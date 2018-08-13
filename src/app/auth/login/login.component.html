@@ -1,0 +1,28 @@
+<div class="row text-center">
+  <div class="col-3 offset-4">
+    <div class="card">
+      <div class="card-header">Login</div>
+      <div class="card-body">
+        <div class="card-text">
+          <img src="../../../assets/logo.jpg" class="img-fluid img-thumbnail">
+          <form (ngSubmit)="logIn(form)" #form="ngForm">
+            <br>
+            <div class="form-group">
+              <input type="text" class="form-control form-control-sm" placeholder="Username" name="username" ngModel #username>
+            </div>
+            <div class="form-group">
+              <input type="password" class="form-control form-control-sm" placeholder="Password" name="password" ngModel>
+            </div>
+            <div class="btn-group btn-group-sm d-flex">
+              <button type="submit" class="btn btn-primary btn-lg w-100">Login</button>
+              <button type="reset" class="btn btn-secondary btn-lg w-100">Clear</button>
+            </div>
+            <br>
+            <alert type="danger" *ngIf="message">{{message}}</alert>
+            <alert type="danger" *ngIf="remainingAttemptMsg">{{remainingAttemptMsg}}</alert>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

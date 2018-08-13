@@ -1,0 +1,300 @@
+<div class="row">
+  <div class="col-lg-4">
+    <div class="card bg-light mb-3">
+      <div class="card-header text-center">Form</div>
+      <div class="card-body">
+        <form [formGroup]="form">
+          <div class="form-group row">
+            <label for="name" class="col-sm-4 col-form-label col-form-label-sm"> Name <span style="color: red">*</span></label>
+            <input [ngClass]="isInvalid(name)" formControlName="name" id="name" type="text"
+                   class="form-control form-control-sm col-sm">
+            <div class="invalid-feedback offset-4" *ngIf="name.hasError('required') && name.touched">Name is required
+            </div>
+            <div class="invalid-feedback offset-4" *ngIf="name.hasError('pattern') && name.touched">Name must contain
+              letters
+              only
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label for="address" class="col-sm-4 col-form-label col-form-label-sm"> Address <span
+              style="color: red">*</span></label>
+            <textarea [ngClass]="isInvalid(address)" formControlName="address" id="address" rows="3" type="text"
+                      class="form-control form-control-sm col-sm"></textarea>
+            <div class="invalid-feedback offset-4" *ngIf="address.hasError('required') && address.touched">Address is
+              required
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label for="dob" class="col-sm-4 col-form-label col-form-label-sm"> Date of birth <span
+              style="color: red">*</span></label>
+            <input
+              [ngClass]="isInvalid(dob)"
+              bsDatepicker
+              [bsConfig]="{dateInputFormat: 'YYYY-MM-DD', containerClass:'theme-default'}"
+              placement="right"
+              type="text" formControlName="dob" class="form-control form-control-sm  col-sm" id="dob">
+            <div class="invalid-feedback offset-4" *ngIf="dob.hasError('required') && dob.touched">Date of birth is
+              required
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label class="col-sm-4 col-form-label col-form-label-sm" for="nic"> NIC <span
+              style="color: red">*</span></label>
+            <input [ngClass]="isInvalid(nic)" type="text" id="nic" formControlName="nic"
+                   class="form-control form-control-sm col-sm">
+            <div class="invalid-feedback offset-4" *ngIf="nic.hasError('required') && nic.touched">NIC is required</div>
+            <div class="invalid-feedback offset-4" *ngIf="nic.hasError('pattern') && nic.touched">NIC should have proper
+              pattern
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label for="mobile" class="col-sm-4 col-form-label col-form-label-sm"> Mobile <span
+              style="color: red">*</span></label>
+            <input [ngClass]="isInvalid(mobile)" type="text" id="mobile" formControlName="mobile"
+                   class="form-control form-control-sm col-sm">
+            <div class="invalid-feedback offset-4" *ngIf="mobile.hasError('required') && mobile.touched">Mobile is
+              required
+            </div>
+            <div class="invalid-feedback offset-4" *ngIf="mobile.hasError('pattern') && mobile.touched">Mobile should
+              have proper
+              pattern
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label class="col-sm-4 col-form-label col-form-label-sm"> Gender <span style="color: red">*</span></label>
+            <select [ngClass]="isInvalid(gender)" class="form-control form-control-sm col-sm" id="gender" formControlName="gender">
+              <option disabled [value]="null">Select Gender</option>
+              <option *ngFor="let gender of genderList" [value]="gender">{{gender | underscore}}</option>
+            </select>
+            <div class="invalid-feedback offset-4" *ngIf="gender.hasError('required') && gender.touched">
+              Gender is
+              required
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label class="col-sm-4 col-form-label col-form-label-sm" for="designation"> Designation <span
+              style="color: red">*</span></label>
+            <select [ngClass]="isInvalid(designation)" class="form-control form-control-sm col-sm" id="designation"
+                    formControlName="designation">
+              <option disabled [value]="null">Select Designation</option>
+              <option *ngFor="let designation of designationList" [value]="designation">{{designation | underscore}}
+              </option>
+            </select>
+            <div class="invalid-feedback offset-4" *ngIf="designation.hasError('required') && designation.touched">
+              Designation is
+              required
+            </div>
+          </div>
+          <div class="form-group row">
+            <div class="btn-group btn-group-sm d-flex col">
+              <button type="button" class="btn btn-primary w-100"
+                      *ngIf="id.value === null"
+                      (click)="addStaff(persist)">Add
+              </button>
+              <button type="button"
+                      *ngIf="id.value !== null"
+                      (click)="addStaff(persist)"
+                      class="btn btn-warning w-100">Update
+              </button>
+              <button type="button" class="btn btn-secondary w-100" (click)="clearForm()">Clear</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-8">
+    <div class="card bg-light mb-3">
+      <div class="card-header text-center">Search</div>
+      <div class="card-body">
+        <form [formGroup]="searchForm" class="form-row align-items-end">
+          <div class="col">
+            <input type="text" class="form-control form-control-sm" id="searchName" formControlName="name"
+                   placeholder="name"
+                   (keyup.enter)="search()">
+          </div>
+          <div class="col">
+            <select class="form-control form-control-sm" formControlName="designation"
+                    (change)="search()">
+              <option disabled [value]="null">Select Designation</option>
+              <option *ngFor="let designation of designationList" [value]="designation">{{designation | underscore}}
+              </option>
+            </select>
+          </div>
+
+          <div class="col">
+            <select class="form-control form-control-sm" formControlName="gender"
+                    (change)="search()">
+              <option disabled [value]="null">Select Gender</option>
+              <option *ngFor="let gender of genderList" [value]="gender">{{gender | underscore}}
+              </option>
+            </select>
+          </div>
+          <div class="col">
+            <button type="button" class="btn btn-secondary btn-block btn-sm" (click)="clearSearch()">Clear</button>
+          </div>
+        </form>
+      </div>
+    </div>
+    <div class="card bg-light mb-3">
+      <div class="card-header text-center">Staff</div>
+      <div class="card-body">
+        <div class="row">
+          <div class="col-12">
+            <div class="form-group row">
+              <label for="filter" class="col-2 col-form-label col-form-label-sm">Filter Columns</label>
+              <mat-select (selectionChange)="addColumn($event)"
+                          placeholder="Columns"
+                          multiple
+                          [value]="displayedColumns"
+                          [compareWith]="compareTableColumns"
+                          class="form-control form-control-sm col" id="filter">
+                <mat-option *ngFor="let column of columns"
+                            [value]="column">
+                  {{column}}
+                </mat-option>
+              </mat-select>
+            </div>
+          </div>
+          <div class="col-12">
+            <div class="mat-elevation-z8">
+              <mat-table [dataSource]="dataSource" matSort>
+                <ng-container matColumnDef="id">
+                  <mat-header-cell *matHeaderCellDef mat-sort-header>Id</mat-header-cell>
+                  <mat-cell *matCellDef="let staff">{{staff.id}}</mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="name">
+                  <mat-header-cell *matHeaderCellDef mat-sort-header>Name</mat-header-cell>
+                  <mat-cell *matCellDef="let staff">{{staff.name}}</mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="address">
+                  <mat-header-cell *matHeaderCellDef mat-sort-header>Address</mat-header-cell>
+                  <mat-cell *matCellDef="let staff">{{staff.address}}</mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="dob">
+                  <mat-header-cell *matHeaderCellDef mat-sort-header>Date of birth</mat-header-cell>
+                  <mat-cell *matCellDef="let staff">{{staff.dob}}</mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="nic">
+                  <mat-header-cell *matHeaderCellDef mat-sort-header>NIC</mat-header-cell>
+                  <mat-cell *matCellDef="let staff">{{staff.nic}}</mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="mobile">
+                  <mat-header-cell *matHeaderCellDef mat-sort-header>Mobile</mat-header-cell>
+                  <mat-cell *matCellDef="let staff">{{staff.mobile}}</mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="gender">
+                  <mat-header-cell *matHeaderCellDef mat-sort-header>Gender</mat-header-cell>
+                  <mat-cell *matCellDef="let staff">{{staff.gender | underscore}}</mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="designation">
+                  <mat-header-cell *matHeaderCellDef mat-sort-header>Designation</mat-header-cell>
+                  <mat-cell *matCellDef="let staff">{{staff.designation | underscore}}</mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="action">
+                  <mat-header-cell *matHeaderCellDef mat-sort-header>Action</mat-header-cell>
+                  <mat-cell *matCellDef="let staff">
+                    <div class="btn-group btn-group-sm special">
+                      <button type="button" class="btn btn-warning" (click)="fillForm(staff)">Edit</button>
+                      <button type="button" class="btn btn-danger" (click)="deleteStaff(delete)">Delete</button>
+                    </div>
+                    <ng-template #delete>
+                      <div class="modal-body text-center">
+                        <p>Are you sure that you want to delete {{staff.name}} ?</p>
+                        <div class="btn-group d-flex">
+                          <button type="button" class="btn btn-danger w-100" (click)="onDeleteYes(staff.id)">Yes
+                          </button>
+                          <button type="button" class="btn btn-secondary w-100" (click)="onDeleteNo()">No</button>
+                        </div>
+                      </div>
+                    </ng-template>
+                  </mat-cell>
+                </ng-container>
+
+                <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+
+                <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+
+              </mat-table>
+              <mat-spinner
+                diameter="50"
+                strokeWidth="5"
+                *ngIf="isLoading"
+                style="margin:0 auto;">
+              </mat-spinner>
+              <mat-paginator [pageSizeOptions]="[5, 7, 10]"></mat-paginator>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<ng-template #persist>
+  <div class="modal-body text-center">
+    <table class="table table-bordered table-hover table-sm">
+      <thead>
+      <tr>
+        <th scope="col" colspan="2">Please Review Again</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngIf="id.value">
+        <td>Id</td>
+        <td> {{id.value}}</td>
+      </tr>
+      <tr>
+        <td>Name</td>
+        <td>{{name.value}}</td>
+      </tr>
+      <tr>
+        <td>Address</td>
+        <td>{{address.value}}</td>
+      </tr>
+      <tr>
+        <td>Date of birth</td>
+        <td>{{dob.value}}</td>
+      </tr>
+      <tr>
+        <td>NIC</td>
+        <td>{{nic.value}}</td>
+      </tr>
+      <tr>
+        <td>Mobile</td>
+        <td>{{mobile.value}}</td>
+      </tr>
+      <tr>
+        <td>Gender</td>
+        <td>{{gender.value | underscore}}</td>
+      </tr>
+      <tr>
+        <td>Designation</td>
+        <td>{{designation.value | underscore}}</td>
+      </tr>
+      </tbody>
+    </table>
+    <div class="btn-group d-flex">
+      <button type="button" class="btn btn-primary w-100" (click)="onPersistYes()">Yes</button>
+      <button type="button" class="btn btn-secondary w-100" (click)="onPersistNo()">No</button>
+    </div>
+  </div>
+</ng-template> <!--persist confirmation modal-->
+
+

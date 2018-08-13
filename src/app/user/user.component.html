@@ -1,0 +1,343 @@
+<div class="row">
+  <div class="col-lg-4">
+    <div class="card bg-light mb-3">
+      <div class="card-header text-center">Form</div>
+      <div class="card-body">
+        <form [formGroup]="form">
+          <div class="form-group form-row">
+            <label for="staffId" class="col-5 col-form-label col-form-label-sm">User type<span
+              style="color: red">*</span></label>
+            <select class="col-5 form-control form-control-sm" #type>
+              <option value="staff" selected>Staff</option>
+              <option value="boardMember">Board Member</option>
+            </select>
+            <input type="text" id="staffId" class="form-control form-control-sm col-2" placeholder="id"
+                   (keyup.enter)="loadPerson(staffId.value, type.value)"
+                   #staffId>
+          </div>
+          <div class="form-group form-row">
+            <div class="offset-5 col btn-group btn-group-sm d-flex">
+              <button type="button" class="btn btn-primary btn-sm w-100"
+                      (click)="loadPerson(staffId.value, type.value)">Load
+                <i class="material-icons md-18">search</i>
+              </button>
+              <button type="button" class="btn btn-info btn-sm w-100" (click)="clearPerson()">Clear
+                <i class="material-icons md-18">clear_all</i>
+              </button>
+            </div>
+          </div>
+          <alert *ngIf="errorMsg" [dismissOnTimeout]="5000" type="danger">{{errorMsg}}</alert>
+
+          <div class="form-group form-row" *ngIf="staff.value">
+            <label for="staffDetails" class="col-form-label col-form-label-sm col-5">Staff Details</label>
+            <textarea [readonly]="true" id="staffDetails" class="form-control form-control-sm col" rows="2">Id: {{staff.value.id}}&#13;&#10;Name: {{staff.value.name}}</textarea>
+          </div>
+
+          <div class="form-group form-row" *ngIf="boardMember.value">
+            <label for="boardMemberDetails" class="col-form-label col-form-label-sm col-5">Board member Details</label>
+            <textarea [readonly]="true" id="boardMemberDetails" class="form-control form-control-sm col" rows="2">Id: {{boardMember.value.id}}&#13;&#10;Name: {{boardMember.value.member.fullName}}</textarea>
+          </div>
+
+          <div class="form-group form-row">
+            <label for="username" class="col-form-label col-form-label-sm col-5">Username <span
+              style="color: red">*</span></label>
+            <input [ngClass]="isInvalid(username)" type="text" id="username" formControlName="username"
+                   class="form-control form-control-sm col">
+            <div class="col-1"
+                 *ngIf="!username.hasError('usernameExists') && username.touched && !username.hasError('required')">
+              <i class="fa fa-check fa-2x" style="color: green;"></i>
+            </div>
+            <div class="col-1"
+                 *ngIf="username.hasError('usernameExists') && username.touched && !username.hasError('required')">
+              <i class="fa fa-times fa-2x" style="color: red;"></i>
+            </div>
+            <div class="invalid-feedback offset-5" *ngIf="username.hasError('usernameExists') && username.touched">
+              Username is already in use
+            </div>
+            <div class="invalid-feedback offset-5" *ngIf="username.hasError('required') && username.touched">Username is
+              required
+            </div>
+          </div>
+
+          <div class="form-group form-row">
+            <label for="password" class="col-form-label col-form-label-sm col-5">Temporary Password <span
+              style="color: red">*</span></label>
+            <input [ngClass]="isInvalid(password)" formControlName="password" type="password" id="password"
+                   class="form-control form-control-sm col">
+            <div class="invalid-feedback offset-5" *ngIf="password.hasError('required') && password.touched">Temporary
+              password
+              must be
+              provided
+            </div>
+            <div class="invalid-feedback offset-5" *ngIf="password.hasError('minlength') && password.touched">Temporary
+              password
+              must have
+              at least 6 characters
+            </div>
+          </div>
+
+          <div class="form-group form-row">
+            <label for="roles" class="col-form-label col-form-label-sm col-5">Roles <span
+              style="color: red">*</span></label>
+            <mat-select multiple
+                        [ngClass]="isInvalid(authorityList)"
+                        formControlName="authorities"
+                        [compareWith]="compareRoles"
+                        class="form-control form-control-sm col"
+                        id="roles"
+                        placeholder="Select Roles">
+              <mat-option *ngFor="let authority of authorities" [value]="authority">{{authority.authority | role |
+                titlecase | underscore}}
+              </mat-option>
+            </mat-select>
+            <div class="invalid-feedback offset-5" *ngIf="authorityList.hasError('required') && authorityList.touched">
+              At least
+              one role should be selected
+            </div>
+          </div>
+
+          <div class="form-group form-row align-items-end">
+            <label class="col-form-label col-form-label-sm col-5">Account Options</label>
+            <mat-slide-toggle formControlName="enabled" class="col-7">
+              <h3 *ngIf="enabled.value" class="badge badge-primary">Enabled</h3>
+              <h3 *ngIf="!enabled.value" class="badge badge-danger">Disabled</h3>
+            </mat-slide-toggle>
+            <mat-slide-toggle formControlName="accountNonLocked" class="col-7 offset-5">
+              <h3 *ngIf="accountNonLocked.value" class="badge badge-primary">Unlocked</h3>
+              <h3 *ngIf="!accountNonLocked.value" class="badge badge-danger">Locked</h3>
+            </mat-slide-toggle>
+            <mat-slide-toggle formControlName="accountNonExpired" class="col-7 offset-5">
+              <h3 *ngIf="accountNonExpired.value" class="badge badge-primary">Account NOT Expired</h3>
+              <h3 *ngIf="!accountNonExpired.value" class="badge badge-danger">Account Expired</h3>
+            </mat-slide-toggle>
+            <mat-slide-toggle [disabled]="true" formControlName="credentialsNonExpired" class="col-7 offset-5">
+              <h3 *ngIf="credentialsNonExpired.value" class="badge badge-primary">Credentials NOT Expired</h3>
+              <h3 *ngIf="!credentialsNonExpired.value" class="badge badge-danger">Credentials Expired</h3>
+            </mat-slide-toggle>
+          </div>
+
+          <div class="form-row">
+            <div class="col-12 btn-group btn-group-sm d-flex">
+              <button type="button" class="btn btn-primary w-100" (click)="addUser(persist)">Add
+              </button>
+              <button type="button" class="btn btn-secondary w-100" (click)="clearForm()">Clear
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-8">
+    <div class="card bg-light mb-3">
+      <div class="card-header text-center">Search Staff Users</div>
+      <div class="card-body">
+        <form [formGroup]="searchForm" class="form-row align-items-end">
+          <div class="col">
+            <input type="text" class="form-control form-control-sm" formControlName="username"
+                   placeholder="username"
+                   (keyup.enter)="search()">
+          </div>
+          <div class="col">
+            <button type="button" class="btn btn-secondary btn-block btn-sm" (click)="clearSearch()">Clear</button>
+          </div>
+        </form>
+      </div>
+    </div>
+    <div class="card bg-light mb-3">
+      <div class="card-header text-center">View Staff Users</div>
+      <div class="card-body">
+        <div class="row">
+
+          <div class="col-12 form-row">
+            <label class="col-2 col-f-orm-label col-form-label-sm" for="userType">User Type</label>
+            <select [(ngModel)]="userType" (change)="loadUsers()"
+                    id="userType" class="form-control form-control-sm col-3">
+              <option value="staff">Staff</option>
+              <option value="boardMember">Board Member</option>
+            </select>
+          </div>
+
+        </div>
+        <br>
+        <div class="row">
+          <div class="col-12">
+            <div class="form-group row">
+              <label for="filter" class="col-2 col-form-label col-form-label-sm">Filter Columns</label>
+              <mat-select (selectionChange)="addColumn($event)"
+                          placeholder="Columns"
+                          multiple
+                          [value]="displayedColumns"
+                          [compareWith]="compareTableColumns"
+                          class="form-control form-control-sm col" id="filter">
+                <mat-option *ngFor="let column of columns"
+                            [value]="column">
+                  {{column}}
+                </mat-option>
+              </mat-select>
+            </div>
+          </div>
+          <div class="col-12">
+            <div class="mat-elevation-z8">
+              <mat-table [dataSource]="dataSource" matSort>
+                <ng-container matColumnDef="id">
+                  <mat-header-cell *matHeaderCellDef mat-sort-header>Id</mat-header-cell>
+                  <mat-cell *matCellDef="let user">{{user.id}}</mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="username">
+                  <mat-header-cell *matHeaderCellDef mat-sort-header>Username</mat-header-cell>
+                  <mat-cell *matCellDef="let user">{{user.username}}</mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="accountNonExpired">
+                  <mat-header-cell *matHeaderCellDef mat-sort-header>Account Status</mat-header-cell>
+                  <mat-cell *matCellDef="let user">
+                    <h3 *ngIf="user.accountNonExpired" class="badge badge-primary">Not Expired</h3>
+                    <h3 *ngIf="!user.accountNonExpired" class="badge badge-danger">Expired</h3>
+                  </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="accountNonLocked">
+                  <mat-header-cell *matHeaderCellDef mat-sort-header>Lock Status</mat-header-cell>
+                  <mat-cell *matCellDef="let user">
+                    <h3 *ngIf="user.accountNonLocked" class="badge badge-primary">Unlocked</h3>
+                    <h3 *ngIf="!user.accountNonLocked" class="badge badge-danger">Locked</h3>
+                  </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="credentialsNonExpired">
+                  <mat-header-cell *matHeaderCellDef mat-sort-header>Credentials Status</mat-header-cell>
+                  <mat-cell *matCellDef="let user">
+                    <h3 *ngIf="user.credentialsNonExpired" class="badge badge-primary">Not Expired</h3>
+                    <h3 *ngIf="!user.credentialsNonExpired" class="badge badge-danger">Expired</h3>
+                  </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="enabled">
+                  <mat-header-cell *matHeaderCellDef mat-sort-header>Enabled</mat-header-cell>
+                  <mat-cell *matCellDef="let user">
+                    <h3 *ngIf="user.enabled" class="badge badge-primary">Enabled</h3>
+                    <h3 *ngIf="!user.enabled" class="badge badge-danger">Disabled</h3>
+                  </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="authorities">
+                  <mat-header-cell *matHeaderCellDef mat-sort-header>Roles</mat-header-cell>
+                  <mat-cell *matCellDef="let user">
+                  <span *ngFor="let authority of user.authorities">
+                    {{ authority.authority }}
+                  </span>
+                  </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="action">
+                  <mat-header-cell *matHeaderCellDef mat-sort-header>Action</mat-header-cell>
+                  <mat-cell *matCellDef="let user">
+                    <div class="btn-group btn-group-sm">
+                      <button type="button" class="btn btn-warning" [routerLink]="user.id">Edit</button>
+                      <button type="button" class="btn btn-danger" (click)="deleteUser(delete)">Delete</button>
+                    </div>
+                    <ng-template #delete>
+                      <div class="modal-body text-center">
+                        <p>Are you sure that you want to delete {{user.username}} ?</p>
+                        <div class="btn-group btn-group-sm d-flex">
+                          <button type="button" class="btn btn-danger w-100" (click)="onDeleteYes(user.id)">Yes</button>
+                          <button type="button" class="btn btn-secondary w-100" (click)="onDeleteNo()">No</button>
+                        </div>
+                      </div>
+                    </ng-template>
+                  </mat-cell>
+                </ng-container>
+
+                <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+
+                <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+
+              </mat-table>
+              <mat-spinner
+                diameter="50"
+                strokeWidth="5"
+                *ngIf="isTableLoading"
+                style="margin:0 auto;">
+              </mat-spinner>
+              <mat-paginator [pageSizeOptions]="[5, 7, 10]"></mat-paginator>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #persist>
+  <div class="modal-body text-center">
+    <table class="table table-bordered table-hover table-sm">
+      <thead>
+      <tr>
+        <th scope="col" colspan="2">Please Review Again</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngIf="id.value">
+        <td>Id</td>
+        <td> {{id.value}}</td>
+      </tr>
+      <tr>
+        <td>Username</td>
+        <td>{{username.value}}</td>
+      </tr>
+      <tr>
+        <td>Roles</td>
+        <td>{{authorityList ? getRolesAsString(): null}}</td>
+      </tr>
+      <tr *ngIf="staff.value">
+        <td>Staff Id</td>
+        <td>{{staff.value.id}}</td>
+      </tr>
+      <tr *ngIf="staff.value">
+        <td>Staff Name</td>
+        <td>{{staff.value?.name}}</td>
+      </tr>
+      <tr *ngIf="boardMember.value">
+        <td>Board Member Id</td>
+        <td>{{boardMember.value?.id}}</td>
+      </tr>
+      <tr *ngIf="boardMember.value">
+        <td>Board Member Name</td>
+        <td>{{boardMember.value?.member.fullName}}</td>
+      </tr>
+      <tr>
+        <td rowspan="4" class="align-middle">Account Options</td>
+        <td>
+          <h3 *ngIf="enabled.value" class="badge badge-primary">Enabled</h3>
+          <h3 *ngIf="!enabled.value" class="badge badge-danger">Disabled</h3>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <h3 *ngIf="accountNonLocked.value" class="badge badge-primary">Unlocked</h3>
+          <h3 *ngIf="!accountNonLocked.value" class="badge badge-danger">Locked</h3>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <h3 *ngIf="accountNonExpired.value" class="badge badge-primary">Account NOT Expired</h3>
+          <h3 *ngIf="!accountNonExpired.value" class="badge badge-danger">Account Expired</h3>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <h3 *ngIf="credentialsNonExpired.value" class="badge badge-primary">Credentials NOT Expired</h3>
+          <h3 *ngIf="!credentialsNonExpired.value" class="badge badge-danger">Credentials Expired</h3>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+    <div class="btn-group btn-group-sm d-flex">
+      <button type="button" class="btn btn-primary w-100" (click)="onPersistYes()">Yes</button>
+      <button type="button" class="btn btn-secondary w-100" (click)="onPersistNo()">No</button>
+    </div>
+  </div>
+</ng-template> <!--persist confirmation modal-->
+

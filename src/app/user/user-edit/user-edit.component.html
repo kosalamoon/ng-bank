@@ -1,0 +1,157 @@
+<div class="row">
+  <div class="col-4 offset-4">
+    <div class="card bg-light mb-3">
+      <div class="card-header text-center">
+        Edit Staff User
+      </div>
+      <div class="card-body">
+        <form [formGroup]="form">
+          <div class="form-group form-row" *ngIf="staff.value">
+            <label for="staffDetails" class="col-5 col-form-label col-form-label-sm">Staff Details</label>
+            <textarea [readonly]="true" id="staffDetails" class="form-control form-control-sm col" rows="2">Id: {{staff.value.id}}&#13;&#10;Name: {{staff.value.name}}</textarea>
+          </div>
+
+          <div class="form-group form-row" *ngIf="boardMember.value">
+            <label for="boardMemberDetails" class="col-5 col-form-label col-form-label-sm">Board Member Details</label>
+            <textarea [readonly]="true" id="boardMemberDetails" class="form-control form-control-sm col" rows="1">Id: {{boardMember.value.id}}</textarea>
+          </div>
+
+          <div class="form-group form-row">
+            <label class="col-form-label col-form-label-sm col-5" for="username">Username</label>
+            <input [ngClass]="isInvalid(username)" type="text" id="username" formControlName="username"
+                   class="form-control form-control-sm col">
+            <!--<div class="invalid-feedback" *ngIf="username.hasError('usernameExists') && username.touched">Username is already in use</div>-->
+            <div class="invalid-feedback offset-5" *ngIf="username.hasError('required') && username.touched">Username is
+              required
+            </div>
+            <div class="col-1 form-group"
+                 *ngIf="username.valid && username.touched">
+              <i class="fa fa-check fa-2x" style="color: green;"></i>
+            </div>
+            <div class="col-1 form-group"
+                 *ngIf="username.hasError('usernameExists') && username.touched && !username.hasError('required')">
+              <i class="fa fa-times fa-2x" style="color: red;"></i>
+            </div>
+          </div>
+          <div class="form-group form-row">
+            <label class="col-form-label col-form-label-sm col-5" for="roles">Roles</label>
+            <mat-select placeholder="Select Roles"
+                        multiple
+                        [ngClass]="isInvalid(authorityList)"
+                        formControlName="authorities"
+                        [compareWith]="compareRoles"
+                        class="form-control form-control-sm col" id="roles">
+              <mat-option *ngFor="let authority of authorities" [value]="authority">{{authority.authority | role |
+                titlecase}}
+              </mat-option>
+            </mat-select>
+            <div class="invalid-feedback offset-5" *ngIf="authorityList.hasError('required') && authorityList.touched">
+              At least
+              one role should be selected
+            </div>
+          </div>
+
+          <div class="form-row align-items-end">
+            <label class="col-form-label col-form-label-sm col-5">Account Options</label>
+            <mat-slide-toggle class="col" formControlName="enabled">
+              <h3 *ngIf="enabled.value" class="badge badge-primary">Enabled</h3>
+              <h3 *ngIf="!enabled.value" class="badge badge-danger">Disabled</h3>
+            </mat-slide-toggle>
+          </div>
+          <div class="form-row">
+            <mat-slide-toggle class="col offset-5" formControlName="accountNonLocked">
+              <h3 *ngIf="accountNonLocked.value" class="badge badge-primary">Unlocked</h3>
+              <h3 *ngIf="!accountNonLocked.value" class="badge badge-danger">Locked</h3>
+            </mat-slide-toggle>
+          </div>
+          <div class="form-row">
+            <mat-slide-toggle class="col offset-5" formControlName="accountNonExpired">
+              <h3 *ngIf="accountNonExpired.value" class="badge badge-primary">Account NOT Expired</h3>
+              <h3 *ngIf="!accountNonExpired.value" class="badge badge-danger">Account Expired</h3>
+            </mat-slide-toggle>
+          </div>
+          <div class="form-row">
+            <mat-slide-toggle class="col offset-5" formControlName="credentialsNonExpired">
+              <h3 *ngIf="credentialsNonExpired.value" class="badge badge-primary">Credentials NOT Expired</h3>
+              <h3 *ngIf="!credentialsNonExpired.value" class="badge badge-danger">Credentials Expired</h3>
+            </mat-slide-toggle>
+          </div>
+          <br>
+          <div class="form-row">
+            <div class="col-12 btn-group btn-group-sm d-flex">
+              <button type="button" class="btn btn-warning w-100" (click)="updateUser(update)">Update</button>
+              <button type="button" class="btn btn-info w-100" routerLink="../">Back</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #update>
+  <div class="modal-body text-center">
+    <table class="table table-bordered table-hover table-sm">
+      <thead>
+      <tr>
+        <th scope="col" colspan="2">Please Review Again</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngIf="!id">
+        <td>Id</td>
+        <td> {{id.value}}</td>
+      </tr>
+      <tr>
+        <td>Username</td>
+        <td>{{username.value}}</td>
+      </tr>
+      <tr>
+        <td>Roles</td>
+        <td>{{authorityList ? getRolesAsString(): null}}</td>
+      </tr>
+      <tr>
+        <td>Staff Id</td>
+        <td>{{staff.value.id}}</td>
+      </tr>
+      <tr>
+        <td>Staff Name</td>
+        <td>{{staff.value.name}}</td>
+      </tr>
+      <tr>
+        <td>Staff Designation</td>
+        <td>{{staff.value.designation | underscore}}</td>
+      </tr>
+      <tr>
+        <td rowspan="4" class="align-middle">Account Options</td>
+        <td>
+          <h3 *ngIf="enabled.value" class="badge badge-primary">Enabled</h3>
+          <h3 *ngIf="!enabled.value" class="badge badge-danger">Disabled</h3>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <h3 *ngIf="accountNonLocked.value" class="badge badge-primary">Unlocked</h3>
+          <h3 *ngIf="!accountNonLocked.value" class="badge badge-danger">Locked</h3>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <h3 *ngIf="accountNonExpired.value" class="badge badge-primary">Account NOT Expired</h3>
+          <h3 *ngIf="!accountNonExpired.value" class="badge badge-danger">Account Expired</h3>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <h3 *ngIf="credentialsNonExpired.value" class="badge badge-primary">Credentials NOT Expired</h3>
+          <h3 *ngIf="!credentialsNonExpired.value" class="badge badge-danger">Credentials Expired</h3>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+    <div class="btn-group d-flex">
+      <button type="button" class="btn btn-primary w-100" (click)="onUpdateYes()">Yes</button>
+      <button type="button" class="btn btn-secondary w-100" (click)="onUpdateNo()">No</button>
+    </div>
+  </div>
+</ng-template>

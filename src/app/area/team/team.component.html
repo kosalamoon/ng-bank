@@ -1,0 +1,192 @@
+<div class="row">
+  <div class="col-lg-4">
+    <div class="card bg-light mb-3">
+      <div class="card-header text-center">Form</div>
+      <div class="card-body">
+        <form [formGroup]="form">
+          <div class="form-group row">
+            <label for="name" class="col-sm-5 col-form-label col-form-label-sm">Name <span style="color: red">*</span></label>
+            <input [ngClass]="isInvalid(name)" formControlName="name" id="name" type="text"
+                   class="form-control form-control-sm col-sm">
+            <div class="invalid-feedback offset-5" *ngIf="name.hasError('required') && name.touched">Name is required
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label class="col-sm-5 col-form-label col-form-label-sm">Division</label>
+            <select [compareWith]="compareDropdown" (change)="loadSocietiesByDivision()"
+                    class="form-control form-control-sm col-sm" id="division" [formControl]="division">
+              <option disabled [ngValue]="null">Select Division</option>
+              <option *ngFor="let division of divisionList" [ngValue]="division">{{division.name}}</option>
+            </select>
+          </div>
+
+          <div class="form-group row">
+            <label class="col-sm-5 col-form-label col-form-label-sm">Society <span
+              style="color: red">*</span></label>
+            <select [ngClass]="isInvalid(society)" [compareWith]="compareDropdown"
+                    class="form-control form-control-sm col-sm" id="society" formControlName="society">
+              <option disabled [ngValue]="null">Select Society</option>
+              <option *ngFor="let society of societyList" [ngValue]="society">{{society.name}}</option>
+            </select>
+            <div class="invalid-feedback offset-5" *ngIf="society.hasError('required') && society.touched">Society is required</div>
+          </div>
+
+          <div class="form-group row">
+            <div class="btn-group btn-group-sm d-flex col">
+              <button type="button" class="btn btn-primary w-100"
+                      *ngIf="id.value === null"
+                      (click)="addTeam(persist)">Add
+              </button>
+              <button type="button"
+                      *ngIf="id.value !== null"
+                      (click)="addTeam(persist)"
+                      class="btn btn-warning w-100">Update
+              </button>
+              <button type="button" class="btn btn-secondary w-100" (click)="clearForm()">Clear</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-8">
+    <div class="card bg-light mb-3">
+      <div class="card-header text-center">Search</div>
+      <div class="card-body">
+        <form [formGroup]="searchForm" class="form-row align-items-end">
+          <div class="col">
+            <input type="text" class="form-control form-control-sm" id="searchName" formControlName="name"
+                   placeholder="name"
+                   (keyup.enter)="search()">
+          </div>
+
+          <div class="col">
+            <select class="form-control form-control-sm" formControlName="society"
+                    (change)="search()">
+              <option disabled [ngValue]="null">Select Society</option>
+              <option *ngFor="let society of societyList" [ngValue]="society">
+                {{society.name}}
+              </option>
+            </select>
+          </div>
+
+          <div class="col">
+            <button type="button" class="btn btn-secondary btn-block btn-sm" (click)="clearSearchForm()">Clear</button>
+          </div>
+
+        </form>
+      </div>
+    </div>
+    <div class="card bg-light mb-3">
+      <div class="card-header text-center">Society</div>
+      <div class="card-body">
+        <div class="row">
+          <div class="col-12">
+            <div class="form-group row">
+              <label for="filter" class="col-2 col-form-label col-form-label-sm">Filter Columns</label>
+              <mat-select (selectionChange)="addColumn($event)"
+                          placeholder="Columns"
+                          multiple
+                          [value]="displayedColumns"
+                          [compareWith]="compareTableColumns"
+                          class="form-control form-control-sm col" id="filter">
+                <mat-option *ngFor="let column of columns"
+                            [value]="column">
+                  {{column}}
+                </mat-option>
+              </mat-select>
+            </div>
+          </div>
+          <div class="col-12">
+            <div class="mat-elevation-z8">
+              <mat-table [dataSource]="dataSource" matSort>
+
+                <ng-container matColumnDef="id">
+                  <mat-header-cell *matHeaderCellDef mat-sort-header>Id</mat-header-cell>
+                  <mat-cell *matCellDef="let team">{{team.id}}</mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="name">
+                  <mat-header-cell *matHeaderCellDef mat-sort-header>Name</mat-header-cell>
+                  <mat-cell *matCellDef="let team">{{team.name}}</mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="society">
+                  <mat-header-cell *matHeaderCellDef mat-sort-header>Society</mat-header-cell>
+                  <mat-cell *matCellDef="let team">{{team.society?.name}}</mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="action">
+                  <mat-header-cell *matHeaderCellDef mat-sort-header>Action</mat-header-cell>
+                  <mat-cell *matCellDef="let team">
+                    <div class="btn-group btn-group-sm special">
+                      <button type="button" class="btn btn-warning" (click)="fillForm(team)">Edit</button>
+                      <button type="button" class="btn btn-danger" (click)="deleteTeam(delete)">Delete</button>
+                    </div>
+                    <ng-template #delete>
+                      <div class="modal-body text-center">
+                        <p>Are you sure that you want to delete {{team.name}} ?</p>
+                        <div class="btn-group d-flex">
+                          <button type="button" class="btn btn-danger w-100" (click)="onDeleteYes(team.id)">Yes
+                          </button>
+                          <button type="button" class="btn btn-secondary w-100" (click)="closeModal()">No</button>
+                        </div>
+                      </div>
+                    </ng-template>
+                  </mat-cell>
+                </ng-container>
+
+                <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+
+                <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+
+              </mat-table>
+              <mat-spinner
+                diameter="50"
+                strokeWidth="5"
+                *ngIf="isLoading"
+                style="margin:0 auto;">
+              </mat-spinner>
+              <mat-paginator [pageSizeOptions]="[5, 7, 10]"></mat-paginator>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<ng-template #persist>
+  <div class="modal-body text-center">
+    <table class="table table-bordered table-hover table-sm">
+      <thead>
+      <tr>
+        <th scope="col" colspan="2">Please Review Again</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngIf="id.value">
+        <td>Id</td>
+        <td> {{id.value}}</td>
+      </tr>
+      <tr>
+        <td>Name</td>
+        <td>{{name.value}}</td>
+      </tr>
+      <tr>
+        <td>Society</td>
+        <td>{{society.value?.name}}</td>
+      </tr>
+      </tbody>
+    </table>
+    <div class="btn-group d-flex">
+      <button type="button" class="btn btn-primary w-100" (click)="onPersistYes()">Yes</button>
+      <button type="button" class="btn btn-secondary w-100" (click)="closeModal()">No</button>
+    </div>
+  </div>
+</ng-template> <!--persist confirmation modal-->
+
+

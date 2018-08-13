@@ -1,0 +1,53 @@
+<nav class="navbar navbar-expand-lg bg-light navbar-light">
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+          aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <a class="navbar-brand" routerLink="/home" routerLinkActive="active"><i class="material-icons">home</i></a>
+  <div class="collapse navbar-collapse">
+    <ul class="navbar-nav">
+
+      <li class="nav-item">
+        <a class="nav-link" routerLink="staff" routerLinkActive="active">Staff</a>
+      </li>
+
+      <li class="nav-item">
+        <a class="nav-link" routerLink="user" routerLinkActive="active">Users</a>
+      </li>
+
+      <li dropdown class="nav-item dropdown">
+        <a dropdownToggle class="nav-link dropdown-toggle">Area</a>
+        <div *dropdownMenu class="dropdown-menu">
+          <a class="dropdown-item" routerLink="division">Division</a>
+          <a class="dropdown-item" routerLink="society">Society</a>
+          <a class="dropdown-item" routerLink="team">Team</a>
+        </div>
+      </li>
+
+      <li dropdown class="nav-item dropdown">
+        <a dropdownToggle class="nav-link dropdown-toggle">Member</a>
+        <div *dropdownMenu class="dropdown-menu">
+          <a class="dropdown-item" routerLink="member">Manage Members</a>
+          <a class="dropdown-item" routerLink="boardMember">Manage Board Members</a>
+        </div>
+      </li>
+
+      <li class="nav-item">
+        <a class="nav-link" routerLink="meeting" routerLinkActive="active">Meeting</a>
+      </li>
+
+    </ul>
+
+    <ul class="navbar-nav ml-auto">
+      <span class="navbar-text">{{username}}  </span>
+      <li dropdown class="nav-item dropdown">
+        <a dropdownToggle class="nav-link dropdown-toggle">Actions</a>
+        <div *dropdownMenu class="dropdown-menu">
+          <a class="dropdown-item" (click)="logout()">Logout</a>
+          <a class="dropdown-item" (click)="changePassword()">Change Password</a>
+        </div>
+      </li>
+    </ul>
+  </div>
+</nav>

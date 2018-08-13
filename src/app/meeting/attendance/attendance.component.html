@@ -1,0 +1,85 @@
+<div class="row">
+  <div class="col-8 offset-2">
+    <div class="card bg-light mb-3">
+      <div class="card-header text-center">Attendance</div>
+      <div class="card-body">
+        <div class="row">
+          <div class="col-12">
+            <form [formGroup]="form">
+              <div formArrayName="attendanceList">
+                <table class="table table-bordered table-hover">
+                  <tr>
+                    <th>Meeting Id</th>
+                    <th>Board Member</th>
+                    <th>Attendance Type</th>
+                    <th>Remarks</th>
+                  </tr>
+                  <ng-container *ngFor="let attendance of attendanceList.controls; let i = index">
+                    <ng-container [formGroupName]="i">
+                      <tr>
+                        <td>{{attendance.value.meeting.id}}</td>
+                        <td>{{attendance.value.boardMember.member.fullName}}</td>
+                        <td>
+                          <select class="form-control form-control-sm col-sm" id="meetingStatus"
+                                  formControlName="attendanceType">
+                            <option *ngFor="let attendanceType of attendanceTypes$ | async" [ngValue]="attendanceType">
+                              {{attendanceType}}
+                            </option>
+                          </select>
+                        </td>
+                        <td>
+                          <input formControlName="remarks" id="name" type="text"
+                                 class="form-control form-control-sm col-sm">
+                        </td>
+                      </tr>
+                    </ng-container>
+                  </ng-container>
+                </table>
+              </div>
+            </form>
+          </div>
+          <div class="col-12">
+            <div class="btn-group btn-group-sm d-flex col">
+              <button type="button" class="btn btn-primary w-100" (click)="addAttendance(persist)">Add</button>
+              <button type="button" class="btn btn-success w-100" (click)="markAllAsPresent()">Mark all as Present
+              </button>
+              <button type="button" class="btn btn-warning w-100" (click)="markAllAsAbsent()">Mark all as absent
+              </button>
+              <button type="button" class="btn btn-info w-100" routerLink="../meeting">Bck</button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #persist>
+  <div class="modal-body text-center">
+    <table class="table table-bordered table-hover table-sm">
+      <thead>
+      <tr>
+        <th>Meeting Id</th>
+        <th>Board Member</th>
+        <th>Attendance Type</th>
+        <th>Remarks</th>
+      </tr>
+      </thead>
+      <tbody>
+      <ng-container *ngFor="let attendance of attendanceList.controls; let i = index">
+        <tr>
+          <td>{{attendance.value.meeting.id}}</td>
+          <td>{{attendance.value.boardMember.member.fullName}}</td>
+          <td>{{attendance.value.attendanceType}}</td>
+          <td>{{attendance.value.remarks}}</td>
+        </tr>
+      </ng-container>
+      </tbody>
+    </table>
+    <div class="btn-group d-flex">
+      <button type="button" class="btn btn-primary w-100" (click)="onPersistYes()">Yes</button>
+      <button type="button" class="btn btn-secondary w-100" (click)="closeModal()">No</button>
+    </div>
+  </div>
+</ng-template>

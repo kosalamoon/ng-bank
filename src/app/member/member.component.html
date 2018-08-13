@@ -1,0 +1,462 @@
+<div class="row">
+  <div class="col-lg-4">
+    <div class="card bg-light mb-3">
+      <div class="card-header text-center">Member Form</div>
+      <div class="card-body">
+        <form [formGroup]="form">
+
+          <div class="form-group row">
+            <label for="fullName" class="col-sm-4 col-form-label col-form-label-sm"> Full Name <span style="color: red">*</span></label>
+            <input [ngClass]="isInvalid(fullName)" formControlName="fullName" id="fullName" type="text"
+                   class="form-control form-control-sm col-sm">
+            <div class="invalid-feedback offset-4" *ngIf="fullName.hasError('required') && fullName.touched">Full Name
+              is required
+            </div>
+            <div class="invalid-feedback offset-4" *ngIf="fullName.hasError('pattern') && fullName.touched">Full Name
+              must contain
+              letters
+              only
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label for="address" class="col-sm-4 col-form-label col-form-label-sm"> Address <span
+              style="color: red">*</span></label>
+            <textarea [ngClass]="isInvalid(address)" formControlName="address" id="address" rows="3" type="text"
+                      class="form-control form-control-sm col-sm"></textarea>
+            <div class="invalid-feedback offset-4" *ngIf="address.hasError('required') && address.touched">Address is
+              required
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label class="col-sm-4 col-form-label col-form-label-sm" for="nic"> NIC <span
+              style="color: red">*</span></label>
+            <input [ngClass]="isInvalid(nic)" type="text" id="nic" formControlName="nic"
+                   class="form-control form-control-sm col-sm">
+            <div class="invalid-feedback offset-4" *ngIf="nic.hasError('required') && nic.touched">NIC is required</div>
+            <div class="invalid-feedback offset-4" *ngIf="nic.hasError('pattern') && nic.touched">NIC should have proper
+              pattern
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label for="dob" class="col-sm-4 col-form-label col-form-label-sm"> Date of birth <span
+              style="color: red">*</span></label>
+            <input
+              [ngClass]="isInvalid(dob)"
+              bsDatepicker
+              [bsConfig]="{dateInputFormat: 'YYYY-MM-DD', containerClass:'theme-default'}"
+              placement="right"
+              type="text" formControlName="dob" class="form-control form-control-sm  col-sm" id="dob">
+            <div class="invalid-feedback offset-4" *ngIf="dob.hasError('required') && dob.touched">Date of birth is
+              required
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label class="col-sm-4 col-form-label col-form-label-sm"> Gender <span
+              style="color: red">*</span></label>
+            <select [ngClass]="isInvalid(gender)" class="form-control form-control-sm col-sm" id="gender"
+                    formControlName="gender">
+              <option disabled [value]="null">Select Gender</option>
+              <option *ngFor="let gender of genders$| async" [value]="gender">{{gender}}</option>
+            </select>
+            <div class="invalid-feedback offset-4" *ngIf="gender.hasError('required') && gender.touched">
+              Gender is
+              required
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label for="telephone" class="col-sm-4 col-form-label col-form-label-sm"> Telephone <span
+              style="color: red">*</span></label>
+            <input [ngClass]="isInvalid(telephone)" type="text" id="telephone" formControlName="telephone"
+                   class="form-control form-control-sm col-sm">
+            <div class="invalid-feedback offset-4" *ngIf="telephone.hasError('required') && telephone.touched">Telephone
+              is
+              required
+            </div>
+            <div class="invalid-feedback offset-4" *ngIf="telephone.hasError('pattern') && telephone.touched">Telephone
+              should
+              have proper
+              pattern
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label for="spouse" class="col-sm-4 col-form-label col-form-label-sm">Spouse</label>
+            <input formControlName="spouse" id="spouse" type="text" class="form-control form-control-sm col-sm">
+          </div>
+
+          <div class="form-group row">
+            <label class="col-sm-4 col-form-label col-form-label-sm"> Income Type <span
+              style="color: red">*</span></label>
+            <select [ngClass]="isInvalid(incomeType)" class="form-control form-control-sm col-sm" id="incomeType"
+                    formControlName="incomeType">
+              <option disabled [value]="null">Select Income Type</option>
+              <option *ngFor="let incomeType of incomeTypes$ | async" [value]="incomeType">{{incomeType | underscore}}
+              </option>
+            </select>
+            <div class="invalid-feedback offset-4" *ngIf="incomeType.hasError('required') && incomeType.touched">
+              Income Type is
+              required
+            </div>
+          </div>
+
+          <div class="form-group form-row">
+            <label class="col-sm-4 col-form-label col-form-label-sm">Have Subsidy ?</label>
+            <div class="custom-control custom-radio custom-control-inline col-sm">
+              <input [formControl]="subsidy" [value]="true" type="radio" class="custom-control-input" id="yes"
+                     name="subsidy">
+              <label class="custom-control-label" for="yes">Yes</label>
+            </div>
+            <div class="custom-control custom-radio custom-control-inline col-sm">
+              <input [formControl]="subsidy" [value]="false" type="radio" class="custom-control-input" id="no"
+                     name="subsidy">
+              <label class="custom-control-label" for="no">No</label>
+            </div>
+          </div>
+
+          <div formGroupName="subsidy" *ngIf="subsidyFormGroup">
+            <div class="form-group row">
+              <label class="col-sm-4 offset-2 col-form-label col-form-label-sm"> Subsidy Type <span
+                style="color: red">*</span></label>
+              <select [ngClass]="isInvalid(subsidyType)" class="form-control form-control-sm col-sm" id="subsidyType"
+                      formControlName="subsidyType">
+                <option disabled [value]="null">Select Subsidy Type</option>
+                <option *ngFor="let subsidyType of subsidyTypes$ | async" [value]="subsidyType">{{subsidyType |
+                  underscore}}
+                </option>
+              </select>
+              <div class="invalid-feedback offset-6" *ngIf="subsidyType.hasError('required') && subsidyType.touched">
+                Subsidy Type is required
+              </div>
+            </div>
+
+            <div class="form-group row">
+              <label for="amount" class="col-sm-4 offset-2 col-form-label col-form-label-sm"> Amount <span
+                style="color: red">*</span></label>
+              <input [ngClass]="isInvalid(amount)" formControlName="amount" id="amount" type="number"
+                     class="form-control form-control-sm col-sm">
+              <div class="invalid-feedback offset-6" *ngIf="amount.hasError('required') && amount.touched">Amount is
+                required
+              </div>
+            </div>
+
+            <div class="form-group row">
+              <label for="number" class="col-sm-4 offset-2 col-form-label col-form-label-sm"> Number <span
+                style="color: red">*</span></label>
+              <input [ngClass]="isInvalid(number)" formControlName="number" id="number" type="number"
+                     class="form-control form-control-sm col-sm">
+              <div class="invalid-feedback offset-6" *ngIf="number.hasError('required') && number.touched">Number is
+                required
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label class="col-sm-4 col-form-label col-form-label-sm">Division</label>
+            <select class="form-control form-control-sm col-sm" id="division"
+                    [compareWith]="compareDropdown" [formControl]="division">
+              <option disabled [value]="null">Select Division</option>
+              <option *ngFor="let division of divisions$ | async" [ngValue]="division">{{division.name}}</option>
+            </select>
+          </div>
+
+          <div class="form-group row">
+            <label class="col-sm-4 col-form-label col-form-label-sm">Society</label>
+            <select class="form-control form-control-sm col-sm" id="society"
+                    [compareWith]="compareDropdown" [formControl]="society">
+              <option disabled [value]="null">Select Society</option>
+              <option *ngFor="let society of societies$ | async" [ngValue]="society">{{society.name}}</option>
+            </select>
+          </div>
+
+          <div class="form-group row">
+            <label class="col-sm-4 col-form-label col-form-label-sm"> Team <span
+              style="color: red">*</span></label>
+            <select [ngClass]="isInvalid(team)" class="form-control form-control-sm col-sm" id="team"
+                    [compareWith]="compareDropdown"
+                    formControlName="team">
+              <option disabled [value]="null">Select Team</option>
+              <option *ngFor="let team of teams$ | async" [ngValue]="team">{{team.name}}</option>
+            </select>
+            <div class="invalid-feedback offset-4" *ngIf="team.hasError('required') && team.touched">Team is required
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <div class="btn-group btn-group-sm d-flex col">
+              <button type="button" class="btn btn-primary w-100"
+                      *ngIf="id.value === null"
+                      (click)="addMember(persist)">Add
+              </button>
+              <button type="button"
+                      *ngIf="id.value !== null"
+                      (click)="addMember(persist)"
+                      class="btn btn-warning w-100">Update
+              </button>
+              <button type="button" class="btn btn-secondary w-100" (click)="clearForm()">Clear</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-8">
+    <div class="card bg-light mb-3">
+      <div class="card-header text-center">Search</div>
+      <div class="card-body">
+        <form [formGroup]="searchForm" class="form-row align-items-end">
+
+          <div class="col">
+            <input type="text" class="form-control form-control-sm" formControlName="fullName"
+                   placeholder="Full name"
+                   (keyup.enter)="search()">
+          </div>
+
+          <div class="col">
+            <input
+              bsDatepicker placement="bottom" placeholder="Date of birth" (blur)="search()"
+              [bsConfig]="{dateInputFormat: 'YYYY-MM-DD', containerClass:'theme-default'}"
+              type="text" formControlName="dob" class="form-control form-control-sm  col-sm">
+          </div>
+
+          <div class="col">
+            <select [compareWith]="compareDropdown" class="form-control form-control-sm col-sm" (change)="search()"
+                    formControlName="incomeType">
+              <option disabled [ngValue]="null">Income Type</option>
+              <option *ngFor="let incomeType of incomeTypes$ | async" [ngValue]="incomeType">{{incomeType}}</option>
+            </select>
+          </div>
+
+          <div class="col" formGroupName="subsidy">
+            <select [compareWith]="compareDropdown" class="form-control form-control-sm col-sm" (change)="search()"
+                    formControlName="subsidyType">
+              <option disabled [ngValue]="null">Subsidy Type</option>
+              <option *ngFor="let subsidyType of subsidyTypes$ | async" [ngValue]="subsidyType">{{subsidyType}}</option>
+            </select>
+          </div>
+
+          <div class="col">
+            <select [compareWith]="compareDropdown" class="form-control form-control-sm col-sm" (change)="search()"
+                    formControlName="team">
+              <option disabled [ngValue]="null">Team</option>
+              <option *ngFor="let team of teams$ | async" [ngValue]="team">{{team.name}}</option>
+            </select>
+          </div>
+
+          <div class="col">
+            <button type="button" class="btn btn-secondary btn-block btn-sm" (click)="clearSearch()">Clear</button>
+          </div>
+
+        </form>
+      </div>
+    </div>
+    <div class="card bg-light mb-3">
+      <div class="card-header text-center">Members</div>
+      <div class="card-body">
+        <div class="row">
+
+          <div class="col-12">
+            <div class="form-group row">
+              <label for="filter" class="col-2 col-form-label col-form-label-sm">Filter Columns</label>
+              <mat-select (selectionChange)="addColumn($event)"
+                          placeholder="Columns"
+                          multiple
+                          [value]="displayedColumns"
+                          [compareWith]="compareTableColumns"
+                          class="form-control form-control-sm col" id="filter">
+                <mat-option *ngFor="let column of columns"
+                            [value]="column">
+                  {{column}}
+                </mat-option>
+              </mat-select>
+            </div>
+          </div>
+
+          <div class="col-12">
+            <div class="mat-elevation-z8">
+              <mat-table [dataSource]="dataSource" matSort>
+                <ng-container matColumnDef="id">
+                  <mat-header-cell *matHeaderCellDef mat-sort-header>Id</mat-header-cell>
+                  <mat-cell *matCellDef="let member">{{member.id}}</mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="fullName">
+                  <mat-header-cell *matHeaderCellDef mat-sort-header>Full Name</mat-header-cell>
+                  <mat-cell *matCellDef="let member">{{member.fullName}}</mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="address">
+                  <mat-header-cell *matHeaderCellDef mat-sort-header>Address</mat-header-cell>
+                  <mat-cell *matCellDef="let member">{{member.address}}</mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="nic">
+                  <mat-header-cell *matHeaderCellDef mat-sort-header>NIC</mat-header-cell>
+                  <mat-cell *matCellDef="let member">{{member.nic}}</mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="dob">
+                  <mat-header-cell *matHeaderCellDef mat-sort-header>Date of birth</mat-header-cell>
+                  <mat-cell *matCellDef="let member">{{member.dob}}</mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="telephone">
+                  <mat-header-cell *matHeaderCellDef mat-sort-header>Telephone</mat-header-cell>
+                  <mat-cell *matCellDef="let member">{{member.telephone}}</mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="gender">
+                  <mat-header-cell *matHeaderCellDef mat-sort-header>Gender</mat-header-cell>
+                  <mat-cell *matCellDef="let member">{{member.gender | underscore}}</mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="spouse">
+                  <mat-header-cell *matHeaderCellDef mat-sort-header>Spouse</mat-header-cell>
+                  <mat-cell *matCellDef="let member">{{member.spouse}}</mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="incomeType">
+                  <mat-header-cell *matHeaderCellDef mat-sort-header>Income Type</mat-header-cell>
+                  <mat-cell *matCellDef="let member">{{member.incomeType}}</mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="team">
+                  <mat-header-cell *matHeaderCellDef mat-sort-header>Team</mat-header-cell>
+                  <mat-cell *matCellDef="let member">{{member.team?.name}}</mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="subsidyType">
+                  <mat-header-cell *matHeaderCellDef mat-sort-header>Subsidy Type</mat-header-cell>
+                  <mat-cell *matCellDef="let member">{{member.subsidy?.subsidyType}}</mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="amount">
+                  <mat-header-cell *matHeaderCellDef mat-sort-header>Subsidy Amount</mat-header-cell>
+                  <mat-cell *matCellDef="let member">{{member.subsidy?.amount}}</mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="number">
+                  <mat-header-cell *matHeaderCellDef mat-sort-header>Subsidy Number</mat-header-cell>
+                  <mat-cell *matCellDef="let member">{{member.subsidy?.number}}</mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="action">
+                  <mat-header-cell *matHeaderCellDef mat-sort-header>Action</mat-header-cell>
+                  <mat-cell *matCellDef="let member">
+                    <div class="btn-group btn-group-sm special">
+                      <button type="button" class="btn btn-warning" (click)="fillForm(member)">Edit</button>
+                      <button type="button" class="btn btn-danger" (click)="deleteMember(delete)">Delete</button>
+                    </div>
+                    <ng-template #delete>
+                      <div class="modal-body text-center">
+                        <p>Are you sure that you want to delete {{member.fullName}} ?</p>
+                        <div class="btn-group d-flex">
+                          <button type="button" class="btn btn-danger w-100" (click)="onDeleteYes(member.id)">Yes
+                          </button>
+                          <button type="button" class="btn btn-secondary w-100" (click)="closeModal()">No</button>
+                        </div>
+                      </div>
+                    </ng-template>
+                  </mat-cell>
+                </ng-container>
+
+                <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+
+                <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+
+              </mat-table>
+              <mat-spinner
+                diameter="50"
+                strokeWidth="5"
+                *ngIf="isLoading"
+                style="margin:0 auto;">
+              </mat-spinner>
+              <mat-paginator [pageSizeOptions]="[5, 7, 10]"></mat-paginator>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #persist>
+  <div class="modal-body text-center">
+    <table class="table table-bordered table-hover table-sm">
+      <thead>
+      <tr>
+        <th scope="col" colspan="2">Please Review Again</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngIf="id.value">
+        <td>Id</td>
+        <td> {{id.value}}</td>
+      </tr>
+      <tr>
+        <td>Full name</td>
+        <td>{{fullName.value}}</td>
+      </tr>
+      <tr>
+        <td>Address</td>
+        <td>{{address.value}}</td>
+      </tr>
+      <tr>
+        <td>NIC</td>
+        <td>{{nic.value}}</td>
+      </tr>
+      <tr>
+        <td>Date of birth</td>
+        <td>{{dob.value}}</td>
+      </tr>
+      <tr>
+        <td>Gender</td>
+        <td>{{gender.value}}</td>
+      </tr>
+      <tr>
+        <td>Telephone</td>
+        <td>{{telephone.value}}</td>
+      </tr>
+      <tr>
+        <td>Spouse</td>
+        <td>{{spouse.value}}</td>
+      </tr>
+      <tr>
+        <td>Income Type</td>
+        <td>{{incomeType.value}}</td>
+      </tr>
+      <ng-container *ngIf="subsidyFormGroup">
+        <tr>
+          <td>Subsidy Id</td>
+          <td>{{subsidyId.value}}</td>
+        </tr>
+        <tr>
+          <td>Subsidy Type</td>
+          <td>{{subsidyType.value}}</td>
+        </tr>
+        <tr>
+          <td>Subsidy amount</td>
+          <td>{{amount.value}}</td>
+        </tr>
+        <tr>
+          <td>Subsidy number</td>
+          <td>{{number.value}}</td>
+        </tr>
+      </ng-container>
+      <tr>
+        <td>Team</td>
+        <td>{{team.value?.name}}</td>
+      </tr>
+      </tbody>
+    </table>
+    <div class="btn-group d-flex">
+      <button type="button" class="btn btn-primary w-100" (click)="onPersistYes()">Yes</button>
+      <button type="button" class="btn btn-secondary w-100" (click)="closeModal()">No</button>
+    </div>
+  </div>
+</ng-template>

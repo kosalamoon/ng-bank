@@ -157,7 +157,7 @@
                           class="form-control form-control-sm col" id="filter">
                 <mat-option *ngFor="let column of columns"
                             [value]="column">
-                  {{column}}
+                  {{column | sentence}}
                 </mat-option>
               </mat-select>
             </div>

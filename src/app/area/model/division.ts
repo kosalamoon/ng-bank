@@ -5,7 +5,7 @@ import {Society} from "./society";
 export interface Division {
   id: string;
   name: string;
-  societyList: Society[];
+  societySet: Society[];
   staff: Staff;
   boardMember: BoardMember
 }

@@ -1,4 +1,4 @@
-import {Component, OnInit, TemplateRef, ViewChild} from "@angular/core";
+import {Component, OnDestroy, OnInit, TemplateRef, ViewChild} from "@angular/core";
 import {MatPaginator, MatSelectChange, MatSort, MatTableDataSource} from "@angular/material";
 import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import {Member} from "../model/member";
@@ -21,7 +21,7 @@ import {Society} from "../../area/model/society";
   templateUrl: "./member.component.html",
   styleUrls: ["./member.component.css"]
 })
-export class MemberComponent implements OnInit {
+export class MemberComponent implements OnInit, OnDestroy {
 
   dataSource: MatTableDataSource<Member>;
 
@@ -219,6 +219,7 @@ export class MemberComponent implements OnInit {
     this.form.reset();
     this.removeSubsidyFromForm();
     this.clearExternalCombos();
+    this.loadTeams();
   }
 
   clearExternalCombos() {
@@ -376,6 +377,10 @@ export class MemberComponent implements OnInit {
     controls.forEach(control => {
       this.form.get(control).markAsTouched({onlySelf: true});
     });
+  }
+
+  ngOnDestroy(): void {
+
   }
 
 

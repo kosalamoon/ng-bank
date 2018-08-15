@@ -10,12 +10,14 @@ import {
 import {RolePipe} from "./pipes/role.pipe";
 import {UnderscorePipe} from "./pipes/underscore.pipe";
 import {TimePipe} from "./pipes/time.pipe";
+import {SentenceCasePipe} from "./pipes/sentence-case.pipe";
 
 @NgModule({
   declarations: [
     RolePipe,
     UnderscorePipe,
-    TimePipe
+    TimePipe,
+    SentenceCasePipe
   ],
   exports: [
     MatTableModule,
@@ -26,7 +28,8 @@ import {TimePipe} from "./pipes/time.pipe";
     MatSlideToggleModule,
     RolePipe,
     UnderscorePipe,
-    TimePipe
+    TimePipe,
+    SentenceCasePipe
   ]
 })
 export class MdComponentsModule { }

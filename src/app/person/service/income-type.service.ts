@@ -1,14 +1,15 @@
 import {Injectable} from "@angular/core";
 import {HttpClient} from "@angular/common/http";
+import {baseURL} from "../../md-components/const/constants";
 
 @Injectable()
 export class IncomeTypeService {
-  private baseUrl: string = "http://localhost:8080/incomeTypes";
+  private url: string = baseURL + "incomeTypes";
 
   constructor(private http: HttpClient) {}
 
   findAll() {
-    return this.http.get<string[]>(this.baseUrl);
+    return this.http.get<string[]>(this.url);
   }
 
 }

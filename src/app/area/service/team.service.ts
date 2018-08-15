@@ -3,6 +3,7 @@ import {Service} from "../../person/service/service";
 import {Team} from "../model/team";
 import {Observable} from "rxjs/internal/Observable";
 import {HttpClient} from "@angular/common/http";
+import {baseURL} from "../../md-components/const/constants";
 
 @Injectable({
   providedIn: 'root'
@@ -11,34 +12,34 @@ export class TeamService implements Service<Team>{
 
   constructor(private http: HttpClient) { }
 
-  baseUrl: string = 'http://localhost:8080/teams';
+  url: string = baseURL + 'teams';
 
   delete(id: string) {
-    return this.http.delete<Team>(`${this.baseUrl}/${id}`);
+    return this.http.delete<Team>(`${this.url}/${id}`);
   }
 
   findAll(): Observable<Team[]> {
-    return this.http.get<Team[]>(this.baseUrl)
+    return this.http.get<Team[]>(this.url)
   }
 
   findById(id: string): Observable<Team> {
-    return this.http.get<Team>(`${this.baseUrl}/${id}`)
+    return this.http.get<Team>(`${this.url}/${id}`)
   }
 
   findAllBySocietyId(id: string): Observable<Team[]> {
-    return this.http.get<Team[]>(`${this.baseUrl}/society/${id}`);
+    return this.http.get<Team[]>(`${this.url}/society/${id}`);
   }
 
   save(e: Team): Observable<Team> {
-    return this.http.post<Team>(this.baseUrl, e);
+    return this.http.post<Team>(this.url, e);
   }
 
   search(e: {}): Observable<Team[]> {
-    return this.http.put<Team[]>(`${this.baseUrl}/search`, e);
+    return this.http.put<Team[]>(`${this.url}/search`, e);
   }
 
   update(e: Team): Observable<Team> {
-    return this.http.put<Team>(this.baseUrl, e);
+    return this.http.put<Team>(this.url, e);
   }
 
 }

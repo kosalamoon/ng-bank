@@ -3,24 +3,25 @@ import {HttpClient} from "@angular/common/http";
 import {BoardMember} from "../model/board-member";
 import {Observable} from "rxjs/internal/Observable";
 import {Service} from "./service";
+import {baseURL} from "../../md-components/const/constants";
 
 @Injectable()
 export class BoardMemberService implements Service<BoardMember>{
 
-  baseUrl: string = "http://localhost:8080/boardMembers";
+  url: string = baseURL + 'boardMembers';
 
   constructor(private http: HttpClient) { }
 
   findAll(): Observable<BoardMember[]> {
-    return this.http.get<BoardMember[]>(this.baseUrl);
+    return this.http.get<BoardMember[]>(this.url);
   }
 
   findById(id: string) {
-    return this.http.get<BoardMember>(`${this.baseUrl}/${id}`);
+    return this.http.get<BoardMember>(`${this.url}/${id}`);
   }
 
   findAllByDivisionIsNull() {
-    return this.http.get<BoardMember[]>(`${this.baseUrl}/divisionIsNull`);
+    return this.http.get<BoardMember[]>(`${this.url}/divisionIsNull`);
   }
 
   delete(id: string) {

@@ -1,15 +1,17 @@
 import {Injectable} from "@angular/core";
 import {HttpClient} from "@angular/common/http";
+import {baseURL} from "../../md-components/const/constants";
 
 @Injectable()
 export class GenderService {
 
-  baseUrl: string = "http://localhost:8080/genders";
+  url: string = baseURL + "genders";
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) {
+  }
 
   findAll() {
-    return this.http.get<string[]>(this.baseUrl);
+    return this.http.get<string[]>(this.url);
   }
 
 }

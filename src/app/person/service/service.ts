@@ -3,7 +3,7 @@ import {Observable} from "rxjs/internal/Observable";
 export interface Service<E> {
 
 
-  baseUrl: string;
+  url: string;
 
   findAll(): Observable<E[]>
   findById(id: string): Observable<E>

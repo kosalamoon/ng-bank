@@ -3,44 +3,45 @@ import {Service} from "../../person/service/service";
 import {Attendance} from "../model/attendance";
 import {Observable} from "rxjs/internal/Observable";
 import {HttpClient} from "@angular/common/http";
+import {baseURL} from "../../md-components/const/constants";
 
 @Injectable()
 export class AttendanceService implements Service<Attendance> {
 
-  baseUrl: string = "http://localhost:8080/attendances";
+  url: string = baseURL + "attendances";
 
   constructor(private http: HttpClient) {}
 
   delete(id: string) {
-    return this.http.delete(`${this.baseUrl}/${id}`);
+    return this.http.delete(`${this.url}/${id}`);
   }
 
   findAll(): Observable<Attendance[]> {
-    return this.http.get<Attendance[]>(this.baseUrl);
+    return this.http.get<Attendance[]>(this.url);
   }
 
   findAllByMeetingId(id: string): Observable<Attendance[]> {
-    return this.http.get<Attendance[]>(`${this.baseUrl}/meeting/${id}`);
+    return this.http.get<Attendance[]>(`${this.url}/meeting/${id}`);
   }
 
   findById(id: string): Observable<Attendance> {
-    return this.http.get<Attendance>(`${this.baseUrl}/${id}`);
+    return this.http.get<Attendance>(`${this.url}/${id}`);
   }
 
   save(e: Attendance): Observable<Attendance> {
-    return this.http.post<Attendance>(this.baseUrl, e);
+    return this.http.post<Attendance>(this.url, e);
   }
 
   saveAll(e: Attendance[]) {
-    return this.http.post<Attendance[]>(`${this.baseUrl}/all`, e);
+    return this.http.post<Attendance[]>(`${this.url}/all`, e);
   }
 
   search(e: {}): Observable<Attendance[]> {
-    return this.http.put<Attendance[]>(`${this.baseUrl}/search`, e);
+    return this.http.put<Attendance[]>(`${this.url}/search`, e);
   }
 
   update(e: Attendance): Observable<Attendance> {
-    return this.http.put<Attendance>(this.baseUrl, e);
+    return this.http.put<Attendance>(this.url, e);
   }
 
 

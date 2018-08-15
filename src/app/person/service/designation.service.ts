@@ -1,15 +1,16 @@
 import {Injectable} from "@angular/core";
 import {HttpClient} from "@angular/common/http";
+import {baseURL} from "../../md-components/const/constants";
 
 @Injectable()
 export class DesignationService {
 
-  baseUrl: string = "http://localhost:8080/designations";
+  url: string = baseURL + "designations";
 
   constructor(private http: HttpClient) {}
 
   findAll() {
-    return this.http.get<string[]>(this.baseUrl);
+    return this.http.get<string[]>(this.url);
   }
 
 }

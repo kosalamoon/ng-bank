@@ -1,15 +1,16 @@
 import {Injectable} from "@angular/core";
 import {HttpClient} from "@angular/common/http";
+import {baseURL} from "../../md-components/const/constants";
 
 @Injectable()
 export class SubsidyTypeService {
 
-  private baseUrl: string = "http://localhost:8080/subsidyTypes";
+  private url: string = baseURL + "subsidyTypes";
 
   constructor(private http: HttpClient) {}
 
   findAll() {
-    return this.http.get<string[]>(this.baseUrl);
+    return this.http.get<string[]>(this.url);
   }
 
 }

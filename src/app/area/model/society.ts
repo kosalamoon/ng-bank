@@ -5,6 +5,6 @@ export interface Society {
 
   id: string;
   name: string;
-  teamSet: Team[];
+  teamList: Team[];
   division: Division;
 }

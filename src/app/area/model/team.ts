@@ -5,7 +5,7 @@ export interface Team {
 
   id: string;
   name: string;
-  memberSet: Member[];
+  memberList: Member[];
   society: Society;
 
 }

@@ -5,17 +5,17 @@ import {RouterModule, Routes} from "@angular/router";
 import {LoginComponent} from "./auth/login/login.component";
 import {HomeComponent} from "./core/home/home.component";
 import {ChangePasswordComponent} from "./auth/change-password/change-password.component";
-import {MemberComponent} from "./member/member.component";
-import {UserComponent} from "./user/user.component";
-import {UserEditComponent} from "./user/user-edit/user-edit.component";
-import {StaffComponent} from "./staff/staff.component";
+import {MemberComponent} from "./person/member/member.component";
+import {UserComponent} from "./person/user/user.component";
+import {UserEditComponent} from "./person/user/user-edit/user-edit.component";
+import {StaffComponent} from "./person/staff/staff.component";
 import {MainWindowComponent} from "./core/main-window/main-window.component";
 import {DivisionComponent} from "./area/division/division.component";
 import {SocietyComponent} from "./area/society/society.component";
 import {TeamComponent} from "./area/team/team.component";
-import {MeetingComponent} from "./meeting/meeting.component";
+import {MeetingComponent} from "./meeting/meeting/meeting.component";
 import {AttendanceComponent} from "./meeting/attendance/attendance.component";
-import {BoardMemberComponent} from "./member/board-member/board-member.component";
+import {BoardMemberComponent} from "./person/member/board-member/board-member.component";
 
 const routes: Routes = [
   {path: '', redirectTo: 'login', pathMatch: 'full'},

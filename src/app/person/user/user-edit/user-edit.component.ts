@@ -6,8 +6,8 @@ import {BsModalRef, BsModalService} from "ngx-bootstrap/modal";
 import {UserService} from "../../service/user.service";
 import {RoleService} from "../../service/role.service";
 import {StaffService} from "../../service/staff.service";
-import {UsernameValidator} from "../../staff/validators/username.validator";
-import {AuthenticationService} from "../../auth/authentication.service";
+import {UsernameValidator} from "../validators/username.validator";
+import {AuthenticationService} from "../../../auth/authentication.service";
 import {ActivatedRoute, Router} from "@angular/router";
 
 @Component({

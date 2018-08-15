@@ -1,14 +1,14 @@
 import {Component, OnInit, TemplateRef, ViewChild} from "@angular/core";
 import {MatPaginator, MatSelectChange, MatSort, MatTableDataSource} from "@angular/material";
-import {Society} from "../../model/society";
+import {Society} from "../model/society";
 import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import {BsModalRef} from "ngx-bootstrap/modal";
-import {Team} from "../../model/team";
+import {Team} from "../model/team";
 import {BsModalService} from "ngx-bootstrap";
-import {SocietyService} from "../../service/society.service";
-import {TeamService} from "../../service/team.service";
-import {Division} from "../../model/division";
-import {DivisionService} from "../../service/division.service";
+import {SocietyService} from "../service/society.service";
+import {TeamService} from "../service/team.service";
+import {Division} from "../model/division";
+import {DivisionService} from "../service/division.service";
 
 @Component({
   selector: 'app-team',

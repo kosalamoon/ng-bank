@@ -1,7 +1,7 @@
 import {Injectable} from "@angular/core";
 import {Division} from "../model/division";
 import {HttpClient} from "@angular/common/http";
-import {Service} from "./service";
+import {Service} from "../../person/service/service";
 import {Observable} from "rxjs/internal/Observable";
 
 @Injectable()

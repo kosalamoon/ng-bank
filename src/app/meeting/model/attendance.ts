@@ -1,5 +1,5 @@
 import {Meeting} from "./meeting";
-import {BoardMember} from "./board-member";
+import {BoardMember} from "../../person/model/board-member";
 
 export interface Attendance {
 

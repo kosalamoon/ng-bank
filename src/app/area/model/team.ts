@@ -1,4 +1,4 @@
-import {Member} from "./member";
+import {Member} from "../../person/model/member";
 import {Society} from "./society";
 
 export interface Team {

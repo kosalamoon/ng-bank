@@ -7,7 +7,7 @@ import {BsModalRef, BsModalService} from "ngx-bootstrap/modal";
 import {UserService} from "../service/user.service";
 import {RoleService} from "../service/role.service";
 import {StaffService} from "../service/staff.service";
-import {UsernameValidator} from "../staff/validators/username.validator";
+import {UsernameValidator} from "./validators/username.validator";
 import {BoardMemberService} from "../service/board-member.service";
 
 @Component({

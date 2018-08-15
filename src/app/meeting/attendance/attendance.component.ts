@@ -1,15 +1,15 @@
-import {Component, OnDestroy, OnInit, TemplateRef} from "@angular/core";
+import {Component, OnInit, TemplateRef} from "@angular/core";
 import {FormArray, FormBuilder, FormGroup} from "@angular/forms";
-import {BoardMemberService} from "../../service/board-member.service";
-import {MeetingService} from "../../service/meeting.service";
-import {AttendanceTypeService} from "../../service/attendance-type.service";
-import {AttendanceService} from "../../service/attendance.service";
+import {BoardMemberService} from "../../person/service/board-member.service";
+import {MeetingService} from "../service/meeting.service";
+import {AttendanceTypeService} from "../service/attendance-type.service";
+import {AttendanceService} from "../service/attendance.service";
 import {ActivatedRoute, Router} from "@angular/router";
 import {Observable} from "rxjs/internal/Observable";
-import {BoardMember} from "../../model/board-member";
-import {Meeting} from "../../model/meeting";
+import {BoardMember} from "../../person/model/board-member";
+import {Meeting} from "../model/meeting";
 import {forkJoin} from "rxjs/internal/observable/forkJoin";
-import {Attendance} from "../../model/attendance";
+import {Attendance} from "../model/attendance";
 import {BsModalRef, BsModalService} from "ngx-bootstrap/modal";
 
 @Component({

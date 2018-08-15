@@ -1,14 +1,14 @@
 import {Component, OnInit, TemplateRef, ViewChild} from "@angular/core";
 import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
-import {BoardMemberService} from "../../service/board-member.service";
-import {StaffService} from "../../service/staff.service";
+import {BoardMemberService} from "../../person/service/board-member.service";
+import {StaffService} from "../../person/service/staff.service";
 import {BsModalService} from "ngx-bootstrap";
 import {MatPaginator, MatSelectChange, MatSort, MatTableDataSource} from "@angular/material";
-import {Division} from "../../model/division";
+import {Division} from "../model/division";
 import {BsModalRef} from "ngx-bootstrap/modal";
-import {BoardMember} from "../../model/board-member";
-import {Staff} from "../../model/staff";
-import {DivisionService} from "../../service/division.service";
+import {BoardMember} from "../../person/model/board-member";
+import {Staff} from "../../person/model/staff";
+import {DivisionService} from "../service/division.service";
 
 @Component({
   selector: "app-division",

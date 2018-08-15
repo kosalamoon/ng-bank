@@ -8,7 +8,7 @@ import {MeetingStatusService} from "../service/meeting-status.service";
 import {MeetingTypeService} from "../service/meeting-type.service";
 import {AttendanceService} from "../service/attendance.service";
 import {Attendance} from "../model/attendance";
-import {date, time} from "../md-components/regex/regex";
+import {date, time} from "../../md-components/regex/regex";
 
 @Component({
   selector: "app-meeting",

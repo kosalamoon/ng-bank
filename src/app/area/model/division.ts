@@ -1,5 +1,5 @@
-import {Staff} from "./staff";
-import {BoardMember} from "./board-member";
+import {Staff} from "../../person/model/staff";
+import {BoardMember} from "../../person/model/board-member";
 import {Society} from "./society";
 
 export interface Division {

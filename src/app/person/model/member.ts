@@ -1,6 +1,6 @@
 import {BoardMember} from "./board-member";
 import {Subsidy} from "./subsidy";
-import {Team} from "./team";
+import {Team} from "../../area/model/team";
 
 export interface Member {
 

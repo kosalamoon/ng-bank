@@ -2,19 +2,19 @@ import {Component, OnInit, TemplateRef, ViewChild} from "@angular/core";
 import {MatPaginator, MatSelectChange, MatSort, MatTableDataSource} from "@angular/material";
 import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import {Member} from "../model/member";
-import {Team} from "../model/team";
+import {Team} from "../../area/model/team";
 import {BsModalRef, BsModalService} from "ngx-bootstrap/modal";
 import {MemberService} from "../service/member.service";
-import {TeamService} from "../service/team.service";
-import {date, fullName, mobile, nic} from "../md-components/regex/regex";
+import {TeamService} from "../../area/service/team.service";
+import {fullName, mobile, nic} from "../../md-components/regex/regex";
 import {Observable} from "rxjs/internal/Observable";
 import {IncomeTypeService} from "../service/income-type.service";
 import {GenderService} from "../service/gender.service";
 import {SubsidyTypeService} from "../service/subsidy-type.service";
-import {DivisionService} from "../service/division.service";
-import {SocietyService} from "../service/society.service";
-import {Division} from "../model/division";
-import {Society} from "../model/society";
+import {DivisionService} from "../../area/service/division.service";
+import {SocietyService} from "../../area/service/society.service";
+import {Division} from "../../area/model/division";
+import {Society} from "../../area/model/society";
 
 @Component({
   selector: "app-member",

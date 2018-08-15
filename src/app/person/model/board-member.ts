@@ -1,4 +1,4 @@
-import {Division} from "./division";
+import {Division} from "../../area/model/division";
 import {User} from "./user";
 import {Member} from "./member";
 

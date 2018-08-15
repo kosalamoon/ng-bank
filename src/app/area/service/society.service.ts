@@ -1,5 +1,5 @@
-import { Injectable } from '@angular/core';
-import {Service} from "./service";
+import {Injectable} from "@angular/core";
+import {Service} from "../../person/service/service";
 import {Society} from "../model/society";
 import {Observable} from "rxjs/internal/Observable";
 import {HttpClient} from "@angular/common/http";

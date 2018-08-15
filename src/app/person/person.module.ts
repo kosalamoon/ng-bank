@@ -7,7 +7,7 @@ import {StaffComponent} from "./staff/staff.component";
 import {RouterModule} from "@angular/router";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {AlertModule, BsDatepickerModule, ModalModule} from "ngx-bootstrap";
-import {MdComponentsModule} from "../md-components/md-components.module";
+import {SharedModule} from "../shared/shared.module";
 import {UserComponent} from "./user/user.component";
 import {UserEditComponent} from "./user/user-edit/user-edit.component";
 import {BoardMemberService} from "./service/board-member.service";
@@ -29,7 +29,7 @@ import {SubsidyTypeService} from "./service/subsidy-type.service";
     BsDatepickerModule.forRoot(),
     ModalModule.forRoot(),
     AlertModule.forRoot(),
-    MdComponentsModule
+    SharedModule
   ],
   declarations: [
     StaffComponent,

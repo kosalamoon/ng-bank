@@ -3,7 +3,7 @@ import {HttpClient} from "@angular/common/http";
 import {BoardMember} from "../model/board-member";
 import {Observable} from "rxjs/internal/Observable";
 import {Service} from "./service";
-import {baseURL} from "../../md-components/const/constants";
+import {baseURL} from "../../shared/const/constants";
 
 @Injectable()
 export class BoardMemberService implements Service<BoardMember>{

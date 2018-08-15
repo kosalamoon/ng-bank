@@ -2,7 +2,7 @@ import {Injectable} from "@angular/core";
 import {HttpClient} from "@angular/common/http";
 import {delay} from "rxjs/operators";
 import {User} from "../model/user";
-import {baseURL} from "../../md-components/const/constants";
+import {baseURL} from "../../shared/const/constants";
 
 @Injectable()
 export class UserService {

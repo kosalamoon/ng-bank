@@ -6,7 +6,7 @@ import {Team} from "../../area/model/team";
 import {BsModalRef, BsModalService} from "ngx-bootstrap/modal";
 import {MemberService} from "../service/member.service";
 import {TeamService} from "../../area/service/team.service";
-import {fullName, mobile, nic} from "../../md-components/regex/regex";
+import {fullName, mobile, nic} from "../../shared/regex/regex";
 import {Observable} from "rxjs/internal/Observable";
 import {IncomeTypeService} from "../service/income-type.service";
 import {GenderService} from "../service/gender.service";

@@ -4,7 +4,7 @@ import {MeetingComponent} from "./meeting/meeting.component";
 import {RouterModule} from "@angular/router";
 import {ReactiveFormsModule} from "@angular/forms";
 import {BsDatepickerModule, ModalModule, TimepickerModule} from "ngx-bootstrap";
-import {MdComponentsModule} from "../md-components/md-components.module";
+import {SharedModule} from "../shared/shared.module";
 import {MeetingService} from "./service/meeting.service";
 import {MeetingStatusService} from "./service/meeting-status.service";
 import {MeetingTypeService} from "./service/meeting-type.service";
@@ -19,7 +19,7 @@ import {AttendanceService} from "./service/attendance.service";
     ReactiveFormsModule,
     BsDatepickerModule.forRoot(),
     ModalModule.forRoot(),
-    MdComponentsModule,
+    SharedModule,
     TimepickerModule.forRoot()
   ],
   declarations: [MeetingComponent, AttendanceComponent],

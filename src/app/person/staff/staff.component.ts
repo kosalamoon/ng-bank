@@ -6,7 +6,7 @@ import {DesignationService} from "../service/designation.service";
 import {GenderService} from "../service/gender.service";
 import {BsModalRef, BsModalService} from "ngx-bootstrap/modal";
 import {Staff} from "../model/staff";
-import {fullName, mobile, nic} from "../../md-components/regex/regex";
+import {fullName, mobile, nic} from "../../shared/regex/regex";
 
 @Component({
   selector: "app-staff",

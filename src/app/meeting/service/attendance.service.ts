@@ -3,7 +3,7 @@ import {Service} from "../../person/service/service";
 import {Attendance} from "../model/attendance";
 import {Observable} from "rxjs/internal/Observable";
 import {HttpClient} from "@angular/common/http";
-import {baseURL} from "../../md-components/const/constants";
+import {baseURL} from "../../shared/const/constants";
 
 @Injectable()
 export class AttendanceService implements Service<Attendance> {

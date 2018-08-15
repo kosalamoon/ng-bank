@@ -3,7 +3,7 @@ import {Division} from "../model/division";
 import {HttpClient} from "@angular/common/http";
 import {Service} from "../../person/service/service";
 import {Observable} from "rxjs/internal/Observable";
-import {baseURL} from "../../md-components/const/constants";
+import {baseURL} from "../../shared/const/constants";
 
 @Injectable()
 export class DivisionService implements Service<Division>{

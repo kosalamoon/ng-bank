@@ -10,7 +10,7 @@ import {AppRoutingModule} from "./app-routing.module";
 import {AuthModule} from "./auth/auth.module";
 import {CoreModule} from "./core/core.module";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
-import {MdComponentsModule} from "./md-components/md-components.module";
+import {SharedModule} from "./shared/shared.module";
 import {AreaModule} from "./area/area.module";
 import {MeetingModule} from "./meeting/meeting.module";
 import {PersonModule} from "./person/person.module";
@@ -36,7 +36,7 @@ import {AccountModule} from "./account/account.module";
     MeetingModule,
     AccountModule,
 
-    MdComponentsModule
+    SharedModule
   ],
   providers: [
     // {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptorService, multi: true},

@@ -3,7 +3,7 @@ import {CommonModule} from "@angular/common";
 import {DivisionComponent} from "./division/division.component";
 import {SocietyComponent} from "./society/society.component";
 import {TeamComponent} from "./team/team.component";
-import {MdComponentsModule} from "../md-components/md-components.module";
+import {SharedModule} from "../shared/shared.module";
 import {DivisionService} from "./service/division.service";
 import {SocietyService} from "./service/society.service";
 import {TeamService} from "./service/team.service";
@@ -13,7 +13,7 @@ import {ReactiveFormsModule} from "@angular/forms";
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    MdComponentsModule,
+    SharedModule,
   ],
   declarations: [
     DivisionComponent,

@@ -32,4 +32,4 @@ import {SentenceCasePipe} from "./pipes/sentence-case.pipe";
     SentenceCasePipe
   ]
 })
-export class MdComponentsModule { }
+export class SharedModule { }

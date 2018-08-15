@@ -4,7 +4,7 @@ import {Staff} from "../model/staff";
 import {delay} from "rxjs/operators";
 import {Observable} from "rxjs/internal/Observable";
 import {Service} from "./service";
-import {baseURL} from "../../md-components/const/constants";
+import {baseURL} from "../../shared/const/constants";
 
 @Injectable()
 export class StaffService implements Service<Staff> {

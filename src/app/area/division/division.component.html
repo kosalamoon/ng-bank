@@ -1,8 +1,8 @@
 <div class="row">
   <div class="col-lg-4">
     <div class="card bg-light mb-3">
-      <div class="card-header text-center">Form</div>
       <div class="card-body">
+        <h5 class="card-title text-center">Division Form</h5>
         <form [formGroup]="form">
           <div class="form-group row">
             <label for="name" class="col-sm-5 col-form-label col-form-label-sm"> Name <span style="color: red">*</span></label>
@@ -65,8 +65,8 @@
   </div>
   <div class="col-lg-8">
     <div class="card bg-light mb-3">
-      <div class="card-header text-center">Search</div>
       <div class="card-body">
+        <h5 class="card-title text-center">Search</h5>
         <form [formGroup]="searchForm" class="form-row align-items-end">
           <div class="col">
             <input type="text" class="form-control form-control-sm" id="searchName" formControlName="name"
@@ -97,9 +97,9 @@
         </form>
       </div>
     </div>
-    <div class="card bg-light mb-3">
-      <div class="card-header text-center">Division</div>
+    <div class="card">
       <div class="card-body">
+        <h5 class="card-title text-center">Divisions</h5>
         <div class="row">
           <div class="col-12">
             <div class="form-group row">
@@ -118,32 +118,32 @@
             </div>
           </div>
           <div class="col-12">
-            <div class="mat-elevation-z8">
-              <mat-table [dataSource]="dataSource" matSort>
+            <div>
+              <table class="table table-bordered table-hover table-sm" cdk-table [dataSource]="dataSource" matSort>
 
-                <ng-container matColumnDef="id">
-                  <mat-header-cell *matHeaderCellDef mat-sort-header>Id</mat-header-cell>
-                  <mat-cell *matCellDef="let division">{{division.id}}</mat-cell>
+                <ng-container cdkColumnDef="id">
+                  <th cdk-header-cell *cdkHeaderCellDef mat-sort-header>Id</th>
+                  <td cdk-cell *cdkCellDef="let division">{{division.id}}</td>
                 </ng-container>
 
-                <ng-container matColumnDef="name">
-                  <mat-header-cell *matHeaderCellDef mat-sort-header>Name</mat-header-cell>
-                  <mat-cell *matCellDef="let division">{{division.name}}</mat-cell>
+                <ng-container cdkColumnDef="name">
+                  <th cdk-header-cell *cdkHeaderCellDef mat-sort-header>Name</th>
+                  <td cdk-cell *cdkCellDef="let division">{{division.name}}</td>
                 </ng-container>
 
-                <ng-container matColumnDef="boardMember">
-                  <mat-header-cell *matHeaderCellDef mat-sort-header>Board Member</mat-header-cell>
-                  <mat-cell *matCellDef="let division">{{division.boardMember?.member?.fullName}}</mat-cell>
+                <ng-container cdkColumnDef="boardMember">
+                  <th cdk-header-cell *cdkHeaderCellDef mat-sort-header>Board Member</th>
+                  <td cdk-cell *cdkCellDef="let division">{{division.boardMember?.member?.fullName}}</td>
                 </ng-container>
 
-                <ng-container matColumnDef="staff">
-                  <mat-header-cell *matHeaderCellDef mat-sort-header>Staff</mat-header-cell>
-                  <mat-cell *matCellDef="let division">{{division.staff?.name}}</mat-cell>
+                <ng-container cdkColumnDef="staff">
+                  <th cdk-header-cell *cdkHeaderCellDef mat-sort-header>Staff</th>
+                  <td cdk-cell *cdkCellDef="let division">{{division.staff?.name}}</td>
                 </ng-container>
 
-                <ng-container matColumnDef="action">
-                  <mat-header-cell *matHeaderCellDef mat-sort-header>Action</mat-header-cell>
-                  <mat-cell *matCellDef="let division">
+                <ng-container cdkColumnDef="action">
+                  <th cdk-header-cell *cdkHeaderCellDef mat-sort-header>Action</th>
+                  <td cdk-cell *cdkCellDef="let division">
                     <div class="btn-group btn-group-sm special">
                       <button type="button" class="btn btn-warning" (click)="fillForm(division)">Edit</button>
                       <button type="button" class="btn btn-danger" (click)="deleteDivision(delete)">Delete</button>
@@ -158,14 +158,14 @@
                         </div>
                       </div>
                     </ng-template>
-                  </mat-cell>
+                  </td>
                 </ng-container>
 
-                <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                <tr class="thead-light" cdk-header-row *cdkHeaderRowDef="displayedColumns"></tr>
 
-                <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+                <tr cdk-row *cdkRowDef="let row; columns: displayedColumns"></tr>
 
-              </mat-table>
+              </table>
               <mat-spinner
                 diameter="50"
                 strokeWidth="5"

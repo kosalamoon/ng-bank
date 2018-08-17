@@ -7,13 +7,15 @@
           <div class="col-12">
             <form [formGroup]="form">
               <div formArrayName="attendanceList">
-                <table class="table table-bordered table-hover">
+                <table class="table table-bordered table-hover table-sm">
+                  <thead class="thead-light">
                   <tr>
                     <th>Meeting Id</th>
                     <th>Board Member</th>
                     <th>Attendance Type</th>
                     <th>Remarks</th>
                   </tr>
+                  </thead>
                   <ng-container *ngFor="let attendance of attendanceList.controls; let i = index">
                     <ng-container [formGroupName]="i">
                       <tr>
@@ -58,7 +60,7 @@
 <ng-template #persist>
   <div class="modal-body text-center">
     <table class="table table-bordered table-hover table-sm">
-      <thead>
+      <thead class="thead-light">
       <tr>
         <th>Meeting Id</th>
         <th>Board Member</th>

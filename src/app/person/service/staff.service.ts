@@ -15,7 +15,7 @@ export class StaffService implements Service<Staff> {
   }
 
   findAll(): Observable<Staff[]> {
-    return this.http.get<Staff[]>(this.url);
+    return this.http.get<Staff[]>(this.url).pipe(delay(0));
   }
 
   findById(id: string): Observable<Staff> {

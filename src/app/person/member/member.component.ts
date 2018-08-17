@@ -15,6 +15,7 @@ import {DivisionService} from "../../area/service/division.service";
 import {SocietyService} from "../../area/service/society.service";
 import {Division} from "../../area/model/division";
 import {Society} from "../../area/model/society";
+import {AccountService} from "../../ledger/service/account.service";
 
 @Component({
   selector: "app-member",
@@ -54,7 +55,7 @@ export class MemberComponent implements OnInit, OnDestroy {
               private fb: FormBuilder, private modalService: BsModalService,
               private incomeTypeService: IncomeTypeService, private genderService: GenderService,
               private subsidyTypeService: SubsidyTypeService, private divisionService: DivisionService,
-              private societyService: SocietyService) {
+              private societyService: SocietyService, private accountService: AccountService) {
   }
 
   ngOnInit() {
@@ -270,11 +271,32 @@ export class MemberComponent implements OnInit, OnDestroy {
       });
   }
 
+  onPersistYesWithAccount() {
+    this.memberService.save(this.form.value).subscribe(member => {
+      this.clearForm();
+      this.memberService.findAll()
+        .subscribe(memberList => this.initializeTable(memberList));
+      this.closeModal();
+
+      let account = {
+        'name': member.fullName,
+        'operationType': 'Credit',
+        'accountType': {'id': 3},
+        'subAccountType': {'id': 13},
+        'shareHolder': {'id': member.id}
+      };
+      this.accountService.save(account).subscribe(console.log)
+    });
+  }
+
   search() {
     setTimeout(() => {
       this.searchForm.patchValue({
         "dob": this.convertDateToString(this.searchForm.get("dob").value)
       });
+      if (this.searchForm.value.subsidy.subsidyType == null) {
+        this.searchForm.value.subsidy = null;
+      }
       this.memberService.search(this.searchForm.value).subscribe(value => this.initializeTable(value));
     }, 100);
 

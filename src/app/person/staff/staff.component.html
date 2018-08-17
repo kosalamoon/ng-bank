@@ -1,8 +1,8 @@
 <div class="row">
   <div class="col-lg-4">
     <div class="card bg-light mb-3">
-      <div class="card-header text-center">Form</div>
       <div class="card-body">
+        <h5 class="card-title text-center">Staff Form</h5>
         <form [formGroup]="form">
           <div class="form-group row">
             <label for="name" class="col-sm-4 col-form-label col-form-label-sm"> Name <span style="color: red">*</span></label>
@@ -111,8 +111,8 @@
   </div>
   <div class="col-lg-8">
     <div class="card bg-light mb-3">
-      <div class="card-header text-center">Search</div>
       <div class="card-body">
+        <h5 class="card-title text-center">Search</h5>
         <form [formGroup]="searchForm" class="form-row align-items-end">
           <div class="col">
             <input type="text" class="form-control form-control-sm" id="searchName" formControlName="name"
@@ -142,9 +142,10 @@
         </form>
       </div>
     </div>
-    <div class="card bg-light mb-3">
-      <div class="card-header text-center">Staff</div>
+    <br>
+    <div class="card">
       <div class="card-body">
+        <h5 class="card-title text-center">Staff</h5>
         <div class="row">
           <div class="col-12">
             <div class="form-group row">
@@ -163,51 +164,52 @@
             </div>
           </div>
           <div class="col-12">
-            <div class="mat-elevation-z8">
-              <mat-table [dataSource]="dataSource" matSort>
+            <div>
+              <table class="table table-bordered table-hover table-sm" cdk-table [dataSource]="dataSource" matSort>
+
                 <ng-container matColumnDef="id">
-                  <mat-header-cell *matHeaderCellDef mat-sort-header>Id</mat-header-cell>
-                  <mat-cell *matCellDef="let staff">{{staff.id}}</mat-cell>
+                  <th cdk-header-cell *cdkHeaderCellDef mat-sort-header>Id</th>
+                  <td cdk-cell *cdkCellDef="let staff">{{staff.id}}</td>
                 </ng-container>
 
-                <ng-container matColumnDef="name">
-                  <mat-header-cell *matHeaderCellDef mat-sort-header>Name</mat-header-cell>
-                  <mat-cell *matCellDef="let staff">{{staff.name}}</mat-cell>
+                <ng-container cdkColumnDef="name">
+                  <th cdk-header-cell *cdkHeaderCellDef mat-sort-header>Name</th>
+                  <td cdk-cell *cdkCellDef="let staff">{{staff.name}}</td>
                 </ng-container>
 
-                <ng-container matColumnDef="address">
-                  <mat-header-cell *matHeaderCellDef mat-sort-header>Address</mat-header-cell>
-                  <mat-cell *matCellDef="let staff">{{staff.address}}</mat-cell>
+                <ng-container cdkColumnDef="address">
+                  <th cdk-header-cell *cdkHeaderCellDef mat-sort-header>Address</th>
+                  <td cdk-cell *cdkCellDef="let staff">{{staff.address}}</td>
                 </ng-container>
 
-                <ng-container matColumnDef="dob">
-                  <mat-header-cell *matHeaderCellDef mat-sort-header>Date of birth</mat-header-cell>
-                  <mat-cell *matCellDef="let staff">{{staff.dob}}</mat-cell>
+                <ng-container cdkColumnDef="dob">
+                  <th cdk-header-cell *cdkHeaderCellDef mat-sort-header>Date of birth</th>
+                  <td cdk-cell *cdkCellDef="let staff">{{staff.dob}}</td>
                 </ng-container>
 
-                <ng-container matColumnDef="nic">
-                  <mat-header-cell *matHeaderCellDef mat-sort-header>NIC</mat-header-cell>
-                  <mat-cell *matCellDef="let staff">{{staff.nic}}</mat-cell>
+                <ng-container cdkColumnDef="nic">
+                  <th cdk-header-cell *cdkHeaderCellDef mat-sort-header>NIC</th>
+                  <td cdk-cell *cdkCellDef="let staff">{{staff.nic}}</td>
                 </ng-container>
 
-                <ng-container matColumnDef="mobile">
-                  <mat-header-cell *matHeaderCellDef mat-sort-header>Mobile</mat-header-cell>
-                  <mat-cell *matCellDef="let staff">{{staff.mobile}}</mat-cell>
+                <ng-container cdkColumnDef="mobile">
+                  <th cdk-header-cell *cdkHeaderCellDef mat-sort-header>Mobile</th>
+                  <td cdk-cell *cdkCellDef="let staff">{{staff.mobile}}</td>
                 </ng-container>
 
-                <ng-container matColumnDef="gender">
-                  <mat-header-cell *matHeaderCellDef mat-sort-header>Gender</mat-header-cell>
-                  <mat-cell *matCellDef="let staff">{{staff.gender | underscore}}</mat-cell>
+                <ng-container cdkColumnDef="gender">
+                  <th cdk-header-cell *cdkHeaderCellDef mat-sort-header>Gender</th>
+                  <td cdk-cell *cdkCellDef="let staff">{{staff.gender | underscore}}</td>
                 </ng-container>
 
-                <ng-container matColumnDef="designation">
-                  <mat-header-cell *matHeaderCellDef mat-sort-header>Designation</mat-header-cell>
-                  <mat-cell *matCellDef="let staff">{{staff.designation | underscore}}</mat-cell>
+                <ng-container cdkColumnDef="designation">
+                  <th cdk-header-cell *cdkHeaderCellDef mat-sort-header>Designation</th>
+                  <td cdk-cell *cdkCellDef="let staff">{{staff.designation | underscore}}</td>
                 </ng-container>
 
-                <ng-container matColumnDef="action">
-                  <mat-header-cell *matHeaderCellDef mat-sort-header>Action</mat-header-cell>
-                  <mat-cell *matCellDef="let staff">
+                <ng-container cdkColumnDef="action">
+                  <th cdk-header-cell *cdkHeaderCellDef mat-sort-header>Action</th>
+                  <td cdk-cell *cdkCellDef="let staff">
                     <div class="btn-group btn-group-sm special">
                       <button type="button" class="btn btn-warning" (click)="fillForm(staff)">Edit</button>
                       <button type="button" class="btn btn-danger" (click)="deleteStaff(delete)">Delete</button>
@@ -222,22 +224,21 @@
                         </div>
                       </div>
                     </ng-template>
-                  </mat-cell>
+                  </td>
                 </ng-container>
 
-                <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                <tr class="thead-light" cdk-header-row *cdkHeaderRowDef="displayedColumns"></tr>
 
-                <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+                <tr cdk-row *cdkRowDef="let row; columns: displayedColumns"></tr>
 
-              </mat-table>
+              </table>
               <mat-spinner
                 diameter="50"
                 strokeWidth="5"
                 *ngIf="isLoading"
-                style="margin:0 auto;">
+                style="display: flex; justify-content: center; align-items: center">
               </mat-spinner>
-              <mat-paginator [pageSizeOptions]="[5, 7, 10]"></mat-paginator>
-
+              <mat-paginator [pageSizeOptions]="[3, 5, 10]"></mat-paginator>
             </div>
           </div>
         </div>

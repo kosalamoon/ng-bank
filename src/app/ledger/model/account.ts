@@ -1,5 +1,6 @@
 import {SubAccountType} from "./sub-account-type";
 import {AccountType} from "./account-type";
+import {Team} from "../../area/model/team";
 
 export interface Account {
 
@@ -11,6 +12,7 @@ export interface Account {
   operationType: string;
   accountType: AccountType;
   subAccountType: SubAccountType;
+  team: Team
 
 
 }

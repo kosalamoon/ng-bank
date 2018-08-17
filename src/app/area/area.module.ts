@@ -8,12 +8,14 @@ import {DivisionService} from "./service/division.service";
 import {SocietyService} from "./service/society.service";
 import {TeamService} from "./service/team.service";
 import {ReactiveFormsModule} from "@angular/forms";
+import {BsDropdownModule} from "ngx-bootstrap";
 
 @NgModule({
   imports: [
     CommonModule,
     ReactiveFormsModule,
     SharedModule,
+    BsDropdownModule
   ],
   declarations: [
     DivisionComponent,

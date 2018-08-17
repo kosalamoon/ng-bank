@@ -6,7 +6,7 @@ import {GenderService} from "./service/gender.service";
 import {StaffComponent} from "./staff/staff.component";
 import {RouterModule} from "@angular/router";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
-import {AlertModule, BsDatepickerModule, ModalModule} from "ngx-bootstrap";
+import {AlertModule, BsDatepickerModule, BsDropdownModule, ModalModule} from "ngx-bootstrap";
 import {SharedModule} from "../shared/shared.module";
 import {UserComponent} from "./user/user.component";
 import {UserEditComponent} from "./user/user-edit/user-edit.component";
@@ -29,6 +29,7 @@ import {SubsidyTypeService} from "./service/subsidy-type.service";
     BsDatepickerModule.forRoot(),
     ModalModule.forRoot(),
     AlertModule.forRoot(),
+    BsDropdownModule,
     SharedModule
   ],
   declarations: [

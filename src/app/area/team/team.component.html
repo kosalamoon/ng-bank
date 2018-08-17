@@ -1,11 +1,12 @@
 <div class="row">
   <div class="col-lg-4">
     <div class="card bg-light mb-3">
-      <div class="card-header text-center">Form</div>
       <div class="card-body">
+        <h5 class="card-title text-center">Team Form</h5>
         <form [formGroup]="form">
           <div class="form-group row">
-            <label for="name" class="col-sm-5 col-form-label col-form-label-sm">Name <span style="color: red">*</span></label>
+            <label for="name" class="col-sm-5 col-form-label col-form-label-sm">Name <span
+              style="color: red">*</span></label>
             <input [ngClass]="isInvalid(name)" formControlName="name" id="name" type="text"
                    class="form-control form-control-sm col-sm">
             <div class="invalid-feedback offset-5" *ngIf="name.hasError('required') && name.touched">Name is required
@@ -29,7 +30,9 @@
               <option disabled [ngValue]="null">Select Society</option>
               <option *ngFor="let society of societyList" [ngValue]="society">{{society.name}}</option>
             </select>
-            <div class="invalid-feedback offset-5" *ngIf="society.hasError('required') && society.touched">Society is required</div>
+            <div class="invalid-feedback offset-5" *ngIf="society.hasError('required') && society.touched">Society is
+              required
+            </div>
           </div>
 
           <div class="form-group row">
@@ -52,8 +55,8 @@
   </div>
   <div class="col-lg-8">
     <div class="card bg-light mb-3">
-      <div class="card-header text-center">Search</div>
       <div class="card-body">
+        <h5 class="card-title text-center">Search</h5>
         <form [formGroup]="searchForm" class="form-row align-items-end">
           <div class="col">
             <input type="text" class="form-control form-control-sm" id="searchName" formControlName="name"
@@ -79,8 +82,8 @@
       </div>
     </div>
     <div class="card bg-light mb-3">
-      <div class="card-header text-center">Society</div>
       <div class="card-body">
+        <h5 class="card-title text-center">Societies</h5>
         <div class="row">
           <div class="col-12">
             <div class="form-group row">
@@ -98,28 +101,33 @@
               </mat-select>
             </div>
           </div>
+
           <div class="col-12">
-            <div class="mat-elevation-z8">
-              <mat-table [dataSource]="dataSource" matSort>
+              <table cdk-table [dataSource]="dataSource" matSort class="table table-bordered table-hover table-sm">
 
                 <ng-container matColumnDef="id">
-                  <mat-header-cell *matHeaderCellDef mat-sort-header>Id</mat-header-cell>
-                  <mat-cell *matCellDef="let team">{{team.id}}</mat-cell>
+                  <th cdk-header-cell *matHeaderCellDef mat-sort-header>Id</th>
+                  <td cdk-cell *cdkCellDef="let team">{{team.id}}</td>
                 </ng-container>
 
-                <ng-container matColumnDef="name">
-                  <mat-header-cell *matHeaderCellDef mat-sort-header>Name</mat-header-cell>
-                  <mat-cell *matCellDef="let team">{{team.name}}</mat-cell>
+                <ng-container cdkColumnDef="name">
+                  <th cdk-header-cell *cdkHeaderCellDef mat-sort-header>Name</th>
+                  <td cdk-cell *cdkCellDef="let team">{{team.name}}</td>
                 </ng-container>
 
-                <ng-container matColumnDef="society">
-                  <mat-header-cell *matHeaderCellDef mat-sort-header>Society</mat-header-cell>
-                  <mat-cell *matCellDef="let team">{{team.society?.name}}</mat-cell>
+                <ng-container cdkColumnDef="society">
+                  <th cdk-header-cell *cdkHeaderCellDef mat-sort-header>Society</th>
+                  <td cdk-cell *cdkCellDef="let team">{{team.society?.name}}</td>
                 </ng-container>
 
-                <ng-container matColumnDef="action">
-                  <mat-header-cell *matHeaderCellDef mat-sort-header>Action</mat-header-cell>
-                  <mat-cell *matCellDef="let team">
+                <ng-container cdkColumnDef="balance">
+                  <th cdk-header-cell *cdkHeaderCellDef mat-sort-header>Account Balance</th>
+                  <td cdk-cell *cdkCellDef="let team">{{team.account?.balance | number: '1.2-2'}}</td>
+                </ng-container>
+
+                <ng-container cdkColumnDef="action">
+                  <th cdk-header-cell *cdkHeaderCellDef mat-sort-header>Action</th>
+                  <td cdk-cell *cdkCellDef="let team">
                     <div class="btn-group btn-group-sm special">
                       <button type="button" class="btn btn-warning" (click)="fillForm(team)">Edit</button>
                       <button type="button" class="btn btn-danger" (click)="deleteTeam(delete)">Delete</button>
@@ -134,14 +142,14 @@
                         </div>
                       </div>
                     </ng-template>
-                  </mat-cell>
+                  </td>
                 </ng-container>
 
-                <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                <tr class="thead-light" cdk-header-row *cdkHeaderRowDef="displayedColumns"></tr>
 
-                <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+                <tr cdk-row *cdkRowDef="let row; columns: displayedColumns"></tr>
 
-              </mat-table>
+              </table>
               <mat-spinner
                 diameter="50"
                 strokeWidth="5"
@@ -150,7 +158,6 @@
               </mat-spinner>
               <mat-paginator [pageSizeOptions]="[5, 7, 10]"></mat-paginator>
 
-            </div>
           </div>
         </div>
       </div>
@@ -162,7 +169,7 @@
 <ng-template #persist>
   <div class="modal-body text-center">
     <table class="table table-bordered table-hover table-sm">
-      <thead>
+      <thead class="thead-light">
       <tr>
         <th scope="col" colspan="2">Please Review Again</th>
       </tr>
@@ -182,8 +189,14 @@
       </tr>
       </tbody>
     </table>
-    <div class="btn-group d-flex">
-      <button type="button" class="btn btn-primary w-100" (click)="onPersistYes()">Yes</button>
+    <div class="btn-group d-flex" dropdown>
+      <button type="button" class="btn btn-primary w-50" (click)="onPersistYes()">Yes</button>
+      <button type="button" dropdownToggle class="btn btn-primary dropdown-toggle dropdown-toggle-split">
+        <span class="caret"></span>
+      </button>
+      <ul *dropdownMenu class="dropdown-menu">
+        <li><a class="dropdown-item" (click)="onPersistYesWithAccount()">Yes + Add Account</a></li>
+      </ul>
       <button type="button" class="btn btn-secondary w-100" (click)="closeModal()">No</button>
     </div>
   </div>

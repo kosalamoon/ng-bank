@@ -108,7 +108,7 @@ export class MeetingComponent implements OnInit {
   }
 
   columns = ["id", "date", "time", "meetingStatus", "meetingType", "action" , "attendance"];
-  displayedColumns = ["id", "date", "time", "meetingStatus", "meetingType", "action", "attendance"];
+  displayedColumns = ["id", "date", "time", "meetingStatus", "meetingType", "attendance", "action"];
 
   addColumn(event: MatSelectChange) {
     this.displayedColumns = event.value;

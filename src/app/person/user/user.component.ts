@@ -31,7 +31,7 @@ export class UserComponent implements OnInit {
 
   modalRef: BsModalRef;
 
-  userType: string = "staff";
+  userType: FormControl = new FormControl("staff");
 
   isTableLoading: boolean = false;
 
@@ -45,7 +45,7 @@ export class UserComponent implements OnInit {
 
 
   ngOnInit() {
-    this.userService.findAll(this.userType).subscribe(users => this.initializeTable(users));
+    this.userService.findAll(this.userType.value).subscribe(users => this.initializeTable(users));
     this.createUserForm();
     this.createSearchForm();
     this.loadAuthorities();
@@ -72,7 +72,7 @@ export class UserComponent implements OnInit {
   compareRoles = (o1: any, o2: any) => o1 && o2 ? o1.id === o2.id : o1 === o2;
   compareTableColumns = (o1: any, o2: any) => o1 === o2;
 
-  columns = ["id", "username", "accountNonExpired", "accountNonLocked", "credentialsNonExpired", "enabled", "authorities", "staff", "action"];
+  columns = ["id", "username", "accountNonExpired", "accountNonLocked", "credentialsNonExpired", "enabled", "authorities", "action"];
   displayedColumns = ["id", "username", "accountNonExpired", "accountNonLocked", "credentialsNonExpired", "enabled", "action"];
 
   addColumn(event: MatSelectChange) {
@@ -148,7 +148,7 @@ export class UserComponent implements OnInit {
 
   onPersistYes() {
     this.userService.save(this.form.value)
-      .subscribe(value => this.userService.findAll(this.userType)
+      .subscribe(value => this.userService.findAll(this.userType.value)
         .subscribe(users => this.initializeTable(users)));
     this.modalRef.hide();
     this.clearForm();
@@ -160,7 +160,7 @@ export class UserComponent implements OnInit {
 
   onDeleteYes(id: string) {
     this.userService.delete(id)
-      .subscribe(value => this.userService.findAll(this.userType)
+      .subscribe(value => this.userService.findAll(this.userType.value)
         .subscribe(users => this.initializeTable(users)));
     this.modalRef.hide();
   }
@@ -174,7 +174,7 @@ export class UserComponent implements OnInit {
     if (this.searchForm.value.username !== "") {
       this.userService.search(this.searchForm.value)
         .subscribe(users => {
-            if (this.userType === "staff") this.initializeTable(users.filter(users => users.staff !== null));
+            if (this.userType.value === "staff") this.initializeTable(users.filter(users => users.staff !== null));
             else this.initializeTable(users.filter(users => users.boardMember !== null));
           }
         );
@@ -183,7 +183,7 @@ export class UserComponent implements OnInit {
 
   clearSearch() {
     this.searchForm.reset();
-    this.userService.findAll(this.userType).subscribe(users => this.initializeTable(users));
+    this.userService.findAll(this.userType.value).subscribe(users => this.initializeTable(users));
   }
 
   //<editor-fold desc="form getters">
@@ -255,7 +255,7 @@ export class UserComponent implements OnInit {
 
 
   loadUsers() {
-    this.userService.findAll(this.userType).subscribe(users => this.initializeTable(users));
+    this.userService.findAll(this.userType.value).subscribe(users => this.initializeTable(users));
   }
 
   validate(controls: string[]) {

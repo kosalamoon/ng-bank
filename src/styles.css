@@ -11,8 +11,12 @@
   cursor: not-allowed;
 }
 
-.mat-column-id {
-  flex: 0 0 60px;
+.cdk-column-id {
+  width: 30px;
+}
+
+.cdk-column-action {
+  width: 100px;
 }
 
 i {

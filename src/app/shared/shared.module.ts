@@ -11,6 +11,7 @@ import {RolePipe} from "./pipes/role.pipe";
 import {UnderscorePipe} from "./pipes/underscore.pipe";
 import {TimePipe} from "./pipes/time.pipe";
 import {SentenceCasePipe} from "./pipes/sentence-case.pipe";
+import {CdkTableModule} from "@angular/cdk/table";
 
 @NgModule({
   declarations: [
@@ -21,6 +22,7 @@ import {SentenceCasePipe} from "./pipes/sentence-case.pipe";
   ],
   exports: [
     MatTableModule,
+    CdkTableModule,
     MatPaginatorModule,
     MatSortModule,
     MatSelectModule,

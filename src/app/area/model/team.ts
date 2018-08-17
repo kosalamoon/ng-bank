@@ -7,5 +7,6 @@ export interface Team {
   name: string;
   memberList: Member[];
   society: Society;
+  account: Account;
 
 }

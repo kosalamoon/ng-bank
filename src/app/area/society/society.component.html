@@ -1,8 +1,8 @@
 <div class="row">
   <div class="col-lg-4">
     <div class="card bg-light mb-3">
-      <div class="card-header text-center">Form</div>
       <div class="card-body">
+        <h5 class="card-title text-center">Society Form</h5>
         <form [formGroup]="form">
           <div class="form-group row">
             <label for="name" class="col-sm-5 col-form-label col-form-label-sm"> Name <span style="color: red">*</span></label>
@@ -43,8 +43,8 @@
   </div>
   <div class="col-lg-8">
     <div class="card bg-light mb-3">
-      <div class="card-header text-center">Search</div>
       <div class="card-body">
+        <h5 class="card-title text-center">Search</h5>
         <form [formGroup]="searchForm" class="form-row align-items-end">
           <div class="col">
             <input type="text" class="form-control form-control-sm" id="searchName" formControlName="name"
@@ -69,9 +69,9 @@
         </form>
       </div>
     </div>
-    <div class="card bg-light mb-3">
-      <div class="card-header text-center">Society</div>
+    <div class="card">
       <div class="card-body">
+        <h5 class="card-title text-center">Societies</h5>
         <div class="row">
           <div class="col-12">
             <div class="form-group row">
@@ -90,27 +90,26 @@
             </div>
           </div>
           <div class="col-12">
-            <div class="mat-elevation-z8">
-              <mat-table [dataSource]="dataSource" matSort>
+              <table cdk-table [dataSource]="dataSource" matSort class="table table-bordered table-hover table-sm">
 
                 <ng-container matColumnDef="id">
-                  <mat-header-cell *matHeaderCellDef mat-sort-header>Id</mat-header-cell>
-                  <mat-cell *matCellDef="let society">{{society.id}}</mat-cell>
+                  <th cdk-header-cell *cdkHeaderCellDef mat-sort-header>Id</th>
+                  <td cdk-cell *cdkCellDef="let society">{{society.id}}</td>
                 </ng-container>
 
-                <ng-container matColumnDef="name">
-                  <mat-header-cell *matHeaderCellDef mat-sort-header>Name</mat-header-cell>
-                  <mat-cell *matCellDef="let society">{{society.name}}</mat-cell>
+                <ng-container cdkColumnDef="name">
+                  <th cdk-header-cell *cdkHeaderCellDef mat-sort-header>Name</th>
+                  <td cdk-cell *cdkCellDef="let society">{{society.name}}</td>
                 </ng-container>
 
-                <ng-container matColumnDef="division">
-                  <mat-header-cell *matHeaderCellDef mat-sort-header>Division</mat-header-cell>
-                  <mat-cell *matCellDef="let society">{{society.division?.name}}</mat-cell>
+                <ng-container cdkColumnDef="division">
+                  <th cdk-header-cell *cdkHeaderCellDef mat-sort-header>Division</th>
+                  <td cdk-cell *cdkCellDef="let society">{{society.division?.name}}</td>
                 </ng-container>
 
-                <ng-container matColumnDef="action">
-                  <mat-header-cell *matHeaderCellDef mat-sort-header>Action</mat-header-cell>
-                  <mat-cell *matCellDef="let society">
+                <ng-container cdkColumnDef="action">
+                  <th cdk-header-cell *cdkHeaderCellDef mat-sort-header>Action</th>
+                  <td cdk-cell *cdkCellDef="let society">
                     <div class="btn-group btn-group-sm special">
                       <button type="button" class="btn btn-warning" (click)="fillForm(society)">Edit</button>
                       <button type="button" class="btn btn-danger" (click)="deleteSociety(delete)">Delete</button>
@@ -125,14 +124,14 @@
                         </div>
                       </div>
                     </ng-template>
-                  </mat-cell>
+                  </td>
                 </ng-container>
 
-                <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                <tr class="thead-light" cdk-header-row *cdkHeaderRowDef="displayedColumns"></tr>
 
-                <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+                <tr cdk-row *cdkRowDef="let row; columns: displayedColumns"></tr>
 
-              </mat-table>
+              </table>
               <mat-spinner
                 diameter="50"
                 strokeWidth="5"
@@ -140,8 +139,6 @@
                 style="margin:0 auto;">
               </mat-spinner>
               <mat-paginator [pageSizeOptions]="[5, 7, 10]"></mat-paginator>
-
-            </div>
           </div>
         </div>
       </div>

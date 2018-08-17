@@ -16,6 +16,7 @@ import {TeamComponent} from "./area/team/team.component";
 import {MeetingComponent} from "./meeting/meeting/meeting.component";
 import {AttendanceComponent} from "./meeting/attendance/attendance.component";
 import {BoardMemberComponent} from "./person/member/board-member/board-member.component";
+import { AccountComponent } from "./ledger/account/account.component";
 
 const routes: Routes = [
   {path: '', redirectTo: 'login', pathMatch: 'full'},
@@ -31,7 +32,8 @@ const routes: Routes = [
       {path: 'society', component: SocietyComponent},
       {path: 'team', component: TeamComponent},
       {path: 'meeting', component: MeetingComponent},
-      {path: 'attendance', component: AttendanceComponent}
+      {path: 'attendance', component: AttendanceComponent},
+      {path: 'account', component: AccountComponent}
     ]},
   {path: 'changePassword/:username', component: ChangePasswordComponent}
 ];

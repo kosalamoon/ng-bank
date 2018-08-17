@@ -14,7 +14,7 @@ import {SharedModule} from "./shared/shared.module";
 import {AreaModule} from "./area/area.module";
 import {MeetingModule} from "./meeting/meeting.module";
 import {PersonModule} from "./person/person.module";
-import {AccountModule} from "./account/account.module";
+import {LedgerModule} from "./ledger/ledger.module";
 
 
 @NgModule({
@@ -34,7 +34,7 @@ import {AccountModule} from "./account/account.module";
     PersonModule,
     AreaModule,
     MeetingModule,
-    AccountModule,
+    LedgerModule,
 
     SharedModule
   ],

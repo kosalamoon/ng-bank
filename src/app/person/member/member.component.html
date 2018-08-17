@@ -277,76 +277,75 @@
           </div>
 
           <div class="col-12">
-            <div class="mat-elevation-z8">
-              <mat-table [dataSource]="dataSource" matSort>
+              <table cdk-table matSort [dataSource]="dataSource" class="table table-bordered table-hover table-sm">
                 <ng-container matColumnDef="id">
-                  <mat-header-cell *matHeaderCellDef mat-sort-header>Id</mat-header-cell>
-                  <mat-cell *matCellDef="let member">{{member.id}}</mat-cell>
+                  <th cdk-header-cell *cdkHeaderCellDef mat-sort-header>Id</th>
+                  <td cdk-cell *cdkCellDef="let member">{{member.id}}</td>
                 </ng-container>
 
-                <ng-container matColumnDef="fullName">
-                  <mat-header-cell *matHeaderCellDef mat-sort-header>Full Name</mat-header-cell>
-                  <mat-cell *matCellDef="let member">{{member.fullName}}</mat-cell>
+                <ng-container cdkColumnDef="fullName">
+                  <th cdk-header-cell *cdkHeaderCellDef mat-sort-header>Full Name</th>
+                  <td cdk-cell *cdkCellDef="let member">{{member.fullName}}</td>
                 </ng-container>
 
-                <ng-container matColumnDef="address">
-                  <mat-header-cell *matHeaderCellDef mat-sort-header>Address</mat-header-cell>
-                  <mat-cell *matCellDef="let member">{{member.address}}</mat-cell>
+                <ng-container cdkColumnDef="address">
+                  <th cdk-header-cell *cdkHeaderCellDef mat-sort-header>Address</th>
+                  <td cdk-cell *cdkCellDef="let member">{{member.address}}</td>
                 </ng-container>
 
-                <ng-container matColumnDef="nic">
-                  <mat-header-cell *matHeaderCellDef mat-sort-header>NIC</mat-header-cell>
-                  <mat-cell *matCellDef="let member">{{member.nic}}</mat-cell>
+                <ng-container cdkColumnDef="nic">
+                  <th cdk-header-cell *cdkHeaderCellDef mat-sort-header>NIC</th>
+                  <td cdk-cell *cdkCellDef="let member">{{member.nic}}</td>
                 </ng-container>
 
-                <ng-container matColumnDef="dob">
-                  <mat-header-cell *matHeaderCellDef mat-sort-header>Date of birth</mat-header-cell>
-                  <mat-cell *matCellDef="let member">{{member.dob}}</mat-cell>
+                <ng-container cdkColumnDef="dob">
+                  <th cdk-header-cell *cdkHeaderCellDef mat-sort-header>Date of birth</th>
+                  <td cdk-cell *cdkCellDef="let member">{{member.dob}}</td>
                 </ng-container>
 
-                <ng-container matColumnDef="telephone">
-                  <mat-header-cell *matHeaderCellDef mat-sort-header>Telephone</mat-header-cell>
-                  <mat-cell *matCellDef="let member">{{member.telephone}}</mat-cell>
+                <ng-container cdkColumnDef="telephone">
+                  <th cdk-header-cell *cdkHeaderCellDef mat-sort-header>Telephone</th>
+                  <td cdk-cell *cdkCellDef="let member">{{member.telephone}}</td>
                 </ng-container>
 
-                <ng-container matColumnDef="gender">
-                  <mat-header-cell *matHeaderCellDef mat-sort-header>Gender</mat-header-cell>
-                  <mat-cell *matCellDef="let member">{{member.gender | underscore}}</mat-cell>
+                <ng-container cdkColumnDef="gender">
+                  <th cdk-header-cell *cdkHeaderCellDef mat-sort-header>Gender</th>
+                  <td cdk-cell *cdkCellDef="let member">{{member.gender | underscore}}</td>
                 </ng-container>
 
-                <ng-container matColumnDef="spouse">
-                  <mat-header-cell *matHeaderCellDef mat-sort-header>Spouse</mat-header-cell>
-                  <mat-cell *matCellDef="let member">{{member.spouse}}</mat-cell>
+                <ng-container cdkColumnDef="spouse">
+                  <th cdk-header-cell *cdkHeaderCellDef mat-sort-header>Spouse</th>
+                  <td cdk-cell *cdkCellDef="let member">{{member.spouse}}</td>
                 </ng-container>
 
-                <ng-container matColumnDef="incomeType">
-                  <mat-header-cell *matHeaderCellDef mat-sort-header>Income Type</mat-header-cell>
-                  <mat-cell *matCellDef="let member">{{member.incomeType}}</mat-cell>
+                <ng-container cdkColumnDef="incomeType">
+                  <th cdk-header-cell *cdkHeaderCellDef mat-sort-header>Income Type</th>
+                  <td cdk-cell *cdkCellDef="let member">{{member.incomeType}}</td>
                 </ng-container>
 
-                <ng-container matColumnDef="team">
-                  <mat-header-cell *matHeaderCellDef mat-sort-header>Team</mat-header-cell>
-                  <mat-cell *matCellDef="let member">{{member.team?.name}}</mat-cell>
+                <ng-container cdkColumnDef="team">
+                  <th cdk-header-cell *cdkHeaderCellDef mat-sort-header>Team</th>
+                  <td cdk-cell *cdkCellDef="let member">{{member.team?.name}}</td>
                 </ng-container>
 
-                <ng-container matColumnDef="subsidyType">
-                  <mat-header-cell *matHeaderCellDef mat-sort-header>Subsidy Type</mat-header-cell>
-                  <mat-cell *matCellDef="let member">{{member.subsidy?.subsidyType}}</mat-cell>
+                <ng-container cdkColumnDef="subsidyType">
+                  <th cdk-header-cell *cdkHeaderCellDef mat-sort-header>Subsidy Type</th>
+                  <td cdk-cell *cdkCellDef="let member">{{member.subsidy?.subsidyType}}</td>
                 </ng-container>
 
-                <ng-container matColumnDef="amount">
-                  <mat-header-cell *matHeaderCellDef mat-sort-header>Subsidy Amount</mat-header-cell>
-                  <mat-cell *matCellDef="let member">{{member.subsidy?.amount}}</mat-cell>
+                <ng-container cdkColumnDef="amount">
+                  <th cdk-header-cell *cdkHeaderCellDef mat-sort-header>Subsidy Amount</th>
+                  <td cdk-cell *cdkCellDef="let member">{{member.subsidy?.amount}}</td>
                 </ng-container>
 
-                <ng-container matColumnDef="number">
-                  <mat-header-cell *matHeaderCellDef mat-sort-header>Subsidy Number</mat-header-cell>
-                  <mat-cell *matCellDef="let member">{{member.subsidy?.number}}</mat-cell>
+                <ng-container cdkColumnDef="number">
+                  <th cdk-header-cell *cdkHeaderCellDef mat-sort-header>Subsidy Number</th>
+                  <td cdk-cell *cdkCellDef="let member">{{member.subsidy?.number}}</td>
                 </ng-container>
 
-                <ng-container matColumnDef="action">
-                  <mat-header-cell *matHeaderCellDef mat-sort-header>Action</mat-header-cell>
-                  <mat-cell *matCellDef="let member">
+                <ng-container cdkColumnDef="action">
+                  <th cdk-header-cell *cdkHeaderCellDef mat-sort-header>Action</th>
+                  <td cdk-cell *cdkCellDef="let member">
                     <div class="btn-group btn-group-sm special">
                       <button type="button" class="btn btn-warning" (click)="fillForm(member)">Edit</button>
                       <button type="button" class="btn btn-danger" (click)="deleteMember(delete)">Delete</button>
@@ -361,14 +360,14 @@
                         </div>
                       </div>
                     </ng-template>
-                  </mat-cell>
+                  </td>
                 </ng-container>
 
-                <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                <tr class="thead-light" cdk-header-row *cdkHeaderRowDef="displayedColumns"></tr>
 
-                <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+                <tr cdk-row *cdkRowDef="let row; columns: displayedColumns"></tr>
 
-              </mat-table>
+              </table>
               <mat-spinner
                 diameter="50"
                 strokeWidth="5"
@@ -376,8 +375,6 @@
                 style="margin:0 auto;">
               </mat-spinner>
               <mat-paginator [pageSizeOptions]="[5, 7, 10]"></mat-paginator>
-
-            </div>
           </div>
         </div>
       </div>
@@ -388,7 +385,7 @@
 <ng-template #persist>
   <div class="modal-body text-center">
     <table class="table table-bordered table-hover table-sm">
-      <thead>
+      <thead class="thead-light">
       <tr>
         <th scope="col" colspan="2">Please Review Again</th>
       </tr>
@@ -431,7 +428,7 @@
         <td>{{incomeType.value}}</td>
       </tr>
       <ng-container *ngIf="subsidyFormGroup">
-        <tr>
+        <tr *ngIf="subsidyId.value">
           <td>Subsidy Id</td>
           <td>{{subsidyId.value}}</td>
         </tr>
@@ -454,8 +451,14 @@
       </tr>
       </tbody>
     </table>
-    <div class="btn-group d-flex">
-      <button type="button" class="btn btn-primary w-100" (click)="onPersistYes()">Yes</button>
+    <div class="btn-group d-flex" dropdown>
+      <button type="button" class="btn btn-primary w-50" (click)="onPersistYes()">Yes</button>
+      <button type="button" dropdownToggle class="btn btn-primary dropdown-toggle dropdown-toggle-split">
+        <span class="caret"></span>
+      </button>
+      <ul *dropdownMenu class="dropdown-menu">
+        <li><a class="dropdown-item" (click)="onPersistYesWithAccount()">Yes + Add Account</a></li>
+      </ul>
       <button type="button" class="btn btn-secondary w-100" (click)="closeModal()">No</button>
     </div>
   </div>

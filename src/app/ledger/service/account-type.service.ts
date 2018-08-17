@@ -2,36 +2,37 @@ import { Injectable } from '@angular/core';
 import {Service} from "../../person/service/service";
 import {AccountType} from "../model/account-type";
 import {Observable} from "rxjs/internal/Observable";
+import {baseURL} from "../../shared/const/constants";
+import {HttpClient} from "@angular/common/http";
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable()
 export class AccountTypeService implements Service<AccountType>{
 
-  constructor() { }
+  constructor(private http: HttpClient) { }
 
-  url: string;
+  url: string = baseURL + 'accountTypes';
 
   delete(id: string) {
+    return this.http.delete(`${this.url}/${id}`);
   }
 
   findAll(): Observable<AccountType[]> {
-    return undefined;
+    return this.http.get<AccountType[]>(this.url);
   }
 
   findById(id: string): Observable<AccountType> {
-    return undefined;
+    return this.http.get<AccountType>(`${this.url}/${id}`);
   }
 
   save(e: AccountType): Observable<AccountType> {
-    return undefined;
+    return this.http.post<AccountType>(this.url, e);
   }
 
   search(e: {}): Observable<AccountType[]> {
-    return undefined;
+    return this.http.put<AccountType[]>(`${this.url}/search`, e);
   }
 
   update(e: AccountType): Observable<AccountType> {
-    return undefined;
+    return this.http.put<AccountType>(this.url, e);
   }
 }

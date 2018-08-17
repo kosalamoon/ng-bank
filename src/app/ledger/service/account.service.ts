@@ -10,7 +10,7 @@ export class AccountService implements Service<Account>{
 
   constructor(private http: HttpClient) { }
 
-  baseUrl: string = "http://localhost:8080";
+  url: string = "http://localhost:8080";
 
   delete(id: string) {
   }

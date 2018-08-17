@@ -10,7 +10,7 @@ export class AccountTypeService implements Service<AccountType>{
 
   constructor() { }
 
-  baseUrl: string;
+  url: string;
 
   delete(id: string) {
   }

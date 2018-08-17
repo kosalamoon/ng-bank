@@ -10,7 +10,7 @@ export class SubAccountTypeService implements Service<SubAccountType>{
 
   constructor() { }
 
-  baseUrl: string;
+  url: string;
 
   delete(id: string) {
   }

@@ -200,6 +200,7 @@
               <button type="button" class="btn btn-secondary w-100" (click)="clearForm()">Clear</button>
             </div>
           </div>
+
         </form>
       </div>
     </div>
@@ -453,12 +454,6 @@
     </table>
     <div class="btn-group d-flex" dropdown>
       <button type="button" class="btn btn-primary w-50" (click)="onPersistYes()">Yes</button>
-      <button type="button" dropdownToggle class="btn btn-primary dropdown-toggle dropdown-toggle-split">
-        <span class="caret"></span>
-      </button>
-      <ul *dropdownMenu class="dropdown-menu">
-        <li><a class="dropdown-item" (click)="onPersistYesWithAccount()">Yes + Add Account</a></li>
-      </ul>
       <button type="button" class="btn btn-secondary w-100" (click)="closeModal()">No</button>
     </div>
   </div>

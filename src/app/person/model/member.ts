@@ -1,6 +1,8 @@
 import {BoardMember} from "./board-member";
 import {Subsidy} from "./subsidy";
 import {Team} from "../../area/model/team";
+import {Account} from "../../ledger/model/account";
+import {Savings} from "../../savings/model/savings";
 
 export interface Member {
 
@@ -16,4 +18,6 @@ export interface Member {
   subsidy: Subsidy;
   boardMember: BoardMember;
   team: Team;
+  shareAccount: Account;
+  savingsList: Savings[];
 }

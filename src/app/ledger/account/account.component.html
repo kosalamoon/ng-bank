@@ -1,0 +1,252 @@
+<div class="row">
+  <div class="col-lg-4">
+    <div class="card bg-light mb-3">
+      <div class="card-body">
+        <h5 class="card-title text-center">Account Form</h5>
+        <form [formGroup]="form">
+
+          <div class="form-group row">
+            <label for="name" class="col-sm-5 col-form-label col-form-label-sm">Account Name <span
+              style="color: red">*</span></label>
+            <input [ngClass]="isInvalid(name)" formControlName="name" id="name" type="text"
+                   class="form-control form-control-sm col-sm">
+            <div class="invalid-feedback offset-5" *ngIf="name.hasError('required') && name.touched">Account Name
+              is required
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label class="col-sm-5 col-form-label col-form-label-sm">Operation Type <span
+              style="color: red">*</span></label>
+            <select [ngClass]="isInvalid(operationType)" class="form-control form-control-sm col-sm" id="operationType"
+                    formControlName="operationType">
+              <option disabled [value]="null">Select Operation Type</option>
+              <option *ngFor="let operationType of operationTypes$| async" [value]="operationType">{{operationType}}
+              </option>
+            </select>
+            <div class="invalid-feedback offset-5" *ngIf="operationType.hasError('required') && operationType.touched">
+              Operation Type is
+              required
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label class="col-sm-5 col-form-label col-form-label-sm">Account Type <span
+              style="color: red">*</span></label>
+            <select [ngClass]="isInvalid(accountType)" class="form-control form-control-sm col-sm" id="accountType"
+                    formControlName="accountType" [compareWith]="compareDropdown">
+              <option disabled [value]="null">Select Account Type</option>
+              <option *ngFor="let accountType of accountTypes$| async" [ngValue]="accountType">{{accountType.name}}</option>
+            </select>
+            <div class="invalid-feedback offset-5" *ngIf="accountType.hasError('required') && accountType.touched">
+              Account Type is
+              required
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label class="col-sm-5 col-form-label col-form-label-sm">Sub Account Type <span
+              style="color: red">*</span></label>
+            <select [ngClass]="isInvalid(subAccountType)" class="form-control form-control-sm col-sm"
+                    id="subAccountType" [compareWith]="compareDropdown" formControlName="subAccountType">
+              <option disabled [value]="null">Select Sub Account Type</option>
+              <option *ngFor="let subAccountType of subAccountTypes$| async" [ngValue]="subAccountType">
+                {{subAccountType.name}}
+              </option>
+            </select>
+            <div class="invalid-feedback offset-5"
+                 *ngIf="subAccountType.hasError('required') && subAccountType.touched">
+              Sub Account Type is
+              required
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <div class="btn-group btn-group-sm d-flex col">
+              <button type="button" class="btn btn-primary w-100"
+                      *ngIf="id.value === null"
+                      (click)="addAccount(persist)">Add
+              </button>
+              <button type="button"
+                      *ngIf="id.value !== null"
+                      (click)="addAccount(persist)"
+                      class="btn btn-warning w-100">Update
+              </button>
+              <button type="button" class="btn btn-secondary w-100" (click)="clearForm()">Clear</button>
+            </div>
+          </div>
+
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-lg-8">
+
+    <div class="card bg-light mb-3">
+      <div class="card-body">
+        <h5 class="card-title text-center">Search</h5>
+
+        <form [formGroup]="searchForm" class="row">
+
+          <div class="col-4">
+            <input type="text" class="form-control form-control-sm" formControlName="name" placeholder="Account name" (keyup.enter)="search()">
+          </div>
+
+          <div class="col-4">
+            <input type="text" class="form-control form-control-sm" formControlName="number" placeholder="Account Number" (keyup.enter)="search()">
+          </div>
+
+          <div class="col-4">
+            <select class="form-control form-control-sm col-sm" formControlName="operationType" (change)="search()">
+              <option disabled [value]="null">Select Operation Type</option>
+              <option *ngFor="let operationType of operationTypes$| async" [value]="operationType">{{operationType}}</option>
+            </select>
+          </div>
+          <div class="col-12"></div>
+          <div class="col-4">
+            <select class="form-control form-control-sm col-sm" formControlName="accountType" (change)="search()">
+              <option disabled [value]="null">Select Account Type</option>
+              <option *ngFor="let accountType of accountTypes$| async" [ngValue]="accountType">{{accountType.name}}</option>
+            </select>
+          </div>
+
+          <div class="col-4">
+            <select class="form-control form-control-sm col-sm" formControlName="subAccountType" (change)="search()">
+              <option disabled [value]="null">Select Sub Account Type</option>
+              <option *ngFor="let subAccountType of subAccountTypes$| async" [ngValue]="subAccountType">{{subAccountType.name}}</option>
+            </select>
+          </div>
+
+          <div class="col-4">
+            <button type="button" class="btn btn-sm btn-secondary btn-block" (click)="clearSearchForm()">Clear</button>
+          </div>
+
+        </form>
+      </div>
+    </div>
+    <div class="card bg-light mb-3">
+      <div class="card-body">
+        <h5 class="card-title text-center">Accounts</h5>
+        <div class="row">
+
+          <label for="filter" class="col-2 col-form-label col-form-label-sm">Filter Columns</label>
+          <mat-select (selectionChange)="addColumn($event)" multiple [value]="displayedColumns" [compareWith]="compareTableColumns"
+                      class="form-control form-control-sm col-10"
+                      id="filter" placeholder="Columns">
+            <mat-option *ngFor="let column of columns" [value]="column">{{column | sentence}}</mat-option>
+          </mat-select>
+
+        </div>
+      </div>
+      <div class="col-12">
+
+        <table cdk-table matSort [dataSource]="dataSource" class="table table-bordered table-hover table-sm">
+
+          <ng-container matColumnDef="id">
+            <th cdk-header-cell *cdkHeaderCellDef mat-sort-header>Id</th>
+            <td cdk-cell *cdkCellDef="let account">{{account.id}}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="number">
+            <th cdk-header-cell *cdkHeaderCellDef mat-sort-header>Account Number</th>
+            <td cdk-cell *cdkCellDef="let account">{{account.number}}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="name">
+            <th cdk-header-cell *cdkHeaderCellDef mat-sort-header>Account Name</th>
+            <td cdk-cell *cdkCellDef="let account">{{account.name}}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="balance">
+            <th cdk-header-cell *cdkHeaderCellDef mat-sort-header>Balance</th>
+            <td cdk-cell *cdkCellDef="let account">{{account.balance | number: '1.2-2'}}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="operationType">
+            <th cdk-header-cell *cdkHeaderCellDef mat-sort-header>Operation Type</th>
+            <td cdk-cell *cdkCellDef="let account">{{account.operationType}}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="accountType">
+            <th cdk-header-cell *cdkHeaderCellDef mat-sort-header>Account Type</th>
+            <td cdk-cell *cdkCellDef="let account">{{account.accountType?.name}}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="subAccountType">
+            <th cdk-header-cell *cdkHeaderCellDef mat-sort-header>Sub Account Type</th>
+            <td cdk-cell *cdkCellDef="let account">{{account.subAccountType?.name}}</td>
+          </ng-container>
+
+          <ng-container cdkColumnDef="action">
+            <th cdk-header-cell *cdkHeaderCellDef mat-sort-header>Action</th>
+            <td cdk-cell *cdkCellDef="let account">
+              <div class="btn-group btn-group-sm special">
+                <button type="button" class="btn btn-warning" (click)="fillForm(account)">Edit</button>
+                <button type="button" class="btn btn-danger" (click)="deleteAccount(delete)">Delete</button>
+              </div>
+              <ng-template #delete>
+                <div class="modal-body text-center">
+                  <p>Are you sure that you want to delete {{account.name}} ?</p>
+                  <div class="btn-group d-flex">
+                    <button type="button" class="btn btn-danger w-100" (click)="onDeleteYes(account.id)">Yes
+                    </button>
+                    <button type="button" class="btn btn-secondary w-100" (click)="closeModal()">No</button>
+                  </div>
+                </div>
+              </ng-template>
+            </td>
+          </ng-container>
+
+          <tr class="thead-light" cdk-header-row *cdkHeaderRowDef="displayedColumns"></tr>
+          <tr cdk-row *cdkRowDef="let row; columns: displayedColumns"></tr>
+
+        </table>
+
+        <mat-paginator [pageSizeOptions]="[5, 7, 10]"></mat-paginator>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+<ng-template #persist>
+  <div class="modal-body text-center">
+    <table class="table table-bordered table-hover table-sm">
+      <thead class="thead-light">
+      <tr>
+        <th scope="col" colspan="2">Please Review Again</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngIf="id.value">
+        <td>Id</td>
+        <td> {{id.value}}</td>
+      </tr>
+      <tr>
+        <td>Account name</td>
+        <td>{{name.value}}</td>
+      </tr>
+      <tr>
+        <td>Operation Type</td>
+        <td>{{operationType.value}}</td>
+      </tr>
+      <tr>
+        <td>Account Type</td>
+        <td>{{accountType.value?.name}}</td>
+      </tr>
+      <tr>
+        <td>Sub Account Type</td>
+        <td>{{subAccountType.value?.name}}</td>
+      </tr>
+      </tbody>
+    </table>
+    <div class="btn-group d-flex">
+      <button type="button" class="btn btn-primary w-100" (click)="onPersistYes()">Yes</button>
+      <button type="button" class="btn btn-secondary w-100" (click)="closeModal()">No</button>
+    </div>
+  </div>
+</ng-template>

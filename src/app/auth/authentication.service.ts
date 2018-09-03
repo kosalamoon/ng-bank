@@ -10,19 +10,19 @@ export interface ApiResponse {
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: "root"
 })
 export class AuthenticationService {
 
-  baseUrl: string = 'http://localhost:8080/auth';
+  baseUrl: string = "http://localhost:8080/auth";
 
   constructor(private http: HttpClient, private jwtHelper: JwtHelperService) {
   }
 
   logIn(username: string, password: string) {
-    return this.http.post(`${this.baseUrl}/login`  , {username, password})
+    return this.http.post(`${this.baseUrl}/login`, {username, password})
       .pipe(
-        map(value => this.setTokenToSession(value['token'])
+        map(value => this.setTokenToSession(value["token"])
         )
       );
   }
@@ -47,19 +47,23 @@ export class AuthenticationService {
   }
 
   getUsernameFromToken() {
-    return this.jwtHelper.decodeToken(sessionStorage.getItem('token')).username;
+    return this.jwtHelper.decodeToken(sessionStorage.getItem("token")).username;
+  }
+
+  getUserIdFromToken() {
+    return this.jwtHelper.decodeToken(sessionStorage.getItem("token")).id;
   }
 
   changePassword(username: string, password: string) {
-    return this.http.post(`${this.baseUrl}/changePassword`,{username: username, password: password});
+    return this.http.post(`${this.baseUrl}/changePassword`, {username: username, password: password});
 
   }
 
   matchPasswords(username: string, password: string) {
     return this.http.post(`${this.baseUrl}/matchPasswords`, {username: username, password: password})
       .pipe(
-      debounceTime(2000),
-    );
+        debounceTime(2000),
+      );
   }
 
   lockAccount(username: string) {

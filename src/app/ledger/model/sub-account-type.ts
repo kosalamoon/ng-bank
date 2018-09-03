@@ -1,4 +1,5 @@
 import {AccountType} from "./account-type";
+import {Account} from "./account";
 
 export interface SubAccountType {
 

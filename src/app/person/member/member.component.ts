@@ -161,7 +161,6 @@ export class MemberComponent implements OnInit, OnDestroy {
   }
 
 
-
   sortingDataAccessor = (data: Member, sortHeaderId: string) => {
     switch (sortHeaderId) {
       case "team":
@@ -262,16 +261,6 @@ export class MemberComponent implements OnInit, OnDestroy {
   }
 
   onPersistYes() {
-    console.log(this.form.value);
-    this.memberService.save(this.form.value).subscribe(
-      value => {
-        this.clearForm();
-        this.memberService.findAll().subscribe(meetingList => this.initializeTable(meetingList));
-        this.closeModal();
-      });
-  }
-
-  onPersistYesWithAccount() {
     this.memberService.save(this.form.value).subscribe(member => {
       this.clearForm();
       this.memberService.findAll()
@@ -279,13 +268,13 @@ export class MemberComponent implements OnInit, OnDestroy {
       this.closeModal();
 
       let account = {
-        'name': member.fullName,
-        'operationType': 'Credit',
-        'accountType': {'id': 3},
-        'subAccountType': {'id': 13},
-        'shareHolder': {'id': member.id}
+        "name": "Shares " + member.fullName,
+        "operationType": "Credit",
+        "accountType": {"id": 3},
+        "subAccountType": {"id": 13},
+        "shareHolder": {"id": member.id}
       };
-      this.accountService.save(account).subscribe(console.log)
+      this.accountService.save(account).subscribe(console.log);
     });
   }
 

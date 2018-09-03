@@ -15,11 +15,13 @@ import {AreaModule} from "./area/area.module";
 import {MeetingModule} from "./meeting/meeting.module";
 import {PersonModule} from "./person/person.module";
 import {LedgerModule} from "./ledger/ledger.module";
+import {CashierModule} from "./cashier/cashier.module";
+import {SavingsModule} from "./savings/savings.module";
 
 
 @NgModule({
   declarations: [
-    AppComponent,
+    AppComponent
   ],
   imports: [
     BrowserModule,
@@ -35,6 +37,8 @@ import {LedgerModule} from "./ledger/ledger.module";
     AreaModule,
     MeetingModule,
     LedgerModule,
+    CashierModule,
+    SavingsModule,
 
     SharedModule
   ],

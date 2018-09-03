@@ -1,0 +1,153 @@
+<div class="row">
+  <div class="col-4">
+    <div class="card bg-light">
+      <div class="card-body">
+        <h5 class="card-title text-center">Add Installment</h5>
+
+        <div class="form-group row">
+
+          <label for="accountNumber" class="col-sm-5 col-form-label col-form-label-sm">Account Number<span style="color: red">*</span></label>
+          <input [ngClass]="isInvalid(accountNumber)" [formControl]="accountNumber" id="accountNumber" type="text"
+                 class="form-control form-control-sm col-sm" (keyup.enter)="loadAccountByNumber()">
+          <small class="form-text text-muted offset-5">Type account number and press ENTER</small>
+          <div class="invalid-feedback offset-5" *ngIf="accountNumber.hasError('required') && accountNumber.touched">Account number is required</div>
+          <div class="invalid-feedback offset-4" *ngIf="accountNumber.hasError('numberIsForbidden') && accountNumber.touched">Account number should starts with "13"</div>
+          <div class="invalid-feedback offset-4" *ngIf="accountNumber.hasError('pattern') && accountNumber.touched">Account Number should only contain numbers</div>
+          <div class="invalid-feedback offset-4" *ngIf="accountNumber.hasError('minlength') && accountNumber.touched">Min length of account number should be 5</div>
+          <div class="invalid-feedback offset-4" *ngIf="accountNumber.hasError('maxlength') && accountNumber.touched">Max length of account number should be 5</div>
+        </div>
+        <alert *ngIf="errorMsg" type="danger">{{errorMsg}}</alert>
+
+        <div class="form-group row">
+
+          <label for="amount" class="col-sm-5 col-form-label col-form-label-sm">Amount<span style="color: red">*</span></label>
+          <input [ngClass]="isInvalid(amount)" [formControl]="amount" [readonly]="account == null" id="amount" type="number" class="form-control form-control-sm col-sm"
+                 (keyup.enter)="calculateInterestAndFine()">
+          <small class="form-text text-muted offset-5">Type amount and press ENTER</small>
+          <div class="invalid-feedback offset-5" *ngIf="amount.hasError('required') && amount.touched">Amount is required</div>
+
+        </div>
+
+        <div [formGroup]="responseForm" *ngIf="response">
+          <div class="form-group row">
+
+            <label for="interest" class="col-sm-5 col-form-label col-form-label-sm">Interest</label>
+            <input formControlName="interest" type="text" [readonly]="true" class="form-control form-control-sm col-sm" id="interest">
+
+          </div>
+
+          <div class="form-group row">
+
+            <label for="fine" class="col-sm-5 col-form-label col-form-label-sm">Fine</label>
+            <input formControlName="fine" type="text" [readonly]="true" class="form-control form-control-sm col-sm" id="fine">
+
+          </div>
+
+          <div class="form-group row">
+
+            <label for="principal" class="col-sm-5 col-form-label col-form-label-sm">Principal</label>
+            <input formControlName="principal" [ngClass]="{'is-invalid': principal.invalid}" type="text" [readonly]="true" class="form-control form-control-sm col-sm" id="principal">
+            <div class="invalid-feedback offset-5" *ngIf="principal.hasError('invalidAmount')">Principal amount should be greater than 0</div>
+
+          </div>
+        </div>
+
+        <div class="form-group row">
+
+          <div class="btn-group btn-group-sm d-flex col">
+            <button type="button" class="btn btn-primary w-100" (click)="addInstallment(persist)">Add</button>
+            <button type="button" class="btn btn-secondary w-100" (click)="clearForm()">Clear</button>
+          </div>
+
+        </div>
+
+
+      </div>
+    </div>
+  </div>
+  <div class="col-3" *ngIf="account && loan">
+    <div class="card bg-light">
+      <div class="card-body">
+        <h5 class="card-title text-center">Loan Details</h5>
+
+        <ul class="list-group mb-3">
+
+          <li class="list-group-item d-flex justify-content-between list-group-item-action">
+            <b>Account Number</b>
+            <span class="text-muted">{{account.number}}</span>
+          </li>
+
+          <ng-container *ngIf="loan">
+            <li class="list-group-item d-flex justify-content-between list-group-item-action">
+              <b>Account Holder</b>
+              <span class="text-muted">{{loan.member?.fullName}}</span>
+            </li>
+
+            <li class="list-group-item d-flex justify-content-between list-group-item-action">
+              <b>NIC</b>
+              <span class="text-muted">{{loan.member?.nic}}</span>
+            </li>
+
+            <li class="list-group-item d-flex justify-content-between list-group-item-action">
+              <b>Loan Type</b>
+              <span class="text-muted">{{loan.loanType.name}}</span>
+            </li>
+          </ng-container>
+
+          <li class="list-group-item d-flex justify-content-between list-group-item-action bg-light">
+            <b class="text-success">Remaining Balance</b>
+            <span class="text-success">{{account.balance | number: '1.2-2'}}</span>
+          </li>
+        </ul>
+
+      </div>
+    </div>
+  </div>
+  <div class="col" *ngIf="transactions$">
+    <div class="card bg-light">
+      <div class="card-body">
+        <h5 class="card-title text-center">Recent Paid Installments</h5>
+
+        <table class="table table-sm table-hover table-bordered">
+          <thead class="thead-light">
+          <tr>
+            <th>Date</th>
+            <th>Interest</th>
+            <th>Fine</th>
+            <th>Principal</th>
+            <th>Total</th>
+          </tr>
+          </thead>
+          <tbody>
+          <ng-container *ngFor="let transaction of transactions$ | async">
+            <tr>
+              <td>{{transaction.dateTime | date: 'fullDate'}}</td>
+              <td>
+                <ng-container *ngFor="let entry of transaction.entryList">
+                  <ng-container *ngIf="entry.account.id == '10'">{{entry.amount | number: '1.2-2'}}</ng-container>
+                </ng-container>
+              </td>
+              <td>
+                <ng-container *ngFor="let entry of transaction.entryList">
+                  <ng-container *ngIf="entry.account.id == '11'">{{entry.amount | number: '1.2-2'}}</ng-container>
+                </ng-container>
+              </td>
+              <td>
+                <ng-container *ngFor="let entry of transaction.entryList">
+                  <ng-container *ngIf="entry.account.id == account.id">{{entry.amount | number: '1.2-2'}}</ng-container>
+                </ng-container>
+              </td>
+              <td>
+                <ng-container *ngFor="let entry of transaction.entryList">
+                  <ng-container *ngIf="entry.account.id == '5'">{{entry.amount | number: '1.2-2'}}</ng-container>
+                </ng-container>
+              </td>
+            </tr>
+          </ng-container>
+          </tbody>
+        </table>
+
+      </div>
+    </div>
+  </div>
+</div>

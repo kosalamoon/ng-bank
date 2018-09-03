@@ -12,9 +12,9 @@ import {DivisionService} from "../service/division.service";
 import {AccountService} from "../../ledger/service/account.service";
 
 @Component({
-  selector: 'app-team',
-  templateUrl: './team.component.html',
-  styleUrls: ['./team.component.css']
+  selector: "app-team",
+  templateUrl: "./team.component.html",
+  styleUrls: ["./team.component.css"]
 })
 export class TeamComponent implements OnInit {
 
@@ -32,7 +32,6 @@ export class TeamComponent implements OnInit {
   confirmModal: BsModalRef;
 
 
-
   isLoading: boolean = false;
 
   division: FormControl = new FormControl();
@@ -40,7 +39,8 @@ export class TeamComponent implements OnInit {
   constructor(
     private fb: FormBuilder, private modalService: BsModalService, private divisionService: DivisionService,
     private societyService: SocietyService, private teamService: TeamService, private accountService: AccountService
-  ) { }
+  ) {
+  }
 
   ngOnInit() {
     this.createForm();
@@ -50,18 +50,28 @@ export class TeamComponent implements OnInit {
     this.loadDivisions();
   }
 
-  private createForm() {
-    this.form = this.fb.group({
-      'id': null,
-      'name': [null, Validators.required],
-      'society': [null, Validators.required]
+  createSearchForm() {
+    this.searchForm = this.fb.group({
+      "name": null,
+      "society": null
     });
   }
 
-  createSearchForm() {
-    this.searchForm = this.fb.group({
-      'name': null,
-      'society': null
+  onPersistYes() {
+    this.teamService.save(this.form.value).subscribe(team => {
+      this.clearForm();
+      this.teamService.findAll()
+        .subscribe(teamList => this.initializeTable(teamList));
+      this.closeModal();
+
+      let account = {
+        "name": "Team " + team.name,
+        "operationType": "Credit",
+        "accountType": {"id": 2},
+        "subAccountType": {"id": 8},
+        "team": {"id": team.id}
+      };
+      this.accountService.save(account).subscribe(console.log);
     });
   }
 
@@ -132,33 +142,14 @@ export class TeamComponent implements OnInit {
     if (this.form.valid)
       this.confirmModal = this.modalService.show(template);
   }
+
   deleteTeam(template: TemplateRef<any>) {
     this.confirmModal = this.modalService.show(template, {class: "modal-sm"});
   }
-  onPersistYes() {
-    this.teamService.save(this.form.value).subscribe(team => {
-      this.clearForm();
-      this.teamService.findAll()
-        .subscribe(teamList => this.initializeTable(teamList));
-      this.closeModal();
-    });
-  }
 
-  onPersistYesWithAccount() {
-    this.teamService.save(this.form.value).subscribe(team => {
-      this.clearForm();
-      this.teamService.findAll()
-        .subscribe(teamList => this.initializeTable(teamList));
-      this.closeModal();
-
-      let account = {
-        'name': team.name,
-        'operationType': 'Credit',
-        'accountType': {'id': 2},
-        'subAccountType': {'id': 8},
-        'team': {'id': team.id}
-      };
-      this.accountService.save(account).subscribe(console.log)
+  validate(controls: string[]) {
+    controls.forEach(control => {
+      this.form.get(control).markAsTouched({onlySelf: true});
     });
   }
 
@@ -168,9 +159,11 @@ export class TeamComponent implements OnInit {
         .subscribe(teamList => this.initializeTable(teamList)));
     this.closeModal();
   }
+
   closeModal() {
     this.confirmModal.hide();
   }
+
   search() {
     this.teamService.search(this.searchForm.value).subscribe(value => this.initializeTable(value));
   }
@@ -201,9 +194,11 @@ export class TeamComponent implements OnInit {
 
   compareDropdown = (o1: any, o2: any) => o1 && o2 ? o1.id === o2.id : o1 === o2;
 
-  validate(controls: string[]) {
-    controls.forEach(control => {
-      this.form.get(control).markAsTouched({onlySelf: true})
+  private createForm() {
+    this.form = this.fb.group({
+      "id": null,
+      "name": [null, Validators.required],
+      "society": [null, Validators.required]
     });
   }
 

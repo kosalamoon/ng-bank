@@ -4,7 +4,9 @@
     <span class="navbar-toggler-icon"></span>
   </button>
 
-  <a class="navbar-brand" routerLink="/home" routerLinkActive="active"><i class="material-icons">home</i></a>
+  <a class="navbar-brand" routerLink="/home" routerLinkActive="active">
+    <i class="material-icons">home</i>
+  </a>
   <div class="collapse navbar-collapse">
     <ul class="navbar-nav">
 
@@ -35,6 +37,24 @@
 
       <li class="nav-item">
         <a class="nav-link" routerLink="meeting" routerLinkActive="active">Meeting</a>
+      </li>
+
+      <li dropdown class="nav-item dropdown">
+        <a dropdownToggle class="nav-link dropdown-toggle">General Ledger</a>
+        <div *dropdownMenu class="dropdown-menu">
+          <a class="dropdown-item" routerLink="account">Manage Accounts</a>
+        </div>
+      </li>
+
+      <li dropdown class="nav-item dropdown">
+        <a dropdownToggle class="nav-link dropdown-toggle">Cashier</a>
+        <div *dropdownMenu class="dropdown-menu">
+          <a class="dropdown-item" routerLink="share-account">Add Shares</a>
+          <a class="dropdown-item" routerLink="team-account">Add Team Funds</a>
+          <a class="dropdown-item" routerLink="deposit">Add Deposits</a>
+          <a class="dropdown-item" routerLink="withdraw">Make Withdrawals</a>
+          <a class="dropdown-item" routerLink="loan-pay">Pay Loan Installments</a>
+        </div>
       </li>
 
     </ul>

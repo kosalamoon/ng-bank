@@ -1,8 +1,8 @@
-import { Injectable } from '@angular/core';
-import {Service} from "../../person/service/service";
+import {Injectable} from "@angular/core";
 import {Observable} from "rxjs/internal/Observable";
 import {HttpClient} from "@angular/common/http";
 import {baseURL} from "../../shared/const/constants";
+import {Account} from "../model/account";
 
 @Injectable()
 export class AccountService {
@@ -21,6 +21,10 @@ export class AccountService {
 
   findById(id: string): Observable<Account> {
     return this.http.get<Account>(`${this.url}/${id}`);
+  }
+
+  findByNumber(number: string): Observable<Account> {
+    return this.http.get<Account>(`${this.url}/number/${number}`);
   }
 
   save(e: {}): Observable<Account> {

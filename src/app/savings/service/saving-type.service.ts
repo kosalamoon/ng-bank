@@ -6,9 +6,9 @@ import {SavingType} from "../model/saving-type";
 import {Observable} from "../../../../node_modules/rxjs";
 
 @Injectable()
-export class SavingsTypeService implements Service<SavingType> {
+export class SavingTypeService implements Service<SavingType> {
 
-  url: string = baseURL + "savingsTypes";
+  url: string = baseURL + "savingTypes";
 
   constructor(private http: HttpClient) {
   }

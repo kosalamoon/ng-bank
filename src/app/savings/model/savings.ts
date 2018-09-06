@@ -5,7 +5,7 @@ import {SavingType} from "./saving-type";
 export interface Savings {
   id: string;
   openedDate: string;
-  savingsAccountStatus: string;
+  savingStatus: string;
   savingType: SavingType;
   account: Account;
   member: Member;

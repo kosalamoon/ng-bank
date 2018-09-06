@@ -1,7 +1,7 @@
 import {Injectable} from "@angular/core";
 import {Service} from "../../person/service/service";
-import {Savings} from "../../savings/model/savings";
-import {Observable} from "../../../../node_modules/rxjs";
+import {Savings} from "../model/savings";
+import {Observable} from "rxjs/internal/Observable";
 import {baseURL} from "../../shared/const/constants";
 import {HttpClient} from "@angular/common/http";
 
@@ -13,11 +13,11 @@ export class SavingsService implements Service<Savings> {
   constructor(private http: HttpClient) {
   }
 
-  delete(id: string) {
+  delete(id: string): void {
   }
 
   findAll(): Observable<Savings[]> {
-    return undefined;
+    return this.http.get<Savings[]>(this.url);
   }
 
   findById(id: string): Observable<Savings> {
@@ -25,15 +25,15 @@ export class SavingsService implements Service<Savings> {
   }
 
   save(e: Savings): Observable<Savings> {
-    return undefined;
+    return this.http.post<Savings>(this.url, e);
   }
 
   search(e: {}): Observable<Savings[]> {
-    return undefined;
+    return this.http.put<Savings[]>(`${this.url}/search`, e);
   }
 
   update(e: Savings): Observable<Savings> {
-    return undefined;
+    return this.http.put<Savings>(this.url, e);
   }
 
 

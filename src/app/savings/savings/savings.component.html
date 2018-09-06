@@ -1,3 +1,182 @@
-<p>
-  savings works!
-</p>
+<div class="row">
+  <div class="col-lg-4">
+    <div class="card bg-light mb-3">
+      <div class="card-body">
+        <h5 class="card-title text-center">Savings Form</h5>
+        <form [formGroup]="form">
+
+          <div class="form-group row">
+            <label for="savingStatus" class="col-sm-4 col-form-label col-form-label-sm">Saving Status<span style="color: red">*</span></label>
+            <select formControlName="savingStatus" class="form-control form-control-sm col-sm"
+                    id="savingStatus">
+              <option disabled [value]="null">Select Saving Status</option>
+              <option *ngFor="let savingStatus of savingStatuses$ | async" [ngValue]="savingStatus">{{savingStatus}}</option>
+            </select>
+            <div class="invalid-feedback offset-4" *ngIf="requiredValidation(savingStatus)">Saving status is required</div>
+          </div>
+
+          <div class="form-group row">
+            <label for="savingType" class="col-sm-4 col-form-label col-form-label-sm">Savings Type<span style="color: red">*</span></label>
+            <select [compareWith]="compareDropdown"
+                    class="form-control form-control-sm col-sm" id="savingType" formControlName="savingType">
+              <option disabled [value]="null">Select Saving Type</option>
+              <option *ngFor="let savingType of savingTypes$ | async" [ngValue]="savingType">{{savingType.name}} - {{savingType.interestRate*100}}%</option>
+            </select>
+            <div class="invalid-feedback offset-4" *ngIf="requiredValidation(savingType)">Saving type is required</div>
+          </div>
+
+          <div class="form-group row">
+            <label class="col-sm-4 col-form-label col-form-label-sm">Division</label>
+            <select class="form-control form-control-sm col-sm" id="division"
+                    [compareWith]="compareDropdown" [formControl]="division">
+              <option disabled [value]="null">Select Division</option>
+              <option *ngFor="let division of divisions$ | async" [ngValue]="division">{{division.name}}</option>
+            </select>
+          </div>
+
+          <div class="form-group row">
+            <label class="col-sm-4 col-form-label col-form-label-sm">Society</label>
+            <select class="form-control form-control-sm col-sm" id="society"
+                    [compareWith]="compareDropdown" [formControl]="society">
+              <option disabled [value]="null">Select Society</option>
+              <option *ngFor="let society of societies$ | async" [ngValue]="society">{{society.name}}</option>
+            </select>
+          </div>
+
+          <div class="form-group row">
+            <label class="col-sm-4 col-form-label col-form-label-sm">Team</label>
+            <select [ngClass]="isInvalid(team)" [compareWith]="compareDropdown" [formControl]="team" class="form-control form-control-sm col-sm" id="team">
+              <option disabled [value]="null">Select Team</option>
+              <option *ngFor="let team of teams$ | async" [ngValue]="team">{{team.name}}</option>
+            </select>
+          </div>
+
+          <div class="form-group row">
+            <label class="col-sm-4 col-form-label mb-4 col-form-label-sm">Member<span style="color: red">*</span></label>
+            <select [ngClass]="isInvalid(member)" class="form-control form-control-sm col-sm" id="member" [compareWith]="compareDropdown" formControlName="member">
+              <option disabled [value]="null">Select Member</option>
+              <option *ngFor="let member of members$ | async" [ngValue]="member">{{member.fullName}}</option>
+            </select>
+          </div>
+
+          <div class="form-group row">
+            <div class="btn-group btn-group-sm d-flex col">
+              <button type="button" class="btn btn-primary w-100"
+                      *ngIf="id.value === null"
+                      (click)="addSavings(persist)">Add
+              </button>
+              <button type="button"
+                      *ngIf="id.value !== null"
+                      (click)="addSavings(persist)"
+                      class="btn btn-warning w-100">Update
+              </button>
+              <button type="button" class="btn btn-secondary w-100" (click)="clearForm()">Clear</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-8">
+    <div class="card bg-light mb-3">
+      <div class="card-body">
+        <h5 class="card-title text-center">Search</h5>
+        <form [formGroup]="searchForm" class="form-row align-items-end">
+          <div class="col" formGroupName="account">
+            <input type="text" class="form-control form-control-sm" formControlName="number" placeholder="Account Number" (keyup.enter)="search()">
+          </div>
+
+          <div class="col">
+            <select formControlName="savingStatus" class="form-control form-control-sm col-sm" (change)="search()">
+              <option disabled [value]="null">Select Saving Status</option>
+              <option *ngFor="let savingStatus of savingStatuses$ | async" [ngValue]="savingStatus">{{savingStatus}}</option>
+            </select>
+          </div>
+
+          <div class="col">
+            <select [compareWith]="compareDropdown" formControlName="savingType" class="form-control form-control-sm col-sm" (change)="search()">
+              <option disabled [value]="null">Select Saving Type</option>
+              <option *ngFor="let savingType of savingTypes$ | async" [ngValue]="savingType">{{savingType.name}} - {{savingType.interestRate*100}}%</option>
+            </select>
+          </div>
+
+          <div class="col" formGroupName="member">
+            <input type="text" class="form-control form-control-sm" formControlName="id" placeholder="Member ID" (keyup.enter)="search()">
+          </div>
+
+          <div class="col">
+            <button type="button" class="btn btn-secondary btn-block btn-sm" (click)="clearSearchForm()">Clear</button>
+          </div>
+
+        </form>
+      </div>
+    </div>
+
+    <div class="card bg-light mb-3">
+      <div class="card-body">
+        <h5 class="card-title text-center">Savings</h5>
+        <div class="row">
+          <div class="col-12">
+            <div class="form-group row">
+              <label for="filter" class="col-2 col-form-label col-form-label-sm">Filter Columns</label>
+              <mat-select (selectionChange)="addColumn($event)" placeholder="Columns" multiple [value]="displayedColumns"
+                          class="form-control form-control-sm col" id="filter">
+                <mat-option *ngFor="let column of columns" [value]="column">{{column | sentence}}</mat-option>
+              </mat-select>
+            </div>
+          </div>
+
+          <div class="col-12">
+            <table cdk-table [dataSource]="dataSource" matSort class="table table-bordered table-hover table-sm">
+
+              <ng-container matColumnDef="id">
+                <th cdk-header-cell *matHeaderCellDef mat-sort-header>ID</th>
+                <td cdk-cell *cdkCellDef="let savings">{{savings.id}}</td>
+              </ng-container>
+
+              <ng-container cdkColumnDef="openedDate">
+                <th cdk-header-cell *cdkHeaderCellDef mat-sort-header>Opened Date</th>
+                <td cdk-cell *cdkCellDef="let savings">{{savings.openedDate}}</td>
+              </ng-container>
+
+              <ng-container cdkColumnDef="savingStatus">
+                <th cdk-header-cell *cdkHeaderCellDef mat-sort-header>Saving Status</th>
+                <td cdk-cell *cdkCellDef="let savings">{{savings.savingStatus}}</td>
+              </ng-container>
+
+              <ng-container cdkColumnDef="savingType">
+                <th cdk-header-cell *cdkHeaderCellDef mat-sort-header>Saving Type</th>
+                <td cdk-cell *cdkCellDef="let savings">{{savings.savingType.name}} - {{savings.savingType.interestRate*100}}%</td>
+              </ng-container>
+
+              <ng-container cdkColumnDef="account">
+                <th cdk-header-cell *cdkHeaderCellDef mat-sort-header>Account Balance</th>
+                <td cdk-cell *cdkCellDef="let savings">{{savings.account?.balance | number: '1.2-2'}}</td>
+              </ng-container>
+
+              <ng-container cdkColumnDef="member">
+                <th cdk-header-cell *cdkHeaderCellDef mat-sort-header>Member</th>
+                <td cdk-cell *cdkCellDef="let savings">{{savings.member?.fullName}}</td>
+              </ng-container>
+
+              <ng-container cdkColumnDef="action">
+                <th cdk-header-cell *cdkHeaderCellDef mat-sort-header>Action</th>
+                <td cdk-cell *cdkCellDef="let savings">
+                  <button type="button" class="btn btn-warning btn-sm btn-block" (click)="fillForm(savings)">Edit</button>
+                </td>
+              </ng-container>
+
+              <tr class="thead-light" cdk-header-row *cdkHeaderRowDef="displayedColumns"></tr>
+
+              <tr cdk-row *cdkRowDef="let row; columns: displayedColumns"></tr>
+
+            </table>
+            <mat-paginator [pageSizeOptions]="[5, 7, 10]"></mat-paginator>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>

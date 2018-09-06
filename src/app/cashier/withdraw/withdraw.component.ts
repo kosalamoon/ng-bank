@@ -10,7 +10,7 @@ import {AuthenticationService} from "../../auth/authentication.service";
 import {AccountService} from "../../ledger/service/account.service";
 import {EntryService} from "../../ledger/service/entry.service";
 import {TransactionService} from "../../ledger/service/transaction.service";
-import {SavingsService} from "../service/savings.service";
+import {SavingsService} from "../../savings/service/savings.service";
 
 @Component({
   selector: "app-withdraw",

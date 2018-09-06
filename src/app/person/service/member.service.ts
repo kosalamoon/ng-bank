@@ -21,6 +21,10 @@ export class MemberService implements Service<Member> {
     return this.http.get<Member[]>(`${this.url}`);
   }
 
+  findAllByTeamId(id: string) {
+    return this.http.get<Member[]>(`${this.url}/teams/${id}`);
+  }
+
   findById(id: string): Observable<Member> {
     return this.http.get<Member>(`${this.url}/${id}`);
   }

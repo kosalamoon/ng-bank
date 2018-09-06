@@ -6,7 +6,6 @@ import {AlertModule, ModalModule} from "ngx-bootstrap";
 import {SharesAccountComponent} from "./shares-account/shares-account.component";
 import {TeamAccountComponent} from "./team-account/team-account.component";
 import {DepositComponent} from "./deposit/deposit.component";
-import {SavingsService} from "./service/savings.service";
 import {WithdrawComponent} from "./withdraw/withdraw.component";
 import {LoanInstallmentComponent} from "./loan-installment/loan-installment.component";
 import {LoanService} from "./service/loan.service";
@@ -27,7 +26,6 @@ import {LoanService} from "./service/loan.service";
     LoanInstallmentComponent
   ],
   providers: [
-    SavingsService,
     LoanService
   ]
 })

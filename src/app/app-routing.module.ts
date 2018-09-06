@@ -22,6 +22,7 @@ import {TeamAccountComponent} from "./cashier/team-account/team-account.componen
 import {DepositComponent} from "./cashier/deposit/deposit.component";
 import {WithdrawComponent} from "./cashier/withdraw/withdraw.component";
 import {LoanInstallmentComponent} from "./cashier/loan-installment/loan-installment.component";
+import {SavingsComponent} from "./savings/savings/savings.component";
 
 const routes: Routes = [
   {path: "", redirectTo: "login", pathMatch: "full"},
@@ -44,7 +45,8 @@ const routes: Routes = [
       {path: "team-account", component: TeamAccountComponent},
       {path: "deposit", component: DepositComponent},
       {path: "withdraw", component: WithdrawComponent},
-      {path: "loan-pay", component: LoanInstallmentComponent}
+      {path: "loan-pay", component: LoanInstallmentComponent},
+      {path: "savings", component: SavingsComponent}
     ]
   },
   {path: "changePassword/:username", component: ChangePasswordComponent}

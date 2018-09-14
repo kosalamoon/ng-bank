@@ -54,7 +54,8 @@ export class TeamComponent implements OnInit {
     this.form = this.fb.group({
       "id": null,
       "name": [null, Validators.required],
-      "society": [null, Validators.required]
+      "society": [null, Validators.required],
+      "account": null
     });
   }
 
@@ -78,14 +79,17 @@ export class TeamComponent implements OnInit {
     switch (sortHeaderId) {
       case "society":
         return data.society.id;
+      case "account":
+        return data.account.balance;
       default:
         return data[sortHeaderId];
     }
   };
 
-  columns = ["id", "name", "society", "balance", "action"];
+  columns = ["id", "name", "society", "account", "action"];
 
-  displayedColumns = ["id", "name", "society", "balance", "action"];
+  displayedColumns = ["id", "name", "society", "account", "action"];
+
   addColumn(event: MatSelectChange) {
     this.displayedColumns = event.value;
   }
@@ -113,7 +117,8 @@ export class TeamComponent implements OnInit {
     this.form.patchValue({
       "id": team.id,
       "name": team.name,
-      "society": team.society
+      "society": team.society,
+      "account": team.account
     });
   }
 
@@ -134,20 +139,21 @@ export class TeamComponent implements OnInit {
   }
 
   onPersistYes() {
+    if (this.form.value.account == null) {
+      this.form.patchValue({
+        "account": {
+          "name": "Team " + this.name.value,
+          "operationType": "Credit",
+          "accountType": {"id": 2},
+          "subAccountType": {"id": 8}
+        }
+      });
+    }
     this.teamService.save(this.form.value).subscribe(team => {
       this.clearForm();
       this.teamService.findAll()
         .subscribe(teamList => this.initializeTable(teamList));
       this.closeModal();
-
-      let account = {
-        "name": "Team " + team.name,
-        "operationType": "Credit",
-        "accountType": {"id": 2},
-        "subAccountType": {"id": 8},
-        "team": {"id": team.id}
-      };
-      this.accountService.save(account).subscribe(console.log);
     });
   }
 

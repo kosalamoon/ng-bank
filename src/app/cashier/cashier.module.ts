@@ -8,7 +8,7 @@ import {TeamAccountComponent} from "./team-account/team-account.component";
 import {DepositComponent} from "./deposit/deposit.component";
 import {WithdrawComponent} from "./withdraw/withdraw.component";
 import {LoanInstallmentComponent} from "./loan-installment/loan-installment.component";
-import {LoanService} from "./service/loan.service";
+import {LoanService} from "../loan/service/loan.service";
 
 @NgModule({
   imports: [

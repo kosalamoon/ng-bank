@@ -2,15 +2,15 @@ import {Component, OnInit, TemplateRef} from "@angular/core";
 import {FormArray, FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import {numbers} from "../../shared/regex/regex";
 import {Account} from "../../ledger/model/account";
-import {Loan} from "../model/loan";
+import {Loan} from "../../loan/model/loan";
 import {Observable} from "../../../../node_modules/rxjs";
 import {BsModalRef, BsModalService} from "ngx-bootstrap/modal";
 import {AuthenticationService} from "../../auth/authentication.service";
 import {AccountService} from "../../ledger/service/account.service";
 import {EntryService} from "../../ledger/service/entry.service";
 import {TransactionService} from "../../ledger/service/transaction.service";
-import {LoanStatusResponse} from "../model/loan-status-response";
-import {LoanService} from "../service/loan.service";
+import {LoanStatusResponse} from "../../loan/model/loan-status-response";
+import {LoanService} from "../../loan/service/loan.service";
 import {Transaction} from "../../ledger/model/transaction";
 
 @Component({

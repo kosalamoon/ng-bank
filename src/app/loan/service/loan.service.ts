@@ -2,7 +2,7 @@ import {Injectable} from "@angular/core";
 import {HttpClient} from "@angular/common/http";
 import {Service} from "../../person/service/service";
 import {Loan} from "../model/loan";
-import {Observable} from "../../../../node_modules/rxjs";
+import {Observable} from "../../../../node_modules/rxjs/index";
 import {baseURL} from "../../shared/const/constants";
 import {LoanStatusRequest} from "../model/loan-status-request";
 import {LoanStatusResponse} from "../model/loan-status-response";
@@ -32,19 +32,18 @@ export class LoanService implements Service<Loan> {
 
   payInstallment(id: string): Observable<Loan> {
     return this.http.put<Loan>(`${this.url}/pay/${id}`, null);
-    ;
   }
 
   save(e: Loan): Observable<Loan> {
-    return undefined;
+    return this.http.post<Loan>(this.url, e);
   }
 
   search(e: {}): Observable<Loan[]> {
-    return undefined;
+    return this.http.put<Loan[]>(`${this.url}/search`, e);
   }
 
   update(e: Loan): Observable<Loan> {
-    return undefined;
+    return this.http.put<Loan>(this.url, e);
   }
 
 }

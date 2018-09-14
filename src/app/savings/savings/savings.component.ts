@@ -1,6 +1,5 @@
 import {Component, OnInit, TemplateRef, ViewChild} from "@angular/core";
 import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
-import {AccountService} from "../../ledger/service/account.service";
 import {SavingsService} from "../service/savings.service";
 import {MatPaginator, MatSelectChange, MatSort, MatTableDataSource} from "@angular/material";
 import {Savings} from "../model/savings";
@@ -48,11 +47,11 @@ export class SavingsComponent implements OnInit {
   confirmModal: BsModalRef;
 
 
-  constructor(private fb: FormBuilder, private accountService: AccountService,
-              private savingsService: SavingsService, private savingsTypeService: SavingTypeService,
-              private divisionService: DivisionService, private societyService: SocietyService,
-              private teamService: TeamService, private memberService: MemberService,
-              private modalService: BsModalService, private savingStatusService: SavingStatusService) {
+  constructor(private fb: FormBuilder, private savingsService: SavingsService,
+              private savingsTypeService: SavingTypeService,
+              private savingStatusService: SavingStatusService, private divisionService: DivisionService,
+              private societyService: SocietyService, private teamService: TeamService,
+              private memberService: MemberService, private modalService: BsModalService) {
   }
 
   ngOnInit() {
@@ -87,7 +86,7 @@ export class SavingsComponent implements OnInit {
         "number": null
       }),
       "member": this.fb.group({
-        "id": null
+        "fullName": null
       })
     });
   }
@@ -165,7 +164,9 @@ export class SavingsComponent implements OnInit {
     switch (sortHeaderId) {
       case "savingType":
         return data.savingType.name;
-      case "account":
+      case "balance":
+        return data.account ? data.account.balance : "";
+      case "number":
         return data.account ? data.account.number : "";
       case "member":
         return data.member ? data.member.fullName : "";
@@ -174,8 +175,8 @@ export class SavingsComponent implements OnInit {
     }
   };
 
-  columns: string[] = ["id", "savingStatus", "savingType", "account", "member", "action"];
-  displayedColumns: string[] = ["id", "savingStatus", "savingType", "account", "member", "action"];
+  columns: string[] = ["id", "savingStatus", "savingType", "balance", "number", "member", "action"];
+  displayedColumns: string[] = ["id", "savingStatus", "savingType", "balance", "number", "member", "action"];
 
   addColumn(event: MatSelectChange) {
     this.displayedColumns = event.value;
@@ -185,6 +186,25 @@ export class SavingsComponent implements OnInit {
     this.validate(["id", "savingStatus", "savingType", "account", "member"]);
     if (this.form.valid)
       this.confirmModal = this.modalService.show(template);
+  }
+
+  onPersistYes() {
+    this.savingsService.save(this.form.value).subscribe(value => {
+      this.loadSavings();
+      this.closeModal();
+      this.clearForm();
+    });
+  }
+
+  search() {
+    this.savingsService.search(this.searchForm.value).subscribe(value => {
+      this.initializeTable(value);
+    });
+  }
+
+  clearSearchForm() {
+    this.loadSavings();
+    this.searchForm.reset();
   }
 
   closeModal() {

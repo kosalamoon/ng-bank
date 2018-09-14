@@ -14,6 +14,6 @@ export interface Loan {
   remarks: string;
   loanType: LoanType;
   account: Account;
-  member: Member
+  member: Member;
 
 }

@@ -64,14 +64,15 @@ export class MemberComponent implements OnInit, OnDestroy {
 
     this.subsidy.valueChanges.subscribe(value => this.addSubsidyToForm(value));
 
-    this.loadTeams();
     this.loadIncomeTypes();
     this.loadGenders();
     this.loadSubsidyTypes();
     this.loadDivisions();
 
-    this.division.valueChanges.subscribe(value => this.loadSocietiesByDivision(value.id));
-    this.society.valueChanges.subscribe(value => this.loadTeamsBySociety(value.id));
+    this.loadSocietiesByDivision();
+    this.loadTeamsBySociety();
+
+    this.loadTeams();
 
     this.memberService.findAll().subscribe(value => this.initializeTable(value));
   }
@@ -105,7 +106,8 @@ export class MemberComponent implements OnInit, OnDestroy {
       "telephone": [null, [Validators.required, Validators.pattern(mobile)]],
       "spouse": null,
       "incomeType": [null, Validators.required],
-      "team": [null, Validators.required]
+      "team": [null, Validators.required],
+      "shareAccount": null
     });
 
 
@@ -152,12 +154,22 @@ export class MemberComponent implements OnInit, OnDestroy {
     this.divisions$ = this.divisionService.findAll();
   }
 
-  loadSocietiesByDivision(id: string) {
-    this.societies$ = this.societyService.findAllByDivisionId(id);
+  loadSocietiesByDivision() {
+    this.society.reset();
+    this.division.valueChanges.subscribe(value => {
+      if (value) {
+        this.societies$ = this.societyService.findAllByDivisionId(value.id);
+      }
+    });
   }
 
-  loadTeamsBySociety(id: string) {
-    this.teams$ = this.teamService.findAllBySocietyId(id);
+  loadTeamsBySociety() {
+    this.team.reset();
+    this.society.valueChanges.subscribe(value => {
+      if (value) {
+        this.teams$ = this.teamService.findAllBySocietyId(value.id);
+      }
+    });
   }
 
 
@@ -171,6 +183,8 @@ export class MemberComponent implements OnInit, OnDestroy {
         return data.subsidy ? data.subsidy.amount : "";
       case "number":
         return data.subsidy ? data.subsidy.number : "";
+      case "shareAccount":
+        return data.shareAccount ? data.shareAccount.id : "";
       default:
         return data[sortHeaderId];
     }
@@ -178,6 +192,7 @@ export class MemberComponent implements OnInit, OnDestroy {
 
   fillForm(member: Member) {
     this.clearForm();
+    this.loadTeams();
     if (member.subsidy != null) {
       this.subsidy.patchValue(true);
       this.form.patchValue({
@@ -196,7 +211,8 @@ export class MemberComponent implements OnInit, OnDestroy {
           "amount": member.subsidy.amount,
           "number": member.subsidy.number
         },
-        "team": member.team
+        "team": member.team,
+        "shareAccount": member.shareAccount
       });
     } else {
       this.removeSubsidyFromForm();
@@ -210,7 +226,8 @@ export class MemberComponent implements OnInit, OnDestroy {
         "telephone": member.telephone,
         "spouse": member.spouse,
         "incomeType": member.incomeType,
-        "team": member.team
+        "team": member.team,
+        "shareAccount": member.shareAccount
       });
     }
   }
@@ -228,8 +245,8 @@ export class MemberComponent implements OnInit, OnDestroy {
   }
 
   columns: string[] = ["id", "fullName", "address", "nic", "dob", "gender", "telephone", "spouse", "incomeType",
-    "subsidyType", "amount", "number", "team", "action"];
-  displayedColumns: string[] = ["id", "fullName", "incomeType", "subsidyType", "team", "action"];
+    "subsidyType", "amount", "number", "team", "shareAccount", "action"];
+  displayedColumns: string[] = ["id", "fullName", "incomeType", "subsidyType", "team", "shareAccount", "action"];
 
   addColumn(event: MatSelectChange) {
     this.displayedColumns = event.value;
@@ -239,8 +256,13 @@ export class MemberComponent implements OnInit, OnDestroy {
     this.form.patchValue({
       "dob": this.convertDateToString(this.dob.value)
     });
-    this.validate(["fullName", "address", "nic", "dob", "gender", "telephone", "spouse", "incomeType", "team",
-      "subsidy.subsidyType", "subsidy.amount", "subsidy.number"]);
+
+    if (this.subsidy.value === true)
+      this.validate(["fullName", "address", "nic", "dob", "gender", "telephone", "spouse", "incomeType", "team",
+        "subsidy.subsidyType", "subsidy.amount", "subsidy.number"]);
+    else
+      this.validate(["fullName", "address", "nic", "dob", "gender", "telephone", "spouse", "incomeType", "team"]);
+
     if (this.form.valid)
       this.modalRef = this.modalService.show(template);
   }
@@ -261,20 +283,21 @@ export class MemberComponent implements OnInit, OnDestroy {
   }
 
   onPersistYes() {
+    if (this.form.value.account == null) {
+      this.form.patchValue({
+        "shareAccount": {
+          "name": "Member " + this.fullName.value,
+          "operationType": "Credit",
+          "accountType": {"id": 3},
+          "subAccountType": {"id": 13}
+        }
+      });
+    }
     this.memberService.save(this.form.value).subscribe(member => {
       this.clearForm();
       this.memberService.findAll()
         .subscribe(memberList => this.initializeTable(memberList));
       this.closeModal();
-
-      let account = {
-        "name": "Shares " + member.fullName,
-        "operationType": "Credit",
-        "accountType": {"id": 3},
-        "subAccountType": {"id": 13},
-        "shareHolder": {"id": member.id}
-      };
-      this.accountService.save(account).subscribe(console.log);
     });
   }
 

@@ -339,6 +339,11 @@
                   <td cdk-cell *cdkCellDef="let member">{{member.subsidy?.amount}}</td>
                 </ng-container>
 
+                <ng-container cdkColumnDef="shareAccount">
+                  <th cdk-header-cell *cdkHeaderCellDef mat-sort-header>Shares</th>
+                  <td cdk-cell *cdkCellDef="let member">{{member.shareAccount?.balance | number: '1.2-2'}}</td>
+                </ng-container>
+
                 <ng-container cdkColumnDef="number">
                   <th cdk-header-cell *cdkHeaderCellDef mat-sort-header>Subsidy Number</th>
                   <td cdk-cell *cdkCellDef="let member">{{member.subsidy?.number}}</td>

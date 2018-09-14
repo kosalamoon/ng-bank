@@ -120,7 +120,7 @@
                   <td cdk-cell *cdkCellDef="let team">{{team.society?.name}}</td>
                 </ng-container>
 
-                <ng-container cdkColumnDef="balance">
+                <ng-container cdkColumnDef="account">
                   <th cdk-header-cell *cdkHeaderCellDef mat-sort-header>Account Balance</th>
                   <td cdk-cell *cdkCellDef="let team">{{team.account?.balance | number: '1.2-2'}}</td>
                 </ng-container>

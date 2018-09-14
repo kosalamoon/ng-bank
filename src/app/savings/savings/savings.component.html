@@ -6,8 +6,9 @@
         <form [formGroup]="form">
 
           <div class="form-group row">
-            <label for="savingStatus" class="col-sm-4 col-form-label col-form-label-sm">Saving Status<span style="color: red">*</span></label>
-            <select formControlName="savingStatus" class="form-control form-control-sm col-sm"
+            <label for="savingStatus" class="col-sm-4 col-form-label col-form-label-sm">Saving Status
+              <span style="color: red">*</span></label>
+            <select formControlName="savingStatus" class="form-control form-control-sm col-sm" [ngClass]="isInvalid(savingStatus)"
                     id="savingStatus">
               <option disabled [value]="null">Select Saving Status</option>
               <option *ngFor="let savingStatus of savingStatuses$ | async" [ngValue]="savingStatus">{{savingStatus}}</option>
@@ -16,8 +17,9 @@
           </div>
 
           <div class="form-group row">
-            <label for="savingType" class="col-sm-4 col-form-label col-form-label-sm">Savings Type<span style="color: red">*</span></label>
-            <select [compareWith]="compareDropdown"
+            <label for="savingType" class="col-sm-4 col-form-label col-form-label-sm">Savings Type
+              <span style="color: red">*</span></label>
+            <select [compareWith]="compareDropdown" [ngClass]="isInvalid(savingType)"
                     class="form-control form-control-sm col-sm" id="savingType" formControlName="savingType">
               <option disabled [value]="null">Select Saving Type</option>
               <option *ngFor="let savingType of savingTypes$ | async" [ngValue]="savingType">{{savingType.name}} - {{savingType.interestRate*100}}%</option>
@@ -45,18 +47,19 @@
 
           <div class="form-group row">
             <label class="col-sm-4 col-form-label col-form-label-sm">Team</label>
-            <select [ngClass]="isInvalid(team)" [compareWith]="compareDropdown" [formControl]="team" class="form-control form-control-sm col-sm" id="team">
+            <select [compareWith]="compareDropdown" [formControl]="team" class="form-control form-control-sm col-sm" id="team">
               <option disabled [value]="null">Select Team</option>
               <option *ngFor="let team of teams$ | async" [ngValue]="team">{{team.name}}</option>
             </select>
           </div>
 
           <div class="form-group row">
-            <label class="col-sm-4 col-form-label mb-4 col-form-label-sm">Member<span style="color: red">*</span></label>
+            <label class="col-sm-4 col-form-label col-form-label-sm">Member <span style="color: red">*</span></label>
             <select [ngClass]="isInvalid(member)" class="form-control form-control-sm col-sm" id="member" [compareWith]="compareDropdown" formControlName="member">
               <option disabled [value]="null">Select Member</option>
               <option *ngFor="let member of members$ | async" [ngValue]="member">{{member.fullName}}</option>
             </select>
+            <div class="invalid-feedback offset-4" *ngIf="requiredValidation(member)">Member is required</div>
           </div>
 
           <div class="form-group row">
@@ -101,7 +104,7 @@
           </div>
 
           <div class="col" formGroupName="member">
-            <input type="text" class="form-control form-control-sm" formControlName="id" placeholder="Member ID" (keyup.enter)="search()">
+            <input type="text" class="form-control form-control-sm" formControlName="fullName" placeholder="Member Name" (keyup.enter)="search()">
           </div>
 
           <div class="col">
@@ -149,9 +152,14 @@
                 <td cdk-cell *cdkCellDef="let savings">{{savings.savingType.name}} - {{savings.savingType.interestRate*100}}%</td>
               </ng-container>
 
-              <ng-container cdkColumnDef="account">
+              <ng-container cdkColumnDef="balance">
                 <th cdk-header-cell *cdkHeaderCellDef mat-sort-header>Account Balance</th>
                 <td cdk-cell *cdkCellDef="let savings">{{savings.account?.balance | number: '1.2-2'}}</td>
+              </ng-container>
+
+              <ng-container cdkColumnDef="number">
+                <th cdk-header-cell *cdkHeaderCellDef mat-sort-header>Account Number</th>
+                <td cdk-cell *cdkCellDef="let savings">{{savings.account?.number}}</td>
               </ng-container>
 
               <ng-container cdkColumnDef="member">
@@ -180,3 +188,37 @@
 
   </div>
 </div>
+
+<ng-template #persist>
+  <div class="modal-body text-center">
+    <table class="table table-bordered table-hover table-sm">
+      <thead class="thead-light">
+      <tr>
+        <th scope="col" colspan="2">Please Review Again</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngIf="id.value">
+        <td>ID</td>
+        <td> {{id.value}}</td>
+      </tr>
+      <tr>
+        <td>Saving Status</td>
+        <td>{{savingStatus.value}}</td>
+      </tr>
+      <tr>
+        <td>Saving Type</td>
+        <td>{{savingType.value?.name}}</td>
+      </tr>
+      <tr>
+        <td>Member</td>
+        <td>{{member.value?.fullName}}</td>
+      </tr>
+      </tbody>
+    </table>
+    <div class="btn-group d-flex" dropdown>
+      <button type="button" class="btn btn-primary w-100" (click)="onPersistYes()">Yes</button>
+      <button type="button" class="btn btn-secondary w-100" (click)="closeModal()">No</button>
+    </div>
+  </div>
+</ng-template> <!--persist confirmation modal-->

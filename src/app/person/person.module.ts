@@ -1,8 +1,6 @@
 import {NgModule} from "@angular/core";
 import {CommonModule} from "@angular/common";
 import {StaffService} from "./service/staff.service";
-import {DesignationService} from "./service/designation.service";
-import {GenderService} from "./service/gender.service";
 import {StaffComponent} from "./staff/staff.component";
 import {RouterModule} from "@angular/router";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
@@ -17,8 +15,7 @@ import {UsernameValidator} from "./user/validators/username.validator";
 import {MemberComponent} from "./member/member.component";
 import {BoardMemberComponent} from "./member/board-member/board-member.component";
 import {MemberService} from "./service/member.service";
-import {IncomeTypeService} from "./service/income-type.service";
-import {SubsidyTypeService} from "./service/subsidy-type.service";
+import {PersonService} from "./service/person.service";
 
 @NgModule({
   imports: [
@@ -41,15 +38,12 @@ import {SubsidyTypeService} from "./service/subsidy-type.service";
   ],
   providers: [
     StaffService,
-    DesignationService,
-    GenderService,
     BoardMemberService,
     RoleService,
     UserService,
     UsernameValidator,
     MemberService,
-    IncomeTypeService,
-    SubsidyTypeService
+    PersonService,
   ]
 })
 export class PersonModule {

@@ -2,7 +2,7 @@ import {Injectable} from "@angular/core";
 import {HttpClient} from "@angular/common/http";
 import {Service} from "../../person/service/service";
 import {Loan} from "../model/loan";
-import {Observable} from "../../../../node_modules/rxjs/index";
+import {Observable} from "rxjs/internal/Observable";
 import {baseURL} from "../../shared/const/constants";
 import {LoanStatusRequest} from "../model/loan-status-request";
 import {LoanStatusResponse} from "../model/loan-status-response";

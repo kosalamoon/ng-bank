@@ -3,6 +3,7 @@ import {Subsidy} from "./subsidy";
 import {Team} from "../../area/model/team";
 import {Account} from "../../ledger/model/account";
 import {Savings} from "../../savings/model/savings";
+import {Loan} from "../../loan/model/loan";
 
 export interface Member {
 
@@ -20,4 +21,5 @@ export interface Member {
   team: Team;
   shareAccount: Account;
   savingsList: Savings[];
+  loanList: Loan[];
 }

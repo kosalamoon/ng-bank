@@ -15,7 +15,7 @@ import {SocietyService} from "../../area/service/society.service";
 import {TeamService} from "../../area/service/team.service";
 import {Member} from "../../person/model/member";
 import {MemberService} from "../../person/service/member.service";
-import {SavingStatusService} from "../service/saving-status.service";
+import {SavingsStatusService} from "../service/saving-status.service";
 
 @Component({
   selector: "app-savings",
@@ -49,7 +49,7 @@ export class SavingsComponent implements OnInit {
 
   constructor(private fb: FormBuilder, private savingsService: SavingsService,
               private savingsTypeService: SavingTypeService,
-              private savingStatusService: SavingStatusService, private divisionService: DivisionService,
+              private savingsStatusService: SavingsStatusService, private divisionService: DivisionService,
               private societyService: SocietyService, private teamService: TeamService,
               private memberService: MemberService, private modalService: BsModalService) {
   }
@@ -102,7 +102,7 @@ export class SavingsComponent implements OnInit {
   }
 
   private loadSavingsStatuses() {
-    this.savingStatuses$ = this.savingStatusService.findAll();
+    this.savingStatuses$ = this.savingsStatusService.findAll();
   }
 
   private loadDivisions() {

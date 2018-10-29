@@ -4,9 +4,9 @@ import {baseURL} from "../../shared/const/constants";
 import {Observable} from "rxjs/internal/Observable";
 
 @Injectable()
-export class SavingStatusService {
+export class SavingsStatusService {
 
-  url: string = baseURL + "savingStatus";
+  url: string = baseURL + "savingsStatus";
 
   constructor(private http: HttpClient) {
   }

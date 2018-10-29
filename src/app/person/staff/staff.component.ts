@@ -2,11 +2,10 @@ import {Component, OnInit, TemplateRef, ViewChild} from "@angular/core";
 import {StaffService} from "../service/staff.service";
 import {MatPaginator, MatSelectChange, MatSort, MatTableDataSource} from "@angular/material";
 import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
-import {DesignationService} from "../service/designation.service";
-import {GenderService} from "../service/gender.service";
 import {BsModalRef, BsModalService} from "ngx-bootstrap/modal";
 import {Staff} from "../model/staff";
 import {fullName, mobile, nic} from "../../shared/regex/regex";
+import {PersonService} from "../service/person.service";
 
 @Component({
   selector: "app-staff",
@@ -30,8 +29,9 @@ export class StaffComponent implements OnInit {
 
   isLoading: boolean = false;
 
-  constructor(private staffService: StaffService, private fb: FormBuilder,
-              private designationService: DesignationService, private genderService: GenderService,
+  constructor(private staffService: StaffService,
+              private fb: FormBuilder,
+              private personService: PersonService,
               private modalService: BsModalService) {
   }
 
@@ -75,11 +75,11 @@ export class StaffComponent implements OnInit {
   }
 
   private loadDesignations() {
-    this.designationService.findAll().subscribe(value => this.designationList = value);
+    this.personService.findDesignations().subscribe(value => this.designationList = value);
   }
 
   private loadGender() {
-    this.genderService.findAll().subscribe(value => this.genderList = value);
+    this.personService.findGenders().subscribe(value => this.genderList = value);
   }
 
   compareTableColumns = (o1: any, o2: any) => o1 === o2;

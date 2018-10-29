@@ -6,7 +6,7 @@ import {SharedModule} from "../shared/shared.module";
 import {SavingsComponent} from "./savings/savings.component";
 import {SavingTypeService} from "./service/saving-type.service";
 import {SavingsService} from "./service/savings.service";
-import {SavingStatusService} from "./service/saving-status.service";
+import {SavingsStatusService} from "./service/saving-status.service";
 
 @NgModule({
   imports: [
@@ -20,7 +20,7 @@ import {SavingStatusService} from "./service/saving-status.service";
   providers: [
     SavingTypeService,
     SavingsService,
-    SavingStatusService
+    SavingsStatusService,
   ]
 })
 export class SavingsModule {

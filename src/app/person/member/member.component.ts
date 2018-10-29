@@ -8,14 +8,12 @@ import {MemberService} from "../service/member.service";
 import {TeamService} from "../../area/service/team.service";
 import {fullName, mobile, nic} from "../../shared/regex/regex";
 import {Observable} from "rxjs/internal/Observable";
-import {IncomeTypeService} from "../service/income-type.service";
-import {GenderService} from "../service/gender.service";
-import {SubsidyTypeService} from "../service/subsidy-type.service";
 import {DivisionService} from "../../area/service/division.service";
 import {SocietyService} from "../../area/service/society.service";
 import {Division} from "../../area/model/division";
 import {Society} from "../../area/model/society";
 import {AccountService} from "../../ledger/service/account.service";
+import {PersonService} from "../service/person.service";
 
 @Component({
   selector: "app-member",
@@ -51,11 +49,14 @@ export class MemberComponent implements OnInit, OnDestroy {
   isLoading: boolean = false;
 
 
-  constructor(private memberService: MemberService, private teamService: TeamService,
-              private fb: FormBuilder, private modalService: BsModalService,
-              private incomeTypeService: IncomeTypeService, private genderService: GenderService,
-              private subsidyTypeService: SubsidyTypeService, private divisionService: DivisionService,
-              private societyService: SocietyService, private accountService: AccountService) {
+  constructor(private memberService: MemberService,
+              private teamService: TeamService,
+              private fb: FormBuilder,
+              private modalService: BsModalService,
+              private divisionService: DivisionService,
+              private societyService: SocietyService,
+              private accountService: AccountService,
+              private personService: PersonService) {
   }
 
   ngOnInit() {
@@ -139,15 +140,15 @@ export class MemberComponent implements OnInit, OnDestroy {
   }
 
   loadIncomeTypes() {
-    this.incomeTypes$ = this.incomeTypeService.findAll();
+    this.incomeTypes$ = this.personService.findIncomeTypes();
   }
 
   loadGenders() {
-    this.genders$ = this.genderService.findAll();
+    this.genders$ = this.personService.findGenders();
   }
 
   loadSubsidyTypes() {
-    this.subsidyTypes$ = this.subsidyTypeService.findAll();
+    this.subsidyTypes$ = this.personService.findSubsidyTypes();
   }
 
   loadDivisions() {

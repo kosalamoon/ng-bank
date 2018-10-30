@@ -23,6 +23,9 @@ import {DepositComponent} from "./cashier/deposit/deposit.component";
 import {WithdrawComponent} from "./cashier/withdraw/withdraw.component";
 import {LoanInstallmentComponent} from "./cashier/loan-installment/loan-installment.component";
 import {SavingsComponent} from "./savings/savings/savings.component";
+import {LoanApproveComponent} from "./loan/loan-approve/loan-approve.component";
+import {LoanDetailsComponent} from "./loan/loan-details/loan-details.component";
+import {LoanRequestComponent} from "./loan/loan-request/loan-request.component";
 
 const routes: Routes = [
   {path: "", redirectTo: "login", pathMatch: "full"},
@@ -46,7 +49,10 @@ const routes: Routes = [
       {path: "deposit", component: DepositComponent},
       {path: "withdraw", component: WithdrawComponent},
       {path: "loan-pay", component: LoanInstallmentComponent},
-      {path: "savings", component: SavingsComponent}
+      {path: "savings", component: SavingsComponent},
+      {path: "loan-approve", component: LoanApproveComponent},
+      {path: "loan-details", component: LoanDetailsComponent},
+      {path: "loan-request", component: LoanRequestComponent},
     ]
   },
   {path: "changePassword/:username", component: ChangePasswordComponent}

@@ -8,7 +8,7 @@ import {Entry} from "../../ledger/model/entry";
 import {EntryService} from "../../ledger/service/entry.service";
 import {TransactionService} from "../../ledger/service/transaction.service";
 import {BsModalRef, BsModalService} from "ngx-bootstrap/modal";
-import {numbers} from "../../shared/regex/regex";
+import {integers} from "../../shared/regex/regex";
 
 @Component({
   selector: "app-share",
@@ -21,12 +21,12 @@ export class SharesAccountComponent implements OnInit {
 
   accountNumber: FormControl = new FormControl(
     "31",
-    [Validators.required, Validators.minLength(5), Validators.maxLength(5), Validators.pattern(numbers), this.validateAccountNumber.bind(this)]
+    [Validators.required, Validators.minLength(5), Validators.maxLength(5), Validators.pattern(integers), this.validateAccountNumber.bind(this)],
   );
 
   amount: FormControl = new FormControl(
     null,
-    [Validators.required, Validators.pattern(numbers)]
+    [Validators.required, Validators.pattern(integers)],
   );
 
   numberOfShares: FormControl = new FormControl(null);

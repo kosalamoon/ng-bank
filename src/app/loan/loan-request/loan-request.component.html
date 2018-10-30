@@ -1,0 +1,212 @@
+<div class="form-row">
+
+  <div class="col-4">
+    <div class="card bg-light mb-3">
+      <div class="card-body">
+        <h5 class="card-title text-center">Loan Request Form</h5>
+
+        <form [formGroup]="form">
+
+          <div class="form-group row">
+            <label for="division" class="col-sm-4 col-form-label col-form-label-sm">Division</label>
+            <select class="form-control form-control-sm col-sm" id="division"
+                    [compareWith]="compareDropdown" [formControl]="division">
+              <option disabled [value]="null">Select Division</option>
+              <option *ngFor="let division of divisions$ | async" [ngValue]="division">{{division.name}}</option>
+            </select>
+          </div>
+
+          <div class="form-group row">
+            <label for="society" class="col-sm-4 col-form-label col-form-label-sm">Society</label>
+            <select class="form-control form-control-sm col-sm" id="society"
+                    [compareWith]="compareDropdown" [formControl]="society">
+              <option disabled [value]="null">Select Society</option>
+              <option *ngFor="let society of societies$ | async" [ngValue]="society">{{society.name}}</option>
+            </select>
+          </div>
+
+          <div class="form-group row">
+            <label for="team" class="col-sm-4 col-form-label col-form-label-sm">Team</label>
+            <select [compareWith]="compareDropdown" [formControl]="team" class="form-control form-control-sm col-sm" id="team">
+              <option disabled [value]="null">Select Team</option>
+              <option *ngFor="let team of teams$ | async" [ngValue]="team">{{team.name}}</option>
+            </select>
+          </div>
+
+          <div class="form-group row">
+            <label for="member" class="col-sm-4 col-form-label col-form-label-sm">Member <span style="color: red">*</span></label>
+            <select [ngClass]="isInvalid(member)" class="form-control form-control-sm col-sm" id="member"
+                    [compareWith]="compareDropdown" formControlName="member">
+              <option disabled [value]="null">Select Member</option>
+              <option *ngFor="let member of members$ | async" [ngValue]="member">{{member.fullName}}</option>
+            </select>
+            <div class="invalid-feedback offset-4" *ngIf="requiredValidation(member)">Member is required</div>
+          </div>
+
+          <div class="form-group row">
+            <label for="requestedAmount" class="col-sm-5 col-form-label col-form-label-sm">RequestedAmount <span style="color: red">*</span></label>
+            <input [ngClass]="isInvalid(requestedAmount)" formControlName="requestedAmount" id="requestedAmount" type="number"
+                   class="form-control form-control-sm col-sm">
+            <div class="invalid-feedback offset-5" *ngIf="requiredValidation(requestedAmount)">Amount is required</div>
+            <div class="invalid-feedback offset-5" *ngIf="requestedAmount.hasError('pattern') && requestedAmount.touched">Amount should contain rupees without cents</div>
+          </div>
+
+          <div class="form-group row">
+            <label for="duration" class="col-sm-4 col-form-label col-form-label-sm">Duration <span style="color: red">*</span></label>
+            <input [ngClass]="isInvalid(duration)" formControlName="duration" id="duration" type="number"
+                   class="form-control form-control-sm col-sm">
+            <div class="invalid-feedback offset-4" *ngIf="requiredValidation(duration)">duration is required</div>
+            <div class="invalid-feedback offset-4" *ngIf="duration.hasError('pattern') && duration.touched">duration should contain integers</div>
+          </div>
+
+          <div class="form-group row">
+            <label for="loanType" class="col-sm-4 col-form-label col-form-label-sm">Loan Type</label>
+            <select [compareWith]="compareDropdown" [formControl]="loanType" class="form-control form-control-sm col-sm" id="loanType">
+              <option disabled [value]="null">Select Loan Type</option>
+              <option *ngFor="let loanType of loanTypes$ | async" [ngValue]="loanType">{{loanType.name}} - {{loanType.interestRate}}%</option>
+            </select>
+            <div class="invalid-feedback offset-5" *ngIf="requiredValidation(loanType)">loan type is required</div>
+          </div>
+
+          <div class="form-group row">
+            <button class="btn btn-sm btn-block btn-info offset-4" (click)="getInstallmentSchedule()"
+                    [disabled]="!(requestedAmount.valid && duration.valid && loanType.valid)">Calculate Schedule
+            </button>
+          </div>
+
+          <div class="form-group row">
+            <label for="remarks" class="col-sm-4 col-form-label col-form-label-sm">Remarks</label>
+            <textarea formControlName="remarks" id="remarks" rows="3" type="text"
+                      class="form-control form-control-sm col-sm"></textarea>
+          </div>
+
+          <div class="form-group row">
+            <div class="btn-group btn-group-sm d-flex col">
+              <button type="button" class="btn btn-primary w-100" (click)="addLoanRequest(persist)">Add</button>
+              <button type="button" class="btn btn-secondary w-100" (click)="clearForm()">Clear</button>
+            </div>
+          </div>
+
+        </form>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="col-4" *ngIf="member.value">
+    <div class="list-group">
+
+      <div class="d-flex w-100 justify-content-center list-group-item active">
+        <b>Member Details</b>
+      </div>
+
+      <div class="d-flex w-100 justify-content-between list-group-item list-group-item-action">
+        <b>Member</b>
+        <span class="text-muted">{{member.value.fullName}}</span>
+      </div>
+
+      <div class="d-flex w-100 justify-content-between list-group-item list-group-item-action">
+        <b>NIC</b>
+        <span class="text-muted">{{member.value.nic}}</span>
+      </div>
+
+      <div class="d-flex w-100 justify-content-between list-group-item list-group-item-action">
+        <b>Income Type</b>
+        <span class="text-muted">{{member.value.incomeType}}</span>
+      </div>
+
+      <ng-container *ngIf="member.value.subsidy">
+        <div class="d-flex w-100 justify-content-between list-group-item list-group-item-action">
+          <b>Subsidy Type</b>
+          <span class="text-muted">{{member.value.subsidy?.subsidyType}}</span>
+        </div>
+
+        <div class="d-flex w-100 justify-content-between list-group-item list-group-item-action">
+          <b>Subsidy Amount</b>
+          <span class="text-muted">{{member.value.subsidy?.amount | number: '1.2-2'}}</span>
+        </div>
+      </ng-container>
+
+      <div class="d-flex w-100 justify-content-between list-group-item list-group-item-action">
+        <b>Team Balance</b>
+        <span class="text-muted">{{team.value.account?.balance | number: '1.2-2'}}</span>
+      </div>
+
+      <div class="d-flex w-100 justify-content-between list-group-item list-group-item-action">
+        <b>Share Balance</b>
+        <span class="text-muted">{{member.value.shareAccount?.balance | number: '1.2-2'}}</span>
+      </div>
+
+
+    </div>
+  </div>
+
+  <div class="col-4" *ngIf="installmentSchedules$">
+    <div class="card bg-light mb-3">
+      <div class="card-body">
+        <h5 class="card-title text-center">Installment Schedule</h5>
+
+        <table class="table table-sm table-hover table-bordered">
+          <thead class="thead-light">
+          <tr>
+            <th>Date</th>
+            <th>Principal</th>
+            <th>Interest</th>
+            <th>Total</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr *ngFor="let schedule of installmentSchedules$ | async">
+            <td>{{schedule.date}}</td>
+            <td>{{schedule.principal | number: '1.2-2'}}</td>
+            <td>{{schedule.interest | number: '1.2-2'}}</td>
+            <td>{{schedule.total | number: '1.2-2'}}</td>
+          </tr>
+          </tbody>
+        </table>
+
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<ng-template #persist>
+  <div class="modal-body text-center">
+    <table class="table table-bordered table-hover table-sm">
+      <thead class="thead-light">
+      <tr>
+        <th scope="col" colspan="2">Please Review Again</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr>
+        <td>Member</td>
+        <td>{{member.value.fullName}}</td>
+      </tr>
+      <tr>
+        <td>Requested Amount</td>
+        <td>{{requestedAmount.value| number: '1.2-2'}}</td>
+      </tr>
+      <tr>
+        <td>Duration</td>
+        <td>{{duration.value}}</td>
+      </tr>
+      <tr>
+        <td>Loan Type</td>
+        <td>{{loanType.value.name}} - {{loanType.value.interestRate}}%</td>
+      </tr>
+      <tr>
+        <td>Remarks</td>
+        <td>{{remarks.value}}</td>
+      </tr>
+      </tbody>
+    </table>
+    <div class="btn-group d-flex">
+      <button type="button" class="btn btn-primary w-100" (click)="onPersistYes()">Yes</button>
+      <button type="button" class="btn btn-secondary w-100" (click)="closeModal()">No</button>
+    </div>
+  </div>
+</ng-template>
+
+

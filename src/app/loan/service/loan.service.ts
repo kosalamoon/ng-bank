@@ -6,6 +6,8 @@ import {Observable} from "rxjs/internal/Observable";
 import {baseURL} from "../../shared/const/constants";
 import {LoanStatusRequest} from "../model/loan-status-request";
 import {LoanStatusResponse} from "../model/loan-status-response";
+import {InstallmentScheduleRequest} from "../model/installment-schedule-request";
+import {InstallmentScheduleResponse} from "../model/installment-schedule-response";
 
 @Injectable()
 export class LoanService implements Service<Loan> {
@@ -36,6 +38,10 @@ export class LoanService implements Service<Loan> {
 
   calculateInterestAndFine(request: LoanStatusRequest): Observable<LoanStatusResponse> {
     return this.http.put<LoanStatusResponse>(`${this.url}/calcInterestAndFine`, request);
+  }
+
+  calculateInstallmentSchedule(request: InstallmentScheduleRequest): Observable<InstallmentScheduleResponse[]> {
+    return this.http.put<InstallmentScheduleResponse[]>(`${this.url}/calcSchedule`, request);
   }
 
   payInstallment(id: string): Observable<Loan> {

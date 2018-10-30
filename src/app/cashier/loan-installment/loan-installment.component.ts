@@ -1,6 +1,6 @@
 import {Component, OnInit, TemplateRef} from "@angular/core";
 import {FormArray, FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
-import {numbers} from "../../shared/regex/regex";
+import {integers} from "../../shared/regex/regex";
 import {Account} from "../../ledger/model/account";
 import {Loan} from "../../loan/model/loan";
 import {Observable} from "../../../../node_modules/rxjs";
@@ -25,10 +25,10 @@ export class LoanInstallmentComponent implements OnInit {
 
   accountNumber: FormControl = new FormControl(
     "13",
-    [Validators.required, Validators.minLength(5), Validators.maxLength(5), Validators.pattern(numbers), this.validateAccountNumber.bind(this)]
+    [Validators.required, Validators.minLength(5), Validators.maxLength(5), Validators.pattern(integers), this.validateAccountNumber.bind(this)],
   );
 
-  amount: FormControl = new FormControl(null, [Validators.required, Validators.pattern(numbers)]);
+  amount: FormControl = new FormControl(null, [Validators.required, Validators.pattern(integers)]);
 
   account: Account;
   loan: Loan;

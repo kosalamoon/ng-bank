@@ -9,5 +9,5 @@ export const date = "^\\d{4}-\\d{2}-\\d{2}$";
 // language=RegExp
 export const time = "^\\d{2}:\\d{2}$";
 // language=RegExp
-export const numbers = "^\\d*$";
+export const integers = "^\\d*$";
 

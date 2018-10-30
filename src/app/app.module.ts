@@ -17,6 +17,7 @@ import {PersonModule} from "./person/person.module";
 import {LedgerModule} from "./ledger/ledger.module";
 import {CashierModule} from "./cashier/cashier.module";
 import {SavingsModule} from "./savings/savings.module";
+import {LoanModule} from "./loan/loan.module";
 
 
 @NgModule({
@@ -39,6 +40,7 @@ import {SavingsModule} from "./savings/savings.module";
     LedgerModule,
     CashierModule,
     SavingsModule,
+    LoanModule,
 
     SharedModule
   ],

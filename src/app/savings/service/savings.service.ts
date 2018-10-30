@@ -20,6 +20,10 @@ export class SavingsService implements Service<Savings> {
     return this.http.get<Savings[]>(this.url);
   }
 
+  findAllByMember(id: string) {
+    return this.http.get<Savings[]>(`${this.url}/members/${id}`);
+  }
+
   findById(id: string): Observable<Savings> {
     return this.http.get<Savings>(`${this.url}/${id}`);
   }

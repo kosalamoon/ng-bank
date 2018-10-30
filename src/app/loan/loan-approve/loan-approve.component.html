@@ -1,3 +1,288 @@
-<p>
-  loan-approve works!
-</p>
+<div class="form-row">
+  <div class="col">
+
+    <div class="card bg-light mb-3">
+      <div class="card-body">
+        <h5 class="card-title text-center">Search Loans</h5>
+
+        <form [formGroup]="searchForm" class="form-row align-items-center mb-4">
+
+          <div class="col" formGroupName="member">
+            <input type="text" class="form-control form-control-sm" formControlName="fullName" placeholder="Member Name (type and press ¶)" (keyup.enter)="search()">
+          </div>
+
+          <div class="col">
+            <select [compareWith]="compareDropdown" formControlName="loanType" class="form-control form-control-sm" (change)="search()">
+              <option disabled [value]="null">Select Saving Type</option>
+              <option *ngFor="let loanType of loanTypes$ | async" [ngValue]="loanType">{{loanType.name}} - {{loanType.interestRate}}%</option>
+            </select>
+          </div>
+
+          <div class="col">
+            <select formControlName="isApproved" class="form-control form-control-sm" (change)="search()">
+              <option disabled [value]="null">Select Status</option>
+              <option [value]="true">Approved</option>
+              <option [value]="false">Pending</option>
+            </select>
+          </div>
+
+        </form>
+
+        <h5 class="card-title text-center">Loans</h5>
+
+        <div class="form-group row">
+          <label for="filter" class="col-2 col-form-label col-form-label-sm">Filter Columns</label>
+          <mat-select (selectionChange)="addColumn($event)" placeholder="Columns" multiple [value]="displayedColumns"
+                      class="form-control form-control-sm col" id="filter">
+            <mat-option *ngFor="let column of columns" [value]="column">{{column | sentence}}</mat-option>
+          </mat-select>
+        </div>
+
+        <table cdk-table [dataSource]="dataSource" matSort class="table table-bordered table-hover table-sm">
+
+          <ng-container matColumnDef="id">
+            <th cdk-header-cell *matHeaderCellDef mat-sort-header>ID</th>
+            <td cdk-cell *cdkCellDef="let loan">{{loan.id}}</td>
+          </ng-container>
+
+          <ng-container cdkColumnDef="member">
+            <th cdk-header-cell *cdkHeaderCellDef mat-sort-header>Member</th>
+            <td cdk-cell *cdkCellDef="let loan">{{loan.member?.fullName}}</td>
+          </ng-container>
+
+          <ng-container cdkColumnDef="loanType">
+            <th cdk-header-cell *cdkHeaderCellDef mat-sort-header>Loan Type</th>
+            <td cdk-cell *cdkCellDef="let loan">{{loan.loanType?.name}} - {{loan.loanType.interestRate}}%</td>
+          </ng-container>
+
+          <ng-container cdkColumnDef="requestedDate">
+            <th cdk-header-cell *cdkHeaderCellDef mat-sort-header>Requested Date</th>
+            <td cdk-cell *cdkCellDef="let loan">{{loan.requestedDate}}</td>
+          </ng-container>
+
+          <ng-container cdkColumnDef="requestedAmount">
+            <th cdk-header-cell *cdkHeaderCellDef mat-sort-header>Requested Amount</th>
+            <td cdk-cell *cdkCellDef="let loan">{{loan.requestedAmount | number: '1.2-2'}}</td>
+          </ng-container>
+
+          <ng-container cdkColumnDef="duration">
+            <th cdk-header-cell *cdkHeaderCellDef mat-sort-header>Duration</th>
+            <td cdk-cell *cdkCellDef="let loan">{{loan.duration}}</td>
+          </ng-container>
+
+          <ng-container cdkColumnDef="isApproved">
+            <th cdk-header-cell *cdkHeaderCellDef mat-sort-header>Status</th>
+            <td cdk-cell *cdkCellDef="let loan">
+              <h3 *ngIf="loan.isApproved == true" class="badge badge-success">Approved</h3>
+              <h3 *ngIf="loan.isApproved == null" class="badge badge-warning">Pending</h3>
+              <h3 *ngIf="loan.isApproved == false" class="badge badge-danger">Rejected</h3>
+            </td>
+          </ng-container>
+
+          <ng-container cdkColumnDef="remarks">
+            <th cdk-header-cell *cdkHeaderCellDef mat-sort-header>Remarks</th>
+            <td cdk-cell *cdkCellDef="let loan">{{loan.remarks}}</td>
+          </ng-container>
+
+          <ng-container cdkColumnDef="action">
+            <th cdk-header-cell *cdkHeaderCellDef mat-sort-header>Action</th>
+            <td cdk-cell *cdkCellDef="let loan">
+              <div class="btn-group btn-group-sm d-flex">
+                <button type="button" class="btn btn-info w-100" (click)="loadMemberDetails(loan.member.id)">Details</button>
+                <button type="button" class="btn btn-success w-100" (click)="approve(loan)">Approve</button>
+              </div>
+            </td>
+          </ng-container>
+
+          <tr class="thead-light" cdk-header-row *cdkHeaderRowDef="displayedColumns"></tr>
+
+          <tr cdk-row *cdkRowDef="let row; columns: displayedColumns"></tr>
+
+        </table>
+        <mat-paginator [pageSizeOptions]="[5, 7, 10]"></mat-paginator>
+
+      </div>
+    </div>
+
+  </div>
+
+
+  <div class="col-4" *ngIf="detailsComponent == true">
+
+    <div class="list-group">
+
+      <div class="d-flex w-100 justify-content-center list-group-item active">
+        <b>Member Details</b>
+      </div>
+
+      <div class="d-flex w-100 justify-content-between list-group-item list-group-item-action">
+        <b>Member</b>
+        <span class="text-muted">{{member.fullName}}</span>
+      </div>
+
+      <div class="d-flex w-100 justify-content-between list-group-item list-group-item-action">
+        <b>NIC</b>
+        <span class="text-muted">{{member.nic}}</span>
+      </div>
+
+      <div class="d-flex w-100 justify-content-between list-group-item list-group-item-action">
+        <b>Income Type</b>
+        <span class="text-muted">{{member.incomeType}}</span>
+      </div>
+
+      <ng-container *ngIf="member.subsidy">
+        <div class="d-flex w-100 justify-content-between list-group-item list-group-item-action">
+          <b>Subsidy Type</b>
+          <span class="text-muted">{{member.subsidy?.subsidyType}}</span>
+        </div>
+
+        <div class="d-flex w-100 justify-content-between list-group-item list-group-item-action">
+          <b>Subsidy Amount</b>
+          <span class="text-muted">{{member.subsidy?.amount | number: '1.2-2'}}</span>
+        </div>
+      </ng-container>
+
+      <div class="d-flex w-100 justify-content-between list-group-item list-group-item-action">
+        <b>Share Balance</b>
+        <span class="text-muted">{{member.shareAccount?.balance | number: '1.2-2'}}</span>
+      </div>
+
+      <button type="button"
+              class="btn btn-secondary btn-block list-group-item list-group-item-action text-center"
+              (click)="close()">Close
+      </button>
+
+    </div>
+
+
+  </div>
+
+  <div class="col-4" *ngIf="approvalComponent == true">
+    <div class="card bg-light mb-3">
+      <div class="card-body">
+
+        <ng-container *ngIf="savings$">
+          <h5 class="card-title text-center">Other Savings Accounts</h5>
+
+          <table class="table table-sm table-hover table-bordered">
+            <thead class="thead-light">
+            <tr>
+              <th>Account Number</th>
+              <th>Balance</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let saving of savings$ | async">
+              <td>{{saving.account?.number}}</td>
+              <td>{{saving.account?.balance | number: '1.2-2'}}</td>
+            </tr>
+            </tbody>
+          </table>
+        </ng-container>
+
+        <ng-container *ngIf="approvedLoans$">
+          <h5 class="card-title text-center">Other Approved Loans</h5>
+
+          <table class="table table-sm table-hover table-bordered">
+            <thead class="thead-light">
+            <tr>
+              <th>Account Number</th>
+              <th>Balance</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let loan of approvedLoans$ | async">
+              <td>{{loan.account?.number}}</td>
+              <td>{{loan.account?.balance | number: '1.2-2'}}</td>
+            </tr>
+            </tbody>
+          </table>
+
+        </ng-container>
+
+        <h5 class="card-title text-center">Approval Conditions</h5>
+        <table class="table table-sm table-hover table-bordered">
+          <thead class="thead-light">
+          <tr>
+            <th>Account</th>
+            <th>Required Balance</th>
+            <th>Available Balance</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr [ngClass]="tableRowStyle(loan.requestedAmount/100*5, member?.shareAccount?.balance)">
+            <td>Shares</td>
+            <td>{{loan.requestedAmount/100*5 | number: '1.2-2'}}</td>
+            <td>{{member?.shareAccount?.balance | number: '1.2-2'}}</td>
+          </tr>
+          <tr [ngClass]="tableRowStyle(loan.requestedAmount/100*25, team?.account?.balance)">
+            <td>Team</td>
+            <td>{{loan.requestedAmount/100*25 | number: '1.2-2'}}</td>
+            <td>{{team?.account?.balance | number: '1.2-2'}}</td>
+          </tr>
+          </tbody>
+        </table>
+
+        <div class="form-row mb-1">
+          <div class="col-4">Release Type</div>
+          <div class="col-8">
+            <div class="custom-control custom-radio">
+              <input [formControl]="releaseType" value="CASH" type="radio" id="customRadio1" class="custom-control-input">
+              <label class="custom-control-label" for="customRadio1">Cash</label>
+            </div>
+            <div class="custom-control custom-radio">
+              <input [formControl]="releaseType" value="BANK" type="radio" id="customRadio2" class="custom-control-input">
+              <label class="custom-control-label" for="customRadio2">Bank</label>
+            </div>
+            <div class="custom-control custom-radio" *ngIf="savings$">
+              <input [formControl]="releaseType" value="ACCOUNT" type="radio" id="customRadio3" class="custom-control-input">
+              <label class="custom-control-label" for="customRadio3">Savings</label>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group row" *ngIf="releaseType.value == 'ACCOUNT'">
+          <label for="account" class="col-sm-4 col-form-label col-form-label-sm">Saving Account</label>
+          <select [ngClass]="isInvalid(account)" [formControl]="account" class="form-control form-control-sm col-sm" id="account">
+            <option disabled [value]="null">Select Account number</option>
+            <option *ngFor="let saving of savings$ | async" [ngValue]="saving.account.number">
+              {{saving.account.number}}
+            </option>
+          </select>
+          <div class="invalid-feedback offset-4" *ngIf="requiredValidation(account)">Account number is required</div>
+        </div>
+
+
+        <div class="btn-group btn-group-sm d-flex">
+          <button type="button" class="btn btn-success w-100" (click)="release(releaseModal)">Release</button>
+          <button type="button" class="btn btn-danger w-100" (click)="reject(rejectModal)">Reject</button>
+          <button type="button" class="btn btn-secondary w-100" (click)="close()">Close</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<ng-template #releaseModal>
+  <div class="modal-body text-center">
+    <p>Are you sure you want to release the loan</p>
+    <div class="btn-group btn-group-sm d-flex">
+      <button type="button" class="btn btn-success w-100" (click)="onReleaseYes()">Yes
+      </button>
+      <button type="button" class="btn btn-secondary w-100" (click)="no()">No</button>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #rejectModal>
+  <div class="modal-body text-center">
+    <p>Are you sure you want to Reject the loan</p>
+    <div class="btn-group btn-group-sm d-flex">
+      <button type="button" class="btn btn-danger w-100" (click)="onRejectYes()">Yes
+      </button>
+      <button type="button" class="btn btn-secondary w-100" (click)="no()">No</button>
+    </div>
+  </div>
+</ng-template>

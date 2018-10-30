@@ -22,12 +22,16 @@ export class TeamService implements Service<Team>{
     return this.http.get<Team[]>(this.url)
   }
 
+  findAllBySocietyId(id: string): Observable<Team[]> {
+    return this.http.get<Team[]>(`${this.url}/society/${id}`);
+  }
+
   findById(id: string): Observable<Team> {
     return this.http.get<Team>(`${this.url}/${id}`)
   }
 
-  findAllBySocietyId(id: string): Observable<Team[]> {
-    return this.http.get<Team[]>(`${this.url}/society/${id}`);
+  findByMemberId(id: string): Observable<Team> {
+    return this.http.get<Team>(`${this.url}/members/${id}`);
   }
 
   save(e: Team): Observable<Team> {

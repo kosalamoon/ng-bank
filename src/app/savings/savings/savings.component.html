@@ -85,6 +85,7 @@
       <div class="card-body">
         <h5 class="card-title text-center">Search</h5>
         <form [formGroup]="searchForm" class="form-row align-items-end">
+
           <div class="col" formGroupName="account">
             <input type="text" class="form-control form-control-sm" formControlName="number" placeholder="Account Number" (keyup.enter)="search()">
           </div>

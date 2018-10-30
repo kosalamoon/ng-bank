@@ -8,10 +8,10 @@ export interface Loan {
   requestedAmount: string;
   requestedDate: string;
   grantedDate: string;
+  equatedMonthlyValue: string;
   duration: string;
-  remainingInstallments: string;
-  nextInstallmentDate: string;
   remarks: string;
+  isApproved: boolean;
   loanType: LoanType;
   account: Account;
   member: Member;

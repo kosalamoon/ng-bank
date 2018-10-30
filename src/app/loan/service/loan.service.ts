@@ -22,8 +22,16 @@ export class LoanService implements Service<Loan> {
     return this.http.get<Loan[]>(this.url);
   }
 
+  findAllByMemberId(id: string): Observable<Loan[]> {
+    return this.http.get<Loan[]>(`${this.url}/members/${id}`);
+  }
+
   findById(id: string): Observable<Loan> {
     return this.http.get<Loan>(`${this.url}/${id}`);
+  }
+
+  nextInstallmentAmount(id: string) {
+
   }
 
   calculateInterestAndFine(request: LoanStatusRequest): Observable<LoanStatusResponse> {

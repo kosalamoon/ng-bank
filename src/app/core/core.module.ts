@@ -5,13 +5,15 @@ import {HomeComponent} from "./home/home.component";
 import {FooterComponent} from "./footer/footer.component";
 import {BsDropdownModule} from "ngx-bootstrap";
 import {RouterModule} from "@angular/router";
-import { MainWindowComponent } from './main-window/main-window.component';
+import {MainWindowComponent} from './main-window/main-window.component';
+import {ChartsModule} from "ng2-charts";
 
 @NgModule({
   imports: [
     CommonModule,
     RouterModule,
     BsDropdownModule.forRoot(),
+    ChartsModule,
   ],
   declarations: [
     HeaderComponent,
@@ -19,7 +21,7 @@ import { MainWindowComponent } from './main-window/main-window.component';
     FooterComponent,
     MainWindowComponent,
   ],
-  providers: []
+  providers: [],
 })
 export class CoreModule {
 }

@@ -8,6 +8,7 @@ import {LoanStatusRequest} from "../model/loan-status-request";
 import {LoanStatusResponse} from "../model/loan-status-response";
 import {InstallmentScheduleRequest} from "../model/installment-schedule-request";
 import {InstallmentScheduleResponse} from "../model/installment-schedule-response";
+import {LoanReport} from "../model/loan-report";
 
 @Injectable()
 export class LoanService implements Service<Loan> {
@@ -30,6 +31,10 @@ export class LoanService implements Service<Loan> {
 
   findById(id: string): Observable<Loan> {
     return this.http.get<Loan>(`${this.url}/${id}`);
+  }
+
+  report(id: string): Observable<LoanReport> {
+    return this.http.get<LoanReport>(`${this.url}/report/${id}`);
   }
 
   calculateInterestAndFine(request: LoanStatusRequest): Observable<LoanStatusResponse> {

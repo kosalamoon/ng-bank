@@ -24,7 +24,7 @@
               style="color: red">*</span></label>
             <timepicker
               [ngClass]="isInvalid(time)" [hourStep]="1" [minuteStep]="1"
-              type="text" formControlName="time" class="form-control form-control-sm  col-sm" id="time"></timepicker>
+              formControlName="time" class="col-sm" id="time"></timepicker>
             <div class="invalid-feedback offset-5" *ngIf="time.hasError('required') && time.touched">Time is
               required
             </div>

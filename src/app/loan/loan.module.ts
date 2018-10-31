@@ -7,6 +7,7 @@ import {LoanTypeService} from "./service/loan-type.service";
 import {LoanApproveComponent} from './loan-approve/loan-approve.component';
 import {LoanRequestComponent} from './loan-request/loan-request.component';
 import {LoanDetailsComponent} from './loan-details/loan-details.component';
+import {LoanStatusService} from "./service/loan-status.service";
 
 @NgModule({
   imports: [
@@ -18,7 +19,8 @@ import {LoanDetailsComponent} from './loan-details/loan-details.component';
   ],
   declarations: [LoanApproveComponent, LoanRequestComponent, LoanDetailsComponent],
   providers: [
-    LoanTypeService
+    LoanTypeService,
+    LoanStatusService,
   ]
 })
 export class LoanModule {

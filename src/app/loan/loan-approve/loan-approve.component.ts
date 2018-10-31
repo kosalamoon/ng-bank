@@ -14,6 +14,9 @@ import {LoanType} from "../model/loan-type";
 import {LoanTypeService} from "../service/loan-type.service";
 import {Team} from "../../area/model/team";
 import {BsModalRef, BsModalService} from "ngx-bootstrap";
+import {AccountService} from "../../ledger/service/account.service";
+import {Account} from "../../ledger/model/account";
+import {LoanStatusService} from "../service/loan-status.service";
 
 @Component({
   selector: 'app-loan-approve',
@@ -27,12 +30,16 @@ export class LoanApproveComponent implements OnInit {
   searchForm: FormGroup;
 
   loanTypes$: Observable<LoanType[]>;
+  loanStatuses$: Observable<string[]>;
 
   loan: Loan;
   member: Member;
   team: Team;
   approvedLoans$: Observable<Loan[]>;
   savings$: Observable<Savings[]>;
+
+  cash: Account;
+  bank: Account;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
@@ -50,6 +57,8 @@ export class LoanApproveComponent implements OnInit {
               private teamService: TeamService,
               private savingsService: SavingsService,
               private loanTypeService: LoanTypeService,
+              private loanStatusService: LoanStatusService,
+              private accountService: AccountService,
               private modalService: BsModalService,
               private fb: FormBuilder) {
   }
@@ -58,12 +67,13 @@ export class LoanApproveComponent implements OnInit {
     this.createSearchForm();
     this.loadLoans();
     this.loadLoanTypes();
+    this.loadLoanStatuses();
   }
 
   createSearchForm() {
     this.searchForm = this.fb.group({
       "loanType": null,
-      "isApproved": null,
+      "loanStatus": null,
       "member": this.fb.group({
         "fullName": null,
       }),
@@ -94,8 +104,8 @@ export class LoanApproveComponent implements OnInit {
     }
   };
 
-  columns: string[] = ["id", "member", "loanType", "requestedDate", "requestedAmount", "duration", "isApproved", "remarks", "action"];
-  displayedColumns: string[] = ["id", "member", "loanType", "requestedDate", "requestedAmount", "isApproved", "duration", "action"];
+  columns: string[] = ["id", "member", "loanType", "requestedDate", "requestedAmount", "duration", "loanStatus", "remarks", "action"];
+  displayedColumns: string[] = ["id", "member", "loanType", "requestedDate", "requestedAmount", "loanStatus", "duration", "action"];
 
   addColumn(event: MatSelectChange) {
     this.displayedColumns = event.value;
@@ -110,6 +120,7 @@ export class LoanApproveComponent implements OnInit {
       this.loadApprovedLoansByMemberId(loan.member.id);
       this.loadSavingsByMemberId(loan.member.id);
       this.loadTeamById(value.team.id);
+      this.loadAccounts();
       this.detailsComponent = false;
       this.approvalComponent = true;
     });
@@ -144,10 +155,28 @@ export class LoanApproveComponent implements OnInit {
     this.loanTypes$ = this.loanTypeService.findAll();
   }
 
+  loadLoanStatuses() {
+    this.loanStatuses$ = this.loanStatusService.findAll();
+  }
+
+  loadAccounts() {
+    this.accountService.findById("1").subscribe(value => {
+      this.cash = value;
+    });
+    this.accountService.findById("2").subscribe(value => {
+      this.bank = value;
+    });
+  }
+
   search() {
     this.loanService.search(this.searchForm.value).subscribe(value => {
       this.initializeTable(value);
     });
+  }
+
+  clearSearch() {
+    this.searchForm.reset();
+    this.loadLoans();
   }
 
   close() {

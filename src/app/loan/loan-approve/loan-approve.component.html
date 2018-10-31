@@ -19,11 +19,14 @@
           </div>
 
           <div class="col">
-            <select formControlName="isApproved" class="form-control form-control-sm" (change)="search()">
-              <option disabled [value]="null">Select Status</option>
-              <option [value]="true">Approved</option>
-              <option [value]="false">Pending</option>
+            <select formControlName="loanStatus" class="form-control form-control-sm" (change)="search()">
+              <option disabled [value]="null">Select Loan Status</option>
+              <option *ngFor="let loanStatus of loanStatuses$ | async" [ngValue]="loanStatus">{{loanStatus}}</option>
             </select>
+          </div>
+
+          <div class="col">
+            <button type="button" class="btn btn-sm btn-block btn-secondary" (click)="clearSearch()">Clear Search</button>
           </div>
 
         </form>
@@ -70,12 +73,12 @@
             <td cdk-cell *cdkCellDef="let loan">{{loan.duration}}</td>
           </ng-container>
 
-          <ng-container cdkColumnDef="isApproved">
+          <ng-container cdkColumnDef="loanStatus">
             <th cdk-header-cell *cdkHeaderCellDef mat-sort-header>Status</th>
             <td cdk-cell *cdkCellDef="let loan">
-              <h3 *ngIf="loan.isApproved == true" class="badge badge-success">Approved</h3>
-              <h3 *ngIf="loan.isApproved == null" class="badge badge-warning">Pending</h3>
-              <h3 *ngIf="loan.isApproved == false" class="badge badge-danger">Rejected</h3>
+              <h3 *ngIf="loan.loanStatus == 'Approved'" class="badge badge-success">{{loan.loanStatus}}</h3>
+              <h3 *ngIf="loan.loanStatus == 'Pending'" class="badge badge-warning">{{loan.loanStatus}}</h3>
+              <h3 *ngIf="loan.loanStatus == 'Rejected'" class="badge badge-danger">{{loan.loanStatus}}</h3>
             </td>
           </ng-container>
 
@@ -227,16 +230,18 @@
           <div class="col-4">Release Type</div>
           <div class="col-8">
             <div class="custom-control custom-radio">
-              <input [formControl]="releaseType" value="CASH" type="radio" id="customRadio1" class="custom-control-input">
-              <label class="custom-control-label" for="customRadio1">Cash</label>
+              <input [formControl]="releaseType" value="CASH" type="radio" id="cash" class="custom-control-input">
+              <label class="custom-control-label" for="cash">Cash</label>
+              <span class="font-weight-bold" *ngIf="cash && releaseType.value === 'CASH'"> (balance - {{cash.balance | number: '1.2-2'}})</span>
             </div>
             <div class="custom-control custom-radio">
-              <input [formControl]="releaseType" value="BANK" type="radio" id="customRadio2" class="custom-control-input">
-              <label class="custom-control-label" for="customRadio2">Bank</label>
+              <input [formControl]="releaseType" value="BANK" type="radio" id="bank" class="custom-control-input">
+              <label class="custom-control-label" for="bank">Bank</label>
+              <span class="font-weight-bold" *ngIf="bank && releaseType.value === 'BANK'"> (balance - {{bank.balance | number: '1.2-2'}})</span>
             </div>
             <div class="custom-control custom-radio" *ngIf="savings$">
-              <input [formControl]="releaseType" value="ACCOUNT" type="radio" id="customRadio3" class="custom-control-input">
-              <label class="custom-control-label" for="customRadio3">Savings</label>
+              <input [formControl]="releaseType" value="ACCOUNT" type="radio" id="savings" class="custom-control-input">
+              <label class="custom-control-label" for="savings">Savings</label>
             </div>
           </div>
         </div>

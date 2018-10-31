@@ -11,7 +11,7 @@ export interface Loan {
   equatedMonthlyValue: string;
   duration: string;
   remarks: string;
-  isApproved: boolean;
+  loanStatus: string;
   loanType: LoanType;
   account: Account;
   member: Member;

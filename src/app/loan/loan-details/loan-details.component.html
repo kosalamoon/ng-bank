@@ -1,3 +1,159 @@
-<p>
-  loan-details works!
-</p>
+<div class="form-row">
+
+  <div class="col">
+
+    <div class="card bg-light mb-3">
+      <div class="card-body">
+        <h5 class="card-title text-center">Search Loans</h5>
+
+        <form [formGroup]="searchForm" class="form-row align-items-center mb-4">
+
+          <div class="col" formGroupName="member">
+            <input type="text" class="form-control form-control-sm" formControlName="fullName" placeholder="Member Name (type and press ¶)" (keyup.enter)="search()">
+          </div>
+
+          <div class="col">
+            <select [compareWith]="compareDropdown" formControlName="loanType" class="form-control form-control-sm" (change)="search()">
+              <option disabled [value]="null">Select Saving Type</option>
+              <option *ngFor="let loanType of loanTypes$ | async" [ngValue]="loanType">{{loanType.name}} - {{loanType.interestRate}}%</option>
+            </select>
+          </div>
+
+          <div class="col">
+            <button type="button" class="btn btn-sm btn-block btn-secondary" (click)="clearSearch()">Clear Search</button>
+          </div>
+
+        </form>
+
+        <h5 class="card-title text-center">Loans</h5>
+
+        <div class="form-group row">
+          <label for="filter" class="col-2 col-form-label col-form-label-sm">Filter Columns</label>
+          <mat-select (selectionChange)="addColumn($event)" placeholder="Columns" multiple [value]="displayedColumns"
+                      class="form-control form-control-sm col" id="filter">
+            <mat-option *ngFor="let column of columns" [value]="column">{{column | sentence}}</mat-option>
+          </mat-select>
+        </div>
+
+        <table cdk-table [dataSource]="dataSource" matSort class="table table-bordered table-hover table-sm">
+
+          <ng-container matColumnDef="id">
+            <th cdk-header-cell *matHeaderCellDef mat-sort-header>ID</th>
+            <td cdk-cell *cdkCellDef="let loan">{{loan.id}}</td>
+          </ng-container>
+
+          <ng-container cdkColumnDef="member">
+            <th cdk-header-cell *cdkHeaderCellDef mat-sort-header>Member</th>
+            <td cdk-cell *cdkCellDef="let loan">{{loan.member?.fullName}}</td>
+          </ng-container>
+
+          <ng-container cdkColumnDef="loanType">
+            <th cdk-header-cell *cdkHeaderCellDef mat-sort-header>Loan Type</th>
+            <td cdk-cell *cdkCellDef="let loan">{{loan.loanType?.name}} - {{loan.loanType.interestRate}}%</td>
+          </ng-container>
+
+          <ng-container cdkColumnDef="requestedDate">
+            <th cdk-header-cell *cdkHeaderCellDef mat-sort-header>Requested Date</th>
+            <td cdk-cell *cdkCellDef="let loan">{{loan.requestedDate}}</td>
+          </ng-container>
+
+          <ng-container cdkColumnDef="requestedAmount">
+            <th cdk-header-cell *cdkHeaderCellDef mat-sort-header>Requested Amount</th>
+            <td cdk-cell *cdkCellDef="let loan">{{loan.requestedAmount | number: '1.2-2'}}</td>
+          </ng-container>
+
+          <ng-container cdkColumnDef="duration">
+            <th cdk-header-cell *cdkHeaderCellDef mat-sort-header>Duration</th>
+            <td cdk-cell *cdkCellDef="let loan">{{loan.duration}}</td>
+          </ng-container>
+
+          <ng-container cdkColumnDef="loanStatus">
+            <th cdk-header-cell *cdkHeaderCellDef mat-sort-header>Status</th>
+            <td cdk-cell *cdkCellDef="let loan">
+              <h3 *ngIf="loan.loanStatus == 'Approved'" class="badge badge-success">{{loan.loanStatus}}</h3>
+              <h3 *ngIf="loan.loanStatus == 'Pending'" class="badge badge-warning">{{loan.loanStatus}}</h3>
+              <h3 *ngIf="loan.loanStatus == 'Rejected'" class="badge badge-danger">{{loan.loanStatus}}</h3>
+            </td>
+          </ng-container>
+
+          <ng-container cdkColumnDef="remarks">
+            <th cdk-header-cell *cdkHeaderCellDef mat-sort-header>Remarks</th>
+            <td cdk-cell *cdkCellDef="let loan">{{loan.remarks}}</td>
+          </ng-container>
+
+          <ng-container cdkColumnDef="action">
+            <th cdk-header-cell *cdkHeaderCellDef mat-sort-header>Action</th>
+            <td cdk-cell *cdkCellDef="let loan">
+              <div class="btn-group btn-group-sm d-flex">
+                <button type="button" class="btn btn-info w-100" (click)="history(loan)">Payment History</button>
+              </div>
+            </td>
+          </ng-container>
+
+          <tr class="thead-light" cdk-header-row *cdkHeaderRowDef="displayedColumns"></tr>
+
+          <tr cdk-row *cdkRowDef="let row; columns: displayedColumns"></tr>
+
+        </table>
+        <mat-paginator [pageSizeOptions]="[5, 7, 10]"></mat-paginator>
+
+      </div>
+    </div>
+
+  </div>
+
+  <div class="col" *ngIf="transactions$">
+    <div class="card bg-light">
+      <div class="card-body">
+        <h5 class="card-title text-center">Recent Paid Installments</h5>
+
+        <table class="table table-sm table-hover table-bordered">
+          <thead class="thead-light">
+          <tr>
+            <th>Date</th>
+            <th>Interest</th>
+            <th>Principal</th>
+            <th>Total</th>
+          </tr>
+          </thead>
+          <tbody>
+          <ng-container *ngFor="let transaction of transactions$ | async">
+            <tr>
+              <td>{{transaction.dateTime | date: 'fullDate'}}</td>
+              <td>
+                <ng-container *ngFor="let entry of transaction.entryList">
+                  <ng-container *ngIf="entry.account.id == '3'">{{entry.amount | number: '1.2-2'}}</ng-container>
+                </ng-container>
+              </td>
+              <td>
+                <ng-container *ngFor="let entry of transaction.entryList">
+                  <ng-container *ngIf="entry.account.id == loan.account.id">{{entry.amount | number: '1.2-2'}}</ng-container>
+                </ng-container>
+              </td>
+              <td>
+                <ng-container *ngFor="let entry of transaction.entryList">
+                  <ng-container *ngIf="entry.account.id == '1'">{{entry.amount | number: '1.2-2'}}</ng-container>
+                </ng-container>
+              </td>
+            </tr>
+          </ng-container>
+          </tbody>
+        </table>
+
+        <button type="button" class="btn btn-sm btn-block btn-primary" (click)="viewChart(lgModal)">View Chart</button>
+
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<ng-template #lgModal>
+  <div class="modal-body">
+    <canvas baseChart width="1000" height="1000"
+            [datasets]="lineChartData"
+            [labels]="lineChartLabels"
+            [legend]="true"
+            [chartType]="'line'"></canvas>
+  </div>
+</ng-template>

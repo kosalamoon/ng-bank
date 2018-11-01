@@ -6,7 +6,7 @@ import {Observable} from "rxjs/internal/Observable";
 @Injectable()
 export class SavingsStatusService {
 
-  url: string = baseURL + "savingsStatus";
+  url: string = baseURL + "savingStatus";
 
   constructor(private http: HttpClient) {
   }

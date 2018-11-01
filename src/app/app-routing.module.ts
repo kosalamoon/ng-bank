@@ -49,7 +49,7 @@ const routes: Routes = [
       {path: "deposit", component: DepositComponent},
       {path: "withdraw", component: WithdrawComponent},
       {path: "loan-pay", component: LoanInstallmentComponent},
-      {path: "savings$", component: SavingsComponent},
+      {path: "savings", component: SavingsComponent},
       {path: "loan-approve", component: LoanApproveComponent},
       {path: "loan-details", component: LoanDetailsComponent},
       {path: "loan-request", component: LoanRequestComponent},

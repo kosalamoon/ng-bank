@@ -113,7 +113,6 @@
           <tr>
             <th>Date</th>
             <th>Interest</th>
-            <th>Fine</th>
             <th>Principal</th>
             <th>Total</th>
           </tr>
@@ -124,12 +123,7 @@
               <td>{{transaction.dateTime | date: 'fullDate'}}</td>
               <td>
                 <ng-container *ngFor="let entry of transaction.entryList">
-                  <ng-container *ngIf="entry.account.id == '10'">{{entry.amount | number: '1.2-2'}}</ng-container>
-                </ng-container>
-              </td>
-              <td>
-                <ng-container *ngFor="let entry of transaction.entryList">
-                  <ng-container *ngIf="entry.account.id == '11'">{{entry.amount | number: '1.2-2'}}</ng-container>
+                  <ng-container *ngIf="entry.account.id == '3'">{{entry.amount | number: '1.2-2'}}</ng-container>
                 </ng-container>
               </td>
               <td>
@@ -139,7 +133,7 @@
               </td>
               <td>
                 <ng-container *ngFor="let entry of transaction.entryList">
-                  <ng-container *ngIf="entry.account.id == '5'">{{entry.amount | number: '1.2-2'}}</ng-container>
+                  <ng-container *ngIf="entry.account.id == '1'">{{entry.amount | number: '1.2-2'}}</ng-container>
                 </ng-container>
               </td>
             </tr>

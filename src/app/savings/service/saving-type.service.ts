@@ -3,7 +3,7 @@ import {HttpClient} from "@angular/common/http";
 import {baseURL} from "../../shared/const/constants";
 import {Service} from "../../person/service/service";
 import {SavingType} from "../model/saving-type";
-import {Observable} from "../../../../node_modules/rxjs";
+import {Observable} from "rxjs/internal/Observable";
 
 @Injectable()
 export class SavingTypeService implements Service<SavingType> {

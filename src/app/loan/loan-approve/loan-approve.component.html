@@ -92,7 +92,9 @@
             <td cdk-cell *cdkCellDef="let loan">
               <div class="btn-group btn-group-sm d-flex">
                 <button type="button" class="btn btn-info w-100" (click)="loadMemberDetails(loan.member.id)">Details</button>
-                <button type="button" class="btn btn-success w-100" (click)="approve(loan)">Approve</button>
+                <button type="button" class="btn btn-success w-100" *ngIf="loan.loanStatus !== 'Approved'"
+                        (click)="approve(loan)">Approve
+                </button>
               </div>
             </td>
           </ng-container>

@@ -8,6 +8,7 @@ import {LoanApproveComponent} from './loan-approve/loan-approve.component';
 import {LoanRequestComponent} from './loan-request/loan-request.component';
 import {LoanDetailsComponent} from './loan-details/loan-details.component';
 import {LoanStatusService} from "./service/loan-status.service";
+import {ChartsModule} from "ng2-charts";
 
 @NgModule({
   imports: [
@@ -15,7 +16,8 @@ import {LoanStatusService} from "./service/loan-status.service";
     ReactiveFormsModule,
     ModalModule.forRoot(),
     AlertModule.forRoot(),
-    SharedModule
+    ChartsModule,
+    SharedModule,
   ],
   declarations: [LoanApproveComponent, LoanRequestComponent, LoanDetailsComponent],
   providers: [

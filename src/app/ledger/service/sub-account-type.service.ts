@@ -3,7 +3,7 @@ import {Service} from "../../person/service/service";
 import {SubAccountType} from "../model/sub-account-type";
 import {Observable} from "rxjs/internal/Observable";
 import {HttpClient} from "@angular/common/http";
-import {baseURL} from "../../shared/const/constants";
+import {baseURL, responseType} from "../../shared/const/constants";
 
 @Injectable()
 export class SubAccountTypeService implements Service<SubAccountType>{
@@ -13,7 +13,7 @@ export class SubAccountTypeService implements Service<SubAccountType>{
   url: string = baseURL + "subAccountTypes";
 
   delete(id: string) {
-    return this.http.delete(`${this.url}/${id}`);
+    return this.http.delete<string>(`${this.url}/${id}`, responseType);
   }
 
   findAll(): Observable<SubAccountType[]> {

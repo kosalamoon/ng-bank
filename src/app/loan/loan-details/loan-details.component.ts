@@ -116,6 +116,10 @@ export class LoanDetailsComponent implements OnInit {
     this.modalRef.hide();
   }
 
+  close() {
+    this.transactions$ = null;
+  }
+
   private initializeTable(loans: Loan[]) {
     this.dataSource = new MatTableDataSource(loans);
     this.dataSource.paginator = this.paginator;

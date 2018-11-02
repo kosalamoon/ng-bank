@@ -154,4 +154,8 @@ export class WithdrawComponent implements OnInit {
     return null;
   }
 
+  getToday() {
+    return new Date();
+  }
+
 }

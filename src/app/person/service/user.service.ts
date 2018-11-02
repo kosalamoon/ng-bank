@@ -2,7 +2,7 @@ import {Injectable} from "@angular/core";
 import {HttpClient} from "@angular/common/http";
 import {delay} from "rxjs/operators";
 import {User} from "../model/user";
-import {baseURL} from "../../shared/const/constants";
+import {baseURL, responseType} from "../../shared/const/constants";
 
 @Injectable()
 export class UserService {
@@ -47,7 +47,7 @@ export class UserService {
   }
 
   delete(id: string) {
-    return this.http.delete(`${this.url}/${id}`);
+    return this.http.delete<string>(`${this.url}/${id}`, responseType);
   }
 
   search(user: User) {

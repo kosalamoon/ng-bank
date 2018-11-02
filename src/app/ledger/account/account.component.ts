@@ -14,7 +14,7 @@ import {OperationTypeService} from "../service/operation-type.service";
 @Component({
   selector: "app-account",
   templateUrl: "./account.component.html",
-  styleUrls: ["./account.component.css"]
+  styleUrls: ["./account.component.css"],
 })
 export class AccountComponent implements OnInit {
 
@@ -43,8 +43,8 @@ export class AccountComponent implements OnInit {
         return data[sortHeaderId];
     }
   };
-  columns: string[] = ["id", "number", "name", "balance", "operationType", "accountType", "subAccountType"];
-  displayedColumns: string[] = ["id", "number", "name", "balance", "operationType", "accountType", "subAccountType"];
+  columns: string[] = ["id", "number", "name", "balance", "operationType", "accountType", "subAccountType", "action"];
+  displayedColumns: string[] = ["id", "number", "name", "balance", "operationType", "accountType", "subAccountType", "action"];
   compareDropdown = (o1: any, o2: any) => o1 && o2 ? o1.id === o2.id : o1 === o2;
   compareTableColumns = (o1: any, o2: any) => o1 === o2;
 
@@ -90,7 +90,7 @@ export class AccountComponent implements OnInit {
       "name": [null, Validators.required],
       "operationType": [null, Validators.required],
       "accountType": [null, Validators.required],
-      "subAccountType": [null, Validators.required]
+      "subAccountType": [null, Validators.required],
     });
   }
 
@@ -100,7 +100,7 @@ export class AccountComponent implements OnInit {
       "number": null,
       "operationType": null,
       "accountType": null,
-      "subAccountType": null
+      "subAccountType": null,
     });
   }
 
@@ -118,12 +118,18 @@ export class AccountComponent implements OnInit {
 
   loadSubAccountTypesByAccountTypeId() {
     this.accountType.valueChanges.subscribe(value => {
-      if (value != null)
+      if (value != null) {
+        this.subAccountType.reset();
+        this.searchForm.get("subAccountType").reset();
         this.subAccountTypes$ = this.subAccountTypeService.findAllByAccountTypeId(value.id);
+      }
     });
     this.searchForm.get("accountType").valueChanges.subscribe(value => {
-      if (value != null)
+      if (value != null) {
+        this.subAccountType.reset();
+        this.searchForm.get("subAccountType").reset();
         this.subAccountTypes$ = this.subAccountTypeService.findAllByAccountTypeId(value.id);
+      }
     });
   }
 
@@ -134,7 +140,7 @@ export class AccountComponent implements OnInit {
       "name": account.name,
       "operationType": account.operationType,
       "accountType": account.accountType,
-      "subAccountType": account.subAccountType
+      "subAccountType": account.subAccountType,
     });
   }
 
@@ -169,6 +175,10 @@ export class AccountComponent implements OnInit {
     });
   }
 
+  onDeleteYes() {
+
+  }
+
   closeModal() {
     this.confirmModal.hide();
   }
@@ -182,7 +192,7 @@ export class AccountComponent implements OnInit {
   isInvalid(control: FormControl) {
     return {
       "is-invalid": control.touched && control.invalid,
-      "is-valid": control.touched && control.valid
+      "is-valid": control.touched && control.valid,
     };
   }
 

@@ -4,7 +4,7 @@ import {Staff} from "../model/staff";
 import {delay} from "rxjs/operators";
 import {Observable} from "rxjs/internal/Observable";
 import {Service} from "./service";
-import {baseURL} from "../../shared/const/constants";
+import {baseURL, responseType} from "../../shared/const/constants";
 
 @Injectable()
 export class StaffService implements Service<Staff> {
@@ -35,7 +35,7 @@ export class StaffService implements Service<Staff> {
   }
 
   delete(id: string) {
-    return this.http.delete(`${this.url}/${id}`);
+    return this.http.delete<string>(`${this.url}/${id}`, responseType);
   }
 
   search(staff: { name: string, designation: string }): Observable<Staff[]> {

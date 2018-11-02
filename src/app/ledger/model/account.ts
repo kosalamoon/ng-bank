@@ -10,7 +10,7 @@ export interface Account {
   id: string;
   number: string;
   name: string;
-  balance: number;
+  balance: string;
   lastUpdatedDateTime: string;
   operationType: string;
   accountType: AccountType;

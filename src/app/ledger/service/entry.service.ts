@@ -3,7 +3,7 @@ import {HttpClient} from "@angular/common/http";
 import {baseURL} from "../../shared/const/constants";
 import {Service} from "../../person/service/service";
 import {Entry} from "../model/entry";
-import {Observable} from "../../../../node_modules/rxjs";
+import {Observable} from "rxjs/internal/Observable";
 
 @Injectable()
 export class EntryService implements Service<Entry> {

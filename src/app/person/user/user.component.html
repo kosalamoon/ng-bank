@@ -133,10 +133,9 @@
       <div class="card-body">
         <h5 class="card-title text-center">Users</h5>
         <form [formGroup]="searchForm" class="form-row align-items-end">
-          <label class="col-2 col-form-label col-form-label-sm" for="userType">User Type</label>
-
-          <select [formControl]="userType" (change)="loadUsers()"
+          <select [formControl]="userType" (change)="search()"
                   id="userType" class="form-control form-control-sm col">
+            <option [value]="null">Select User Type</option>
             <option value="staff">Staff</option>
             <option value="boardMember">Board Member</option>
           </select>
@@ -217,9 +216,9 @@
               <ng-container cdkColumnDef="authorities">
                 <th cdk-header-cell *cdkHeaderCellDef mat-sort-header>Roles</th>
                 <td cdk-cell *cdkCellDef="let user">
-                  <span *ngFor="let authority of user.authorities">
+                  <ng-container *ngFor="let authority of user.authorities">
                     {{ authority.authority | role | underscore}}
-                  </span>
+                  </ng-container>
                 </td>
               </ng-container>
 
@@ -227,8 +226,8 @@
                 <th cdk-header-cell *cdkHeaderCellDef mat-sort-header>Action</th>
                 <td cdk-cell *cdkCellDef="let user">
                   <div class="btn-group btn-group-sm">
-                    <button type="button" class="btn btn-warning" [routerLink]="user.id">Edit</button>
-                    <button type="button" class="btn btn-danger" (click)="deleteUser(delete)">Delete</button>
+                    <button type="button" class="btn btn-warning" [disabled]="user.id === 1" [routerLink]="user.id">Edit</button>
+                    <button type="button" class="btn btn-danger" [disabled]="user.id === 1" (click)="deleteUser(delete)">Delete</button>
                   </div>
                   <ng-template #delete>
                     <div class="modal-body text-center">

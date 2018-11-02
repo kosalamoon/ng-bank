@@ -3,7 +3,7 @@ import {Service} from "../../person/service/service";
 import {Attendance} from "../model/attendance";
 import {Observable} from "rxjs/internal/Observable";
 import {HttpClient} from "@angular/common/http";
-import {baseURL} from "../../shared/const/constants";
+import {baseURL, responseType} from "../../shared/const/constants";
 
 @Injectable()
 export class AttendanceService implements Service<Attendance> {
@@ -13,7 +13,7 @@ export class AttendanceService implements Service<Attendance> {
   constructor(private http: HttpClient) {}
 
   delete(id: string) {
-    return this.http.delete(`${this.url}/${id}`);
+    return this.http.delete<string>(`${this.url}/${id}`, responseType);
   }
 
   findAll(): Observable<Attendance[]> {

@@ -3,7 +3,7 @@ import {FormArray, FormBuilder, FormControl, FormGroup, Validators} from "@angul
 import {integers} from "../../shared/regex/regex";
 import {Account} from "../../ledger/model/account";
 import {Loan} from "../../loan/model/loan";
-import {Observable} from "../../../../node_modules/rxjs";
+import {Observable} from "rxjs/internal/Observable";
 import {BsModalRef, BsModalService} from "ngx-bootstrap/modal";
 import {AuthenticationService} from "../../auth/authentication.service";
 import {AccountService} from "../../ledger/service/account.service";
@@ -16,29 +16,40 @@ import {Transaction} from "../../ledger/model/transaction";
 @Component({
   selector: "app-loan-installment",
   templateUrl: "./loan-installment.component.html",
-  styleUrls: ["./loan-installment.component.css"]
+  styleUrls: ["./loan-installment.component.css"],
 })
 export class LoanInstallmentComponent implements OnInit {
+
 
   form: FormGroup;
   responseForm: FormGroup;
 
+  validateAccountNumber = (control: FormControl) => !(control.value as string).startsWith("13") ? {"numberIsForbidden": true} : null;
+
   accountNumber: FormControl = new FormControl(
     "13",
-    [Validators.required, Validators.minLength(5), Validators.maxLength(5), Validators.pattern(integers), this.validateAccountNumber.bind(this)],
+    [Validators.required,
+      Validators.minLength(5),
+      Validators.maxLength(5),
+      Validators.pattern(integers),
+      this.validateAccountNumber.bind(this)],
   );
 
-  amount: FormControl = new FormControl(null, [Validators.required, Validators.pattern(integers)]);
-
+  amount: FormControl = new FormControl(null,
+    [Validators.required, Validators.pattern(integers)]);
   account: Account;
   loan: Loan;
   transactions$: Observable<Transaction[]>;
+
+  nextInstallmentAmount: string;
+  arrears: string;
+
   response: LoanStatusResponse;
 
   errorMsg: string = null;
 
-  confirmModal: BsModalRef;
 
+  confirmModal: BsModalRef;
 
   constructor(private fb: FormBuilder, private authService: AuthenticationService,
               private accountService: AccountService, private entryService: EntryService,
@@ -46,31 +57,45 @@ export class LoanInstallmentComponent implements OnInit {
               private loanService: LoanService) {
   }
 
-  //<editor-fold desc="responseForm getters">
-  get interest() {
-    return this.responseForm.get("interest");
-  }
-
-  get fine() {
-    return this.responseForm.get("fine");
-  }
-
-  get principal() {
-    return this.responseForm.get("principal");
-  }
-
   ngOnInit() {
     this.createForm();
     this.createResponseForm();
   }
 
+  private createForm() {
+    this.form = this.fb.group({
+      "entryType": "Transaction_Entry",
+      "user": this.fb.group({
+        "id": this.authService.getUserIdFromToken(),
+      }),
+      "entryList": this.fb.array([
+        this.fb.group({
+          "account": this.fb.group({"id": "1"}), // cash account
+          "amount": null,
+          "operationType": "Debit",
+        }),
+        this.fb.group({
+          "account": this.fb.group({"id": null}), // particular loan account
+          "amount": null,
+          "operationType": "Credit",
+        }),
+        this.fb.group({
+          "account": this.fb.group({"id": "2"}), // interest income account
+          "amount": null,
+          "operationType": "Credit",
+        }),
+      ]),
+    });
+  }
+
   createResponseForm() {
     this.responseForm = this.fb.group({
       "interest": [null, Validators.required],
-      "fine": [null, Validators.required],
-      "principal": [null, [Validators.required, this.validatePrincipal.bind(this)]]
+      "principal": [null, Validators.required],
+      "total": [null, Validators.required],
     });
   }
+
 
   loadAccountByNumber() {
     this.errorMsg = null;
@@ -84,6 +109,9 @@ export class LoanInstallmentComponent implements OnInit {
       this.loadLoan(account.loan.id);
       this.loadTransactions();
       this.assignAccount(account);
+      this.getNextInstallmentAmount(account.loan.id);
+      this.getArrears(account.loan.id);
+
     }, error1 => {
       this.account = null;
       this.loan = null;
@@ -98,11 +126,14 @@ export class LoanInstallmentComponent implements OnInit {
   }
 
   calculateInterestAndFine() {
+    this.validate();
+    if (!this.amount.valid) return;
     this.response = null;
-    this.loanService.calculateInterestAndFine({accountNumber: this.account.number, amount: this.amount.value})
+    this.loanService.calculateInterest({accountNumber: this.account.number, amount: this.amount.value})
       .subscribe(response => {
-        this.assignResponse(response);
         this.response = response;
+        this.assignResponse(response);
+        this.addTotalValidation();
       });
   }
 
@@ -111,17 +142,10 @@ export class LoanInstallmentComponent implements OnInit {
     (this.form.get("entryList") as FormArray).at(1).get("amount").patchValue(response.principal);
     (this.form.get("entryList") as FormArray).at(2).get("amount").patchValue(response.interest);
 
-    if (response.fine !== "0") {
-      (this.form.get("entryList") as FormArray).push(this.fb.group({
-        "account": this.fb.group({"id": "11"}), // fine income account
-        "amount": response.fine,
-        "operationType": "Credit"
-      }));
-    }
     this.responseForm.patchValue({
       "interest": response.interest,
-      "fine": response.fine,
-      "principal": response.principal
+      "principal": response.principal,
+      "total": this.amount.value,
     });
   }
 
@@ -131,6 +155,15 @@ export class LoanInstallmentComponent implements OnInit {
 
   loadTransactions() {
     this.transactions$ = this.transactionService.findAllByAccountNumber(this.accountNumber.value);
+  }
+
+  getNextInstallmentAmount(id: string) {
+    this.loanService.nextInstallmentAmount(id).subscribe(value => this.nextInstallmentAmount = value);
+  }
+
+  getArrears(id: string) {
+    this.loanService.calculateArrears(id).subscribe(value => this.arrears = value);
+
   }
 
   clearForm() {
@@ -145,7 +178,6 @@ export class LoanInstallmentComponent implements OnInit {
 
   addInstallment(template: TemplateRef<any>) {
     this.validate();
-    console.log(this.accountNumber);
     if (this.accountNumber.valid && this.amount.valid && this.account != null && this.responseForm.valid) {
       this.confirmModal = this.modalService.show(template);
     }
@@ -153,10 +185,8 @@ export class LoanInstallmentComponent implements OnInit {
 
   onPersistYes() {
     this.transactionService.save(this.form.value).subscribe(value => {
-      this.loanService.payInstallment(this.loan.id).subscribe(value1 => {
-        this.closeModal();
-        this.clearForm();
-      });
+      this.closeModal();
+      this.clearForm();
     });
   }
 
@@ -167,51 +197,33 @@ export class LoanInstallmentComponent implements OnInit {
   isInvalid(control: FormControl) {
     return {
       "is-invalid": control.touched && control.invalid,
-      "is-valid": control.touched && control.valid
+      "is-valid": control.touched && control.valid,
     };
   }
 
   validate() {
     this.accountNumber.markAsTouched();
     this.amount.markAsTouched();
+    this.total.markAsTouched();
   }
 
-  validateAccountNumber(control: FormControl): { [s: string]: boolean } {
-    return !(control.value as string).startsWith("13") ? {"numberIsForbidden": true} : null;
+
+  private addTotalValidation() {
+    let func = control => (control.value as number) < +this.response.interest ? {"invalidAmount": true} : null;
+    this.total.setValidators(func.bind(this));
   }
 
-  validatePrincipal(control: FormControl): { [s: string]: boolean } {
-    if ((control.value as number) < 1) {
-      return {"invalidAmount": true};
-    } else {
-      return null;
-    }
+  //<editor-fold desc="responseForm getters">
+  get interest() {
+    return this.responseForm.get("interest");
   }
 
-  private createForm() {
-    this.form = this.fb.group({
-      "entryType": "Transaction_Entry",
-      "user": this.fb.group({
-        "id": this.authService.getUserIdFromToken()
-      }),
-      "entryList": this.fb.array([
-        this.fb.group({
-          "account": this.fb.group({"id": "5"}), // cash account
-          "amount": null,
-          "operationType": "Debit"
-        }),
-        this.fb.group({
-          "account": this.fb.group({"id": null}), // particular loan account
-          "amount": null,
-          "operationType": "Credit"
-        }),
-        this.fb.group({
-          "account": this.fb.group({"id": "10"}), // interest income account
-          "amount": null,
-          "operationType": "Credit"
-        }),
-      ])
-    });
+  get principal() {
+    return this.responseForm.get("principal");
+  }
+
+  get total() {
+    return this.responseForm.get("total");
   }
 
   //</editor-fold>

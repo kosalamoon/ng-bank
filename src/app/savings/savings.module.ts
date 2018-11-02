@@ -7,6 +7,7 @@ import {SavingsComponent} from "./savings/savings.component";
 import {SavingTypeService} from "./service/saving-type.service";
 import {SavingsService} from "./service/savings.service";
 import {SavingsStatusService} from "./service/saving-status.service";
+import {SavingsHistoryComponent} from './savings-history/savings-history.component';
 
 @NgModule({
   imports: [
@@ -16,7 +17,7 @@ import {SavingsStatusService} from "./service/saving-status.service";
     AlertModule.forRoot(),
     SharedModule
   ],
-  declarations: [SavingsComponent],
+  declarations: [SavingsComponent, SavingsHistoryComponent],
   providers: [
     SavingTypeService,
     SavingsService,

@@ -1,4 +1,4 @@
-<div class="row">
+<div class="form-row">
   <div class="col-4">
     <div class="card bg-light">
       <div class="card-body">
@@ -40,38 +40,44 @@
       </div>
     </div>
   </div>
-  <div class="col-4 offset-4">
-    <div class="card bg-light" *ngIf="account">
+  <div class="col-4" *ngIf="account">
+    <ul class="list-group">
+
+      <li class="d-flex w-100 justify-content-center list-group-item active">
+        <b>Member Details</b>
+      </li>
+
+      <li class="list-group-item d-flex justify-content-between list-group-item-action">
+        <b>Account Number</b>
+        <span class="text-muted">{{account.number}}</span>
+      </li>
+
+      <li class="list-group-item d-flex justify-content-between list-group-item-action">
+        <b>Full name</b>
+        <span class="text-muted">{{account.shareHolder?.fullName}}</span>
+      </li>
+
+      <li class="list-group-item d-flex justify-content-between list-group-item-action">
+        <b>Address</b>
+        <span class="text-muted">{{account.shareHolder?.address}}</span>
+      </li>
+
+      <li class="list-group-item d-flex justify-content-between list-group-item-action">
+        <b>NIC</b>
+        <span class="text-muted">{{account.shareHolder?.nic}}</span>
+      </li>
+
+      <li class="list-group-item d-flex justify-content-between list-group-item-action bg-light">
+        <b class="text-success">Current shares balance</b>
+        <span class="text-success">{{account.balance | number: '1.2-2'}}({{round(account.balance)}})</span>
+      </li>
+    </ul>
+  </div>
+
+
+  <div class="col-4" *ngIf="entries$">
+    <div class="card bg-light mb-3">
       <div class="card-body">
-        <h5 class="card-title text-center">Member Details</h5>
-        <ul class="list-group mb-3">
-
-          <li class="list-group-item d-flex justify-content-between list-group-item-action">
-            <b>Account Number</b>
-            <span class="text-muted">{{account.number}}</span>
-          </li>
-
-          <li class="list-group-item d-flex justify-content-between list-group-item-action">
-            <b>Full name</b>
-            <span class="text-muted">{{account.shareHolder?.fullName}}</span>
-          </li>
-
-          <li class="list-group-item d-flex justify-content-between list-group-item-action">
-            <b>Address</b>
-            <span class="text-muted">{{account.shareHolder?.address}}</span>
-          </li>
-
-          <li class="list-group-item d-flex justify-content-between list-group-item-action">
-            <b>NIC</b>
-            <span class="text-muted">{{account.shareHolder?.nic}}</span>
-          </li>
-
-          <li class="list-group-item d-flex justify-content-between list-group-item-action bg-light">
-            <b class="text-success">Current shares balance</b>
-            <span class="text-success">{{account.balance | number: '1.2-2'}}({{round(account.balance)}})</span>
-          </li>
-        </ul>
-
         <h5 class="card-title text-center">Recent Shares Acquisitions</h5>
 
 
@@ -94,12 +100,11 @@
           </tr>
           </tbody>
         </table>
-
-
       </div>
     </div>
   </div>
 </div>
+
 
 <ng-template #persist>
   <div class="modal-body text-center">
@@ -132,7 +137,7 @@
       </tr>
       </tbody>
     </table>
-    <div class="btn-group d-flex">
+    <div class="btn-group btn-group-sm d-flex">
       <button type="button" class="btn btn-primary w-100" (click)="onPersistYes()">Yes</button>
       <button type="button" class="btn btn-secondary w-100" (click)="closeModal()">No</button>
     </div>

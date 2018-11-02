@@ -13,7 +13,7 @@ import {BoardMemberService} from "../service/board-member.service";
 @Component({
   selector: "app-staff-user",
   templateUrl: "./user.component.html",
-  styleUrls: ["./user.component.css"]
+  styleUrls: ["./user.component.css"],
 })
 export class UserComponent implements OnInit {
 
@@ -31,7 +31,7 @@ export class UserComponent implements OnInit {
 
   modalRef: BsModalRef;
 
-  userType: FormControl = new FormControl("staff");
+  userType: FormControl = new FormControl(null);
 
   isTableLoading: boolean = false;
 
@@ -45,10 +45,14 @@ export class UserComponent implements OnInit {
 
 
   ngOnInit() {
-    this.userService.findAll(this.userType.value).subscribe(users => this.initializeTable(users));
     this.createUserForm();
     this.createSearchForm();
+    this.loadUsers();
     this.loadAuthorities();
+  }
+
+  loadUsers() {
+    this.userService.findAll().subscribe(users => this.initializeTable(users));
   }
 
   private initializeTable(users) {
@@ -68,11 +72,11 @@ export class UserComponent implements OnInit {
         return data[sortHeaderId];
     }
   };
-
   compareRoles = (o1: any, o2: any) => o1 && o2 ? o1.id === o2.id : o1 === o2;
-  compareTableColumns = (o1: any, o2: any) => o1 === o2;
 
+  compareTableColumns = (o1: any, o2: any) => o1 === o2;
   columns = ["id", "username", "accountNonExpired", "accountNonLocked", "credentialsNonExpired", "enabled", "authorities", "action"];
+
   displayedColumns = ["id", "username", "accountNonExpired", "accountNonLocked", "credentialsNonExpired", "enabled", "action"];
 
   addColumn(event: MatSelectChange) {
@@ -126,7 +130,7 @@ export class UserComponent implements OnInit {
       "enabled": true,
       "authorities": [null, Validators.required],
       "staff": null,
-      "boardMember": null
+      "boardMember": null,
     });
   }
 
@@ -170,20 +174,18 @@ export class UserComponent implements OnInit {
   }
 
   search() {
-    console.log(this.searchForm.value);
-    if (this.searchForm.value.username !== "") {
       this.userService.search(this.searchForm.value)
         .subscribe(users => {
             if (this.userType.value === "staff") this.initializeTable(users.filter(users => users.staff !== null));
             else this.initializeTable(users.filter(users => users.boardMember !== null));
-          }
+          },
         );
-    }
   }
 
   clearSearch() {
     this.searchForm.reset();
-    this.userService.findAll(this.userType.value).subscribe(users => this.initializeTable(users));
+    this.userType.reset();
+    this.userService.findAll().subscribe(users => this.initializeTable(users));
   }
 
   //<editor-fold desc="form getters">
@@ -232,7 +234,7 @@ export class UserComponent implements OnInit {
   isInvalid(control: FormControl) {
     return {
       "is-invalid": control.touched && control.invalid,
-      "is-valid": control.touched && control.valid
+      "is-valid": control.touched && control.valid,
     };
   }
 
@@ -244,6 +246,7 @@ export class UserComponent implements OnInit {
     return roles.slice(0, roles.length - 2);
   }
 
+
   clearForm() {
     this.form.reset({
       "enabled": true,
@@ -251,11 +254,6 @@ export class UserComponent implements OnInit {
       "accountNonLocked": true,
       "credentialsNonExpired": false,
     });
-  }
-
-
-  loadUsers() {
-    this.userService.findAll(this.userType.value).subscribe(users => this.initializeTable(users));
   }
 
   validate(controls: string[]) {

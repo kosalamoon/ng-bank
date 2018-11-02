@@ -1,7 +1,7 @@
 import {Injectable} from "@angular/core";
 import {Observable} from "rxjs/internal/Observable";
 import {HttpClient} from "@angular/common/http";
-import {baseURL} from "../../shared/const/constants";
+import {baseURL, responseType} from "../../shared/const/constants";
 import {Account} from "../model/account";
 
 @Injectable()
@@ -12,7 +12,7 @@ export class AccountService {
   url: string = baseURL + "accounts";
 
   delete(id: string) {
-    return this.http.delete(`${this.url}/${id}`);
+    return this.http.delete<string>(`${this.url}/${id}`, responseType);
   }
 
   findAll(): Observable<Account[]> {

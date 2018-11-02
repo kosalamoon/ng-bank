@@ -352,9 +352,12 @@
                 <ng-container cdkColumnDef="action">
                   <th cdk-header-cell *cdkHeaderCellDef mat-sort-header>Action</th>
                   <td cdk-cell *cdkCellDef="let member">
-                    <div class="btn-group btn-group-sm special">
-                      <button type="button" class="btn btn-warning" (click)="fillForm(member)">Edit</button>
-                      <button type="button" class="btn btn-danger" (click)="deleteMember(delete)">Delete</button>
+                    <div class="btn-group btn-group-sm d-flex">
+                      <button type="button" class="btn btn-warning w-100" (click)="fillForm(member)">Edit</button>
+                      <button type="button" class="btn btn-danger w-100"
+                              *ngIf="member.shareAccount?.balance === '0' || member.shareAccount?.balance === null"
+                              (click)="deleteMember(delete)">Delete
+                      </button>
                     </div>
                     <ng-template #delete>
                       <div class="modal-body text-center">

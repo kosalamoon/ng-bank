@@ -13,7 +13,7 @@ import {date, time} from "../../shared/regex/regex";
 @Component({
   selector: "app-meeting",
   templateUrl: "./meeting.component.html",
-  styleUrls: ["./meeting.component.css"]
+  styleUrls: ["./meeting.component.css"],
 })
 export class MeetingComponent implements OnInit {
 
@@ -36,7 +36,7 @@ export class MeetingComponent implements OnInit {
   constructor(
     private fb: FormBuilder, private modalService: BsModalService,
     private meetingService: MeetingService, private meetingStatusService: MeetingStatusService,
-    private meetingTypeService: MeetingTypeService, private attendanceService: AttendanceService
+    private meetingTypeService: MeetingTypeService, private attendanceService: AttendanceService,
   ) {
   }
 
@@ -54,7 +54,7 @@ export class MeetingComponent implements OnInit {
       "date": [null, [Validators.required, Validators.pattern(date)]],
       "time": [null, [Validators.required, Validators.pattern(time)]],
       "meetingStatus": [null, Validators.required],
-      "meetingType": [null, Validators.required]
+      "meetingType": [null, Validators.required],
     });
   }
 
@@ -62,7 +62,7 @@ export class MeetingComponent implements OnInit {
     this.searchForm = this.fb.group({
       "date": null,
       "meetingStatus": null,
-      "meetingType": null
+      "meetingType": null,
     });
   }
 
@@ -99,7 +99,7 @@ export class MeetingComponent implements OnInit {
       "date": meeting.date,
       "time": this.convertStringToTime(meeting.time),
       "meetingStatus": meeting.meetingStatus,
-      "meetingType": meeting.meetingType
+      "meetingType": meeting.meetingType,
     });
   }
 
@@ -107,7 +107,7 @@ export class MeetingComponent implements OnInit {
     this.form.reset();
   }
 
-  columns = ["id", "date", "time", "meetingStatus", "meetingType", "action" , "attendance"];
+  columns = ["id", "date", "time", "meetingStatus", "meetingType", "action", "attendance"];
   displayedColumns = ["id", "date", "time", "meetingStatus", "meetingType", "attendance", "action"];
 
   addColumn(event: MatSelectChange) {
@@ -118,11 +118,11 @@ export class MeetingComponent implements OnInit {
   addMeeting(template: TemplateRef<any>) {
     this.form.patchValue({
       "date": this.convertDateToString(this.date.value),
-      "time": this.convertTimeToString(this.time.value)
+      "time": this.convertTimeToString(this.time.value),
     });
     this.validate(["id", "date", "time", "meetingStatus", "meetingType"]);
-      if (this.form.valid)
-        this.modalRef = this.modalService.show(template);
+    if (this.form.valid)
+      this.modalRef = this.modalService.show(template);
   }
 
   deleteMeeting(template: TemplateRef<any>) {
@@ -130,10 +130,13 @@ export class MeetingComponent implements OnInit {
   }
 
   onDeleteYes(id: string) {
-    this.meetingService.delete(id).subscribe(
-      value => this.meetingService.findAll().subscribe(meetingList => this.initializeTable(meetingList))
+    this.meetingService.delete(id).subscribe(value => {
+        this.meetingService.findAll().subscribe(meetingList => {
+          this.initializeTable(meetingList);
+          this.closeModal();
+        });
+      },
     );
-    this.closeModal();
   }
 
   closeModal() {
@@ -159,7 +162,7 @@ export class MeetingComponent implements OnInit {
     setTimeout(() => {
       console.log(this.searchForm.value);
       this.searchForm.patchValue({
-        date: this.convertDateToString(this.searchForm.get("date").value)
+        date: this.convertDateToString(this.searchForm.get("date").value),
       });
       this.meetingService.search(this.searchForm.value).subscribe(meetingList => this.initializeTable(meetingList));
     }, 500);
@@ -237,14 +240,14 @@ export class MeetingComponent implements OnInit {
   isInvalid(control: FormControl) {
     return {
       "is-invalid": control.touched && control.invalid,
-      "is-valid": control.touched && control.valid
+      "is-valid": control.touched && control.valid,
     };
   }
 
   tableRowStyle(attendanceType: string) {
     return {
       "table-danger": attendanceType === 'Absent',
-      "table-success": attendanceType === 'Present'
+      "table-success": attendanceType === 'Present',
     };
   }
 

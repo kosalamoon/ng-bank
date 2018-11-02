@@ -3,7 +3,7 @@ import {Service} from "../../person/service/service";
 import {Team} from "../model/team";
 import {Observable} from "rxjs/internal/Observable";
 import {HttpClient} from "@angular/common/http";
-import {baseURL} from "../../shared/const/constants";
+import {baseURL, responseType} from "../../shared/const/constants";
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +15,7 @@ export class TeamService implements Service<Team>{
   url: string = baseURL + 'teams';
 
   delete(id: string) {
-    return this.http.delete<Team>(`${this.url}/${id}`);
+    return this.http.delete<string>(`${this.url}/${id}`, responseType);
   }
 
   findAll(): Observable<Team[]> {

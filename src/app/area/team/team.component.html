@@ -128,9 +128,12 @@
                 <ng-container cdkColumnDef="action">
                   <th cdk-header-cell *cdkHeaderCellDef mat-sort-header>Action</th>
                   <td cdk-cell *cdkCellDef="let team">
-                    <div class="btn-group btn-group-sm special">
-                      <button type="button" class="btn btn-warning" (click)="fillForm(team)">Edit</button>
-                      <button type="button" class="btn btn-danger" (click)="deleteTeam(delete)">Delete</button>
+                    <div class="btn-group btn-group-sm d-flex">
+                      <button type="button" class="btn btn-warning w-100" (click)="fillForm(team)">Edit</button>
+                      <button type="button" class="btn btn-danger w-100"
+                              *ngIf="team.account?.balance === '0' || team.account?.balance === null"
+                              (click)="deleteTeam(delete)">Delete
+                      </button>
                     </div>
                     <ng-template #delete>
                       <div class="modal-body text-center">

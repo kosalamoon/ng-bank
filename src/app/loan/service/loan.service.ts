@@ -37,16 +37,21 @@ export class LoanService implements Service<Loan> {
     return this.http.get<LoanReport>(`${this.url}/report/${id}`);
   }
 
-  calculateInterestAndFine(request: LoanStatusRequest): Observable<LoanStatusResponse> {
-    return this.http.put<LoanStatusResponse>(`${this.url}/calcInterestAndFine`, request);
+  calculateInterest(request: LoanStatusRequest): Observable<LoanStatusResponse> {
+    return this.http.put<LoanStatusResponse>(`${this.url}/calcInterest`, request);
   }
 
   calculateInstallmentSchedule(request: InstallmentScheduleRequest): Observable<InstallmentScheduleResponse[]> {
     return this.http.put<InstallmentScheduleResponse[]>(`${this.url}/calcSchedule`, request);
   }
 
-  payInstallment(id: string): Observable<Loan> {
-    return this.http.put<Loan>(`${this.url}/pay/${id}`, null);
+  calculateArrears(id: string): Observable<string> {
+    return this.http.get<string>(`${this.url}/calcArrears/${id}`);
+  }
+
+  nextInstallmentAmount(id: string): Observable<string> {
+    return this.http.get<string>(`${this.url}/nextInstallmentAmount/${id}`);
+
   }
 
   approve(id: string, releaseType: string, accountNumber: string): Observable<Loan> {

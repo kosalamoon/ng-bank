@@ -144,17 +144,17 @@
         <table cdk-table matSort [dataSource]="dataSource" class="table table-bordered table-hover table-sm">
 
           <ng-container matColumnDef="id">
-            <th cdk-header-cell *cdkHeaderCellDef mat-sort-header>Id</th>
+            <th cdk-header-cell *cdkHeaderCellDef mat-sort-header>ID</th>
             <td cdk-cell *cdkCellDef="let account">{{account.id}}</td>
           </ng-container>
 
           <ng-container matColumnDef="number">
-            <th cdk-header-cell *cdkHeaderCellDef mat-sort-header>Account Number</th>
+            <th cdk-header-cell *cdkHeaderCellDef mat-sort-header>Number</th>
             <td cdk-cell *cdkCellDef="let account">{{account.number}}</td>
           </ng-container>
 
           <ng-container matColumnDef="name">
-            <th cdk-header-cell *cdkHeaderCellDef mat-sort-header>Account Name</th>
+            <th cdk-header-cell *cdkHeaderCellDef mat-sort-header>Name</th>
             <td cdk-cell *cdkCellDef="let account">{{account.name}}</td>
           </ng-container>
 
@@ -169,21 +169,24 @@
           </ng-container>
 
           <ng-container matColumnDef="accountType">
-            <th cdk-header-cell *cdkHeaderCellDef mat-sort-header>Account Type</th>
+            <th cdk-header-cell *cdkHeaderCellDef mat-sort-header>Type</th>
             <td cdk-cell *cdkCellDef="let account">{{account.accountType?.name}}</td>
           </ng-container>
 
           <ng-container matColumnDef="subAccountType">
-            <th cdk-header-cell *cdkHeaderCellDef mat-sort-header>Sub Account Type</th>
+            <th cdk-header-cell *cdkHeaderCellDef mat-sort-header>Sub Type</th>
             <td cdk-cell *cdkCellDef="let account">{{account.subAccountType?.name}}</td>
           </ng-container>
 
           <ng-container cdkColumnDef="action">
             <th cdk-header-cell *cdkHeaderCellDef mat-sort-header>Action</th>
             <td cdk-cell *cdkCellDef="let account">
-              <div class="btn-group btn-group-sm special">
-                <button type="button" class="btn btn-warning" (click)="fillForm(account)">Edit</button>
-                <button type="button" class="btn btn-danger" (click)="deleteAccount(delete)">Delete</button>
+              <div class="btn-group btn-group-sm d-flex">
+                <button type="button" class="btn btn-warning w-100" (click)="fillForm(account)">Edit</button>
+                <button type="button" class="btn btn-danger w-100"
+                        *ngIf="account.balance === '0' && account.balance === null"
+                        (click)="deleteAccount(delete)">Delete
+                </button>
               </div>
               <ng-template #delete>
                 <div class="modal-body text-center">

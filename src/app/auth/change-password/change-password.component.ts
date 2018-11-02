@@ -1,13 +1,12 @@
-import {Component, OnInit, TemplateRef} from "@angular/core";
+import {Component, OnInit} from "@angular/core";
 import {AuthenticationService} from "../authentication.service";
 import {ActivatedRoute, Router} from "@angular/router";
-import {FormBuilder, FormGroup} from "@angular/forms";
-import {distinctUntilChanged} from "rxjs/operators";
+import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 
 @Component({
   selector: 'app-change-password',
   templateUrl: './change-password.component.html',
-  styleUrls: ['./change-password.component.css']
+  styleUrls: ['./change-password.component.css'],
 })
 export class ChangePasswordComponent implements OnInit {
 
@@ -21,41 +20,69 @@ export class ChangePasswordComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.createForm();
+    this.addConfirmValidation();
+  }
+
+  oldPasswordValidation = (control: FormControl) =>
+    new Promise(resolve => this.authService.matchPasswords(this.username.value, control.value)
+      .subscribe(value => resolve(null), error1 => resolve({"oldPasswordIsWrong": true})),
+    );
+
+  private createForm() {
     this.form = this.formBuilder.group({
       'username': this.route.snapshot.params['username'],
-      'oldPassword': null,
-      'newPassword': null,
-      'newPasswordAgain': null
+      'oldPassword': [null, Validators.required, this.oldPasswordValidation.bind(this)],
+      'newPassword': [null, Validators.required],
+      'newPasswordAgain': [null, Validators.required],
     });
+  }
 
-    this.form.get('oldPassword').valueChanges
-      .pipe(
-        distinctUntilChanged()
-      )
-      .subscribe(password => {
-        this.message = null;
-        this.authService.matchPasswords(this.form.get('username').value, password).subscribe(
-          value => {
-            console.log(value);
-            this.message = {type: 'success', msg: 'Old password is correct'};
-          },
-          error => {
-            console.log(error);
-            this.message = {type: 'danger', msg: 'Old password is wrong !!!'};
-          }
-        );
-      });
+  addConfirmValidation() {
+    let confirmValidation = (control: FormControl) => control.value !== null ? control.value !== this.newPassword.value ? {"confirmationIsWrong": true} : null : null;
+    this.newPasswordAgain.setValidators([Validators.required.bind(this), confirmValidation.bind(this)]);
   }
 
   change() {
-    this.authService.changePassword(this.form.get('username').value, this.form.get('newPassword').value)
+    console.log(this.form);
+    /*this.authService.changePassword(this.username.value, this.newPassword.value)
       .subscribe(
-      value => this.router.navigate(['']),
-      error1 => this.error = 'There is something wrong in connection !!!');
+        value => this.router.navigate(['']),
+        error1 => this.error = 'There is something wrong in connection !!!');*/
   }
 
   cancel() {
     this.router.navigate(['']);
+  }
+
+  //<editor-fold desc="Form getters">
+  public get username() {
+    return this.form.get("username");
+  }
+
+  public get oldPassword() {
+    return this.form.get("oldPassword");
+  }
+
+  public get newPassword() {
+    return this.form.get("newPassword");
+  }
+
+  public get newPasswordAgain() {
+    return this.form.get("newPasswordAgain");
+  }
+
+  //</editor-fold>
+
+  isInvalid(control: FormControl) {
+    return {
+      "is-invalid": control.touched && control.invalid,
+      "is-valid": control.touched && control.valid,
+    };
+  }
+
+  requiredValidation(control: FormControl) {
+    return control.hasError("required") && control.touched;
   }
 
 }

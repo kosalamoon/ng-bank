@@ -3,7 +3,7 @@ import {Division} from "../model/division";
 import {HttpClient} from "@angular/common/http";
 import {Service} from "../../person/service/service";
 import {Observable} from "rxjs/internal/Observable";
-import {baseURL} from "../../shared/const/constants";
+import {baseURL, responseType} from "../../shared/const/constants";
 
 @Injectable()
 export class DivisionService implements Service<Division>{
@@ -13,7 +13,7 @@ export class DivisionService implements Service<Division>{
   url: string = baseURL + 'divisions';
 
   delete(id: string) {
-    return this.http.delete(`${this.url}/${id}`);
+    return this.http.delete<string>(`${this.url}/${id}`, responseType);
   }
 
   findAll(): Observable<Division[]> {

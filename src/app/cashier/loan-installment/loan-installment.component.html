@@ -1,4 +1,4 @@
-<div class="row">
+<div class="form-row">
   <div class="col-4">
     <div class="card bg-light">
       <div class="card-body">
@@ -25,6 +25,7 @@
                  (keyup.enter)="calculateInterestAndFine()">
           <small class="form-text text-muted offset-5">Type amount and press ENTER</small>
           <div class="invalid-feedback offset-5" *ngIf="amount.hasError('required') && amount.touched">Amount is required</div>
+          <div class="invalid-feedback offset-5" *ngIf="amount.hasError('pattern') && amount.touched">Amount should only contain numbers without cents</div>
 
         </div>
 
@@ -33,23 +34,20 @@
 
             <label for="interest" class="col-sm-5 col-form-label col-form-label-sm">Interest</label>
             <input formControlName="interest" type="text" [readonly]="true" class="form-control form-control-sm col-sm" id="interest">
-
           </div>
 
           <div class="form-group row">
-
-            <label for="fine" class="col-sm-5 col-form-label col-form-label-sm">Fine</label>
-            <input formControlName="fine" type="text" [readonly]="true" class="form-control form-control-sm col-sm" id="fine">
-
-          </div>
-
-          <div class="form-group row">
-
             <label for="principal" class="col-sm-5 col-form-label col-form-label-sm">Principal</label>
-            <input formControlName="principal" [ngClass]="{'is-invalid': principal.invalid}" type="text" [readonly]="true" class="form-control form-control-sm col-sm" id="principal">
-            <div class="invalid-feedback offset-5" *ngIf="principal.hasError('invalidAmount')">Principal amount should be greater than 0</div>
-
+            <input formControlName="principal" type="text" [readonly]="true" class="form-control form-control-sm col-sm" id="principal">
           </div>
+
+          <div class="form-group row">
+
+            <label for="total" class="col-sm-5 col-form-label col-form-label-sm">Total</label>
+            <input formControlName="total" [ngClass]="{'is-invalid': total.invalid}" type="text" [readonly]="true" class="form-control form-control-sm col-sm" id="total">
+            <div class="invalid-feedback offset-5" *ngIf="total.hasError('invalidAmount')">At least interest amount should be paid</div>
+          </div>
+
         </div>
 
         <div class="form-group row">
@@ -65,45 +63,53 @@
       </div>
     </div>
   </div>
-  <div class="col-3" *ngIf="account && loan">
-    <div class="card bg-light">
-      <div class="card-body">
-        <h5 class="card-title text-center">Loan Details</h5>
+  <div class="col-4" *ngIf="account && loan">
+    <ul class="list-group">
 
-        <ul class="list-group mb-3">
+      <li class="d-flex w-100 justify-content-center list-group-item active">
+        <b>Loan Details</b>
+      </li>
 
-          <li class="list-group-item d-flex justify-content-between list-group-item-action">
-            <b>Account Number</b>
-            <span class="text-muted">{{account.number}}</span>
-          </li>
+      <li class="list-group-item d-flex justify-content-between list-group-item-action">
+        <b>Account Number</b>
+        <span class="text-muted">{{account.number}}</span>
+      </li>
 
-          <ng-container *ngIf="loan">
-            <li class="list-group-item d-flex justify-content-between list-group-item-action">
-              <b>Account Holder</b>
-              <span class="text-muted">{{loan.member?.fullName}}</span>
-            </li>
+      <li class="list-group-item d-flex justify-content-between list-group-item-action">
+        <b>Account Holder</b>
+        <span class="text-muted">{{loan.member?.fullName}}</span>
+      </li>
 
-            <li class="list-group-item d-flex justify-content-between list-group-item-action">
-              <b>NIC</b>
-              <span class="text-muted">{{loan.member?.nic}}</span>
-            </li>
+      <li class="list-group-item d-flex justify-content-between list-group-item-action">
+        <b>NIC</b>
+        <span class="text-muted">{{loan.member?.nic}}</span>
+      </li>
 
-            <li class="list-group-item d-flex justify-content-between list-group-item-action">
-              <b>Loan Type</b>
-              <span class="text-muted">{{loan.loanType.name}}</span>
-            </li>
-          </ng-container>
+      <li class="list-group-item d-flex justify-content-between list-group-item-action">
+        <b>Loan Type</b>
+        <span class="text-muted">{{loan.loanType.name}}</span>
+      </li>
 
-          <li class="list-group-item d-flex justify-content-between list-group-item-action bg-light">
-            <b class="text-success">Remaining Balance</b>
-            <span class="text-success">{{account.balance | number: '1.2-2'}}</span>
-          </li>
-        </ul>
+      <li class="list-group-item d-flex justify-content-between list-group-item-action bg-light">
+        <b class="text-success">Remaining Balance</b>
+        <span class="text-success">{{account.balance | number: '1.2-2'}}</span>
+      </li>
 
-      </div>
-    </div>
+      <li class="list-group-item d-flex justify-content-between list-group-item-action bg-light"
+          *ngIf="nextInstallmentAmount">
+        <b class="text-success">Next Installment Amount</b>
+        <span class="text-success">{{nextInstallmentAmount | number: '1.2-2'}}</span>
+      </li>
+
+      <li class="list-group-item d-flex justify-content-between list-group-item-action bg-light"
+          *ngIf="arrears !== '0'">
+        <b class="text-danger">Arrears</b>
+        <span class="text-danger">{{nextInstallmentAmount | number: '1.2-2'}}</span>
+      </li>
+    </ul>
   </div>
-  <div class="col" *ngIf="transactions$">
+
+  <div class="col-4" *ngIf="transactions$">
     <div class="card bg-light">
       <div class="card-body">
         <h5 class="card-title text-center">Recent Paid Installments</h5>
@@ -145,3 +151,50 @@
     </div>
   </div>
 </div>
+
+<ng-template #persist>
+  <div class="modal-body text-center">
+    <table class="table table-bordered table-hover table-sm">
+      <thead class="thead-light">
+      <tr>
+        <th scope="col" colspan="2">Please Review Again</th>
+      </tr>
+      </thead>
+      <tbody *ngIf="account">
+      <tr>
+        <td>Account Number</td>
+        <td>{{account.number}}</td>
+      </tr>
+      <tr>
+        <td>Full name</td>
+        <td>{{loan.member?.fullName}}</td>
+      </tr>
+      <tr>
+        <td>NIC</td>
+        <td>{{loan.member?.nic}}</td>
+      </tr>
+      <tr>
+        <td>Loan Type</td>
+        <td>{{loan.loanType.name}}</td>
+      </tr>
+      <tr>
+        <td>Interest</td>
+        <td>{{interest.value | number: '1.2-2'}}</td>
+      </tr>
+      <tr>
+        <td>Principal</td>
+        <td>{{principal.value | number: '1.2-2'}}</td>
+      </tr>
+      <tr>
+        <td>Total</td>
+        <td>{{total.value | number: '1.2-2'}}</td>
+      </tr>
+      </tbody>
+    </table>
+    <div class="btn-group btn-group-sm d-flex">
+      <button type="button" class="btn btn-primary w-100" (click)="onPersistYes()">Yes</button>
+      <button type="button" class="btn btn-secondary w-100" (click)="closeModal()">No</button>
+    </div>
+  </div>
+</ng-template>
+

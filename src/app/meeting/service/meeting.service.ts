@@ -3,17 +3,18 @@ import {Service} from "../../person/service/service";
 import {Meeting} from "../model/meeting";
 import {Observable} from "rxjs/internal/Observable";
 import {HttpClient} from "@angular/common/http";
-import {baseURL} from "../../shared/const/constants";
+import {baseURL, responseType} from "../../shared/const/constants";
 
 @Injectable()
-export class MeetingService implements Service<Meeting>{
+export class MeetingService implements Service<Meeting> {
 
   url: string = baseURL + "meetings";
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) {
+  }
 
   delete(id: string) {
-    return this.http.delete(`${this.url}/${id}`);
+    return this.http.delete<string>(`${this.url}/${id}`, responseType);
   }
 
   findAll(): Observable<Meeting[]> {

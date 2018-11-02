@@ -3,7 +3,7 @@ import {Service} from "./service";
 import {Member} from "../model/member";
 import {Observable} from "rxjs/internal/Observable";
 import {HttpClient} from "@angular/common/http";
-import {baseURL} from "../../shared/const/constants";
+import {baseURL, responseType} from "../../shared/const/constants";
 
 @Injectable()
 export class MemberService implements Service<Member> {
@@ -14,7 +14,7 @@ export class MemberService implements Service<Member> {
   }
 
   delete(id: string) {
-    return this.http.delete(`${this.url}/${id}`);
+    return this.http.delete<string>(`${this.url}/${id}`, responseType);
   }
 
   findAll(): Observable<Member[]> {

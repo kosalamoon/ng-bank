@@ -6,6 +6,7 @@ import {BsModalRef, BsModalService} from "ngx-bootstrap/modal";
 import {Staff} from "../model/staff";
 import {fullName, mobile, nic} from "../../shared/regex/regex";
 import {PersonService} from "../service/person.service";
+import {ExportService} from "../../shared/print/export.service";
 
 @Component({
   selector: "app-staff",
@@ -32,7 +33,8 @@ export class StaffComponent implements OnInit {
   constructor(private staffService: StaffService,
               private fb: FormBuilder,
               private personService: PersonService,
-              private modalService: BsModalService) {
+              private modalService: BsModalService,
+              private exportService: ExportService) {
   }
 
   ngOnInit() {
@@ -229,5 +231,9 @@ export class StaffComponent implements OnInit {
     controls.forEach(control => {
       this.form.get(control).markAsTouched({onlySelf: true})
     });
+  }
+
+  export() {
+    this.exportService.exportAsExcelFile(this.dataSource.data, "staff-details");
   }
 }

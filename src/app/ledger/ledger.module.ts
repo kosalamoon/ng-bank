@@ -7,9 +7,12 @@ import {AccountComponent} from "./account/account.component";
 import {SharedModule} from "../shared/shared.module";
 import {OperationTypeService} from "./service/operation-type.service";
 import {ReactiveFormsModule} from "@angular/forms";
-import {AlertModule, ModalModule} from "ngx-bootstrap";
+import {AlertModule, BsDatepickerModule, ModalModule} from "ngx-bootstrap";
 import {EntryService} from "./service/entry.service";
 import {TransactionService} from "./service/transaction.service";
+import {JournalEntryComponent} from './journal-entry/journal-entry.component';
+import {EntryTypeService} from "./service/entry-type.service";
+import {NgSelectModule} from "@ng-select/ng-select";
 
 @NgModule({
   imports: [
@@ -17,16 +20,19 @@ import {TransactionService} from "./service/transaction.service";
     ReactiveFormsModule,
     ModalModule.forRoot(),
     AlertModule.forRoot(),
+    BsDatepickerModule.forRoot(),
+    NgSelectModule,
     SharedModule
   ],
-  declarations: [AccountComponent],
+  declarations: [AccountComponent, JournalEntryComponent],
   providers: [
     AccountService,
     AccountTypeService,
     SubAccountTypeService,
     OperationTypeService,
     EntryService,
-    TransactionService
+    TransactionService,
+    EntryTypeService,
   ]
 })
 export class LedgerModule {

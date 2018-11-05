@@ -9,6 +9,7 @@ import {RoleService} from "../service/role.service";
 import {StaffService} from "../service/staff.service";
 import {UsernameValidator} from "./validators/username.validator";
 import {BoardMemberService} from "../service/board-member.service";
+import {ExportService} from "../../shared/print/export.service";
 
 @Component({
   selector: "app-staff-user",
@@ -40,7 +41,7 @@ export class UserComponent implements OnInit {
   constructor(private userService: UserService, private fb: FormBuilder,
               private roleService: RoleService, private modalService: BsModalService,
               private staffService: StaffService, private boardMemberService: BoardMemberService,
-              private usernameValidator: UsernameValidator) {
+              private usernameValidator: UsernameValidator, private exportService: ExportService) {
   }
 
 
@@ -260,5 +261,9 @@ export class UserComponent implements OnInit {
     controls.forEach(control => {
       this.form.get(control).markAsTouched({onlySelf: true})
     });
+  }
+
+  export() {
+    this.exportService.exportAsExcelFile(this.dataSource.data, "user-details");
   }
 }

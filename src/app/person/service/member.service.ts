@@ -41,5 +41,10 @@ export class MemberService implements Service<Member> {
     return this.http.put<Member>(`${this.url}`, e);
   }
 
+  pdf() {
+    let response: any = {responseType: 'blob'};
+    return this.http.get(`${baseURL}report/members`, response);
+  }
+
 
 }

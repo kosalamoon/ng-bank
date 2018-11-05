@@ -1,5 +1,5 @@
 import {Injectable} from "@angular/core";
-import {HttpClient} from "@angular/common/http";
+import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {baseURL} from "../../shared/const/constants";
 import {Service} from "../../person/service/service";
 import {Entry} from "../model/entry";
@@ -16,7 +16,13 @@ export class EntryService implements Service<Entry> {
   delete(id: string) {
   }
 
-  findAll(): Observable<Entry[]> {
+  findAll(fromDate: string = null, toDate: string = null): Observable<Entry[]> {
+    if (fromDate != null && toDate != null) {
+      let headers = new HttpHeaders()
+        .append("fromDate", fromDate)
+        .append("toDate", toDate);
+      return this.http.get<Entry[]>(this.url, {headers: headers});
+    }
     return this.http.get<Entry[]>(this.url);
   }
 
@@ -32,8 +38,13 @@ export class EntryService implements Service<Entry> {
     return undefined;
   }
 
-  search(e: {}): Observable<Entry[]> {
-    return undefined;
+  search(e: {}, fromDate: string = null, toDate: string = null): Observable<Entry[]> {
+    if (fromDate != null && toDate != null) {
+      let params = {"fromDate": fromDate, "toDate": toDate};
+      console.log(params);
+      return this.http.put<Entry[]>(`${this.url}/search`, e, {params: params});
+    }
+    return this.http.put<Entry[]>(`${this.url}/search`, e);
   }
 
   update(e: Entry): Observable<Entry> {

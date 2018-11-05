@@ -31,6 +31,12 @@ export class AccountComponent implements OnInit {
   subAccountTypes$: Observable<SubAccountType[]>;
 
   confirmModal: BsModalRef;
+
+  constructor(private accountService: AccountService, private accountTypeService: AccountTypeService,
+              private subAccountTypeService: SubAccountTypeService, private operationTypeService: OperationTypeService,
+              private fb: FormBuilder, private modalService: BsModalService) {
+  }
+
   sortingDataAccessor = (data: Account, sortHeaderId: string) => {
     switch (sortHeaderId) {
       case "team":
@@ -46,12 +52,8 @@ export class AccountComponent implements OnInit {
   columns: string[] = ["id", "number", "name", "balance", "operationType", "accountType", "subAccountType", "action"];
   displayedColumns: string[] = ["id", "number", "name", "balance", "operationType", "accountType", "subAccountType", "action"];
   compareDropdown = (o1: any, o2: any) => o1 && o2 ? o1.id === o2.id : o1 === o2;
-  compareTableColumns = (o1: any, o2: any) => o1 === o2;
 
-  constructor(private accountService: AccountService, private accountTypeService: AccountTypeService,
-              private subAccountTypeService: SubAccountTypeService, private operationTypeService: OperationTypeService,
-              private fb: FormBuilder, private modalService: BsModalService) {
-  }
+  compareTableColumns = (o1: any, o2: any) => o1 === o2;
 
   public get id() {
     return this.form.get("id") as FormControl;

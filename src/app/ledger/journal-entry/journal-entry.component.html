@@ -1,0 +1,255 @@
+<div class="form-row">
+  <div class="offset-2 col-8">
+
+    <div class="card bg-light mb-3">
+      <div class="card-body">
+        <h5 class="card-title text-center mb-3">Journal Entry Form</h5>
+        <form [formGroup]="form">
+          <div class="row">
+            <div class="form-group col-6">
+              <div class="form-row">
+                <label class="col-3 col-form-label col-form-label-sm">Entry Type <span style="color: red">*</span></label>
+                <select [ngClass]="isInvalid(entryType)" class="col form-control form-control-sm" id="entryType"
+                        formControlName="entryType">
+                  <option disabled [value]="null">Select Entry Type</option>
+                  <option *ngFor="let entryType of entryTypes$| async" [value]="entryType">{{entryType | underscore}}
+                  </option>
+                </select>
+                <div class="invalid-feedback offset-3" *ngIf="requiredValidation(entryType)">Operation Type is required</div>
+              </div>
+            </div>
+
+            <div class="form-group col-6">
+              <div class="form-row">
+                <label for="narration" class="col-3 col-form-label col-form-label-sm">Narration <span
+                  style="color: red">*</span></label>
+                <input [ngClass]="isInvalid(narration)" formControlName="narration" id="narration" type="text"
+                       class="form-control form-control-sm col-sm">
+                <div class="invalid-feedback offset-3" *ngIf="requiredValidation(narration)">Narration is required</div>
+              </div>
+            </div>
+
+          </div>
+          <div class="row mb-3">
+            <h5 class="col text-center card-title">Entries</h5>
+          </div>
+
+          <ng-container formArrayName="entryList">
+            <div class="row mb-3" *ngFor="let entry of entryList.controls; let i = index">
+              <ng-container [formGroupName]="i">
+
+                <div *ngIf="entry.get('operationType').value === 'Credit'" class="col-1"></div>
+
+                <div class="col">
+
+                  <select [ngClass]="isInvalid(entry.get('operationType'))" class="form-control form-control-sm" id="operationType"
+                          formControlName="operationType">
+                    <option disabled [value]="null">Select Entry Type</option>
+                    <option value="Debit">Debit</option>
+                    <option value="Credit">Credit</option>
+                  </select>
+                  <div class="invalid-feedback" *ngIf="requiredValidation(entry.get('operationType'))">Operation Type is required</div>
+
+                </div>
+
+                <div class="col">
+                  <ng-select [searchable]="true"
+                             [ngClass]="isInvalid(entry.get('account'))"
+                             placeholder="account number"
+                             [groupBy]="groupBy"
+                             [items]="accounts$ | async"
+                             bindLabel="number"
+                             formControlName="account">
+                  </ng-select>
+                  <div class="text-danger" *ngIf="requiredValidation(entry.get('account'))">
+                    <small>Account number is required</small>
+                  </div>
+
+                </div>
+
+                <div class="col">
+
+                  <input [ngClass]="isInvalid(entry.get('amount'))" formControlName="amount" id="amount" type="number"
+                         class="form-control form-control-sm" placeholder="amount">
+                  <div class="invalid-feedback" *ngIf="requiredValidation(entry.get('amount'))">Amount is required</div>
+                  <div class="invalid-feedback" *ngIf="entry.get('amount').hasError('pattern') && entry.get('amount').touched">Amount should only contain numbers without cents</div>
+                </div>
+
+                <div class="col-2">
+                  <div class="btn-group btn-group-sm d-flex">
+                    <button *ngIf="i !== 0 && i !== 1" type="button" class="btn btn-danger w-100" (click)="deleteEntry(i)"><b>X</b></button>
+                    <button *ngIf="i !== 0 && i === entryList.length - 1" type="button" class="btn btn-success w-100" (click)="addEntry()"><b>+</b></button>
+                  </div>
+                </div>
+
+              </ng-container>
+            </div>
+          </ng-container>
+
+          <alert *ngIf="entriesValidationError" type="danger" class="text-center">Total debit amount isn't matched with total credit amount</alert>
+
+          <div class="row">
+            <div class="col btn-group btn-group-sm d-flex">
+              <button type="button" class="btn btn-primary w-100" (click)="addEntries(persist)">Add</button>
+              <button type="button" class="btn btn-secondary w-100" (click)="clearForm()">Clear</button>
+            </div>
+          </div>
+
+        </form>
+      </div>
+    </div>
+
+  </div>
+</div>
+<div class="row">
+  <div class="col">
+
+    <div class="card bg-light mb-3">
+      <div class="card-body">
+        <h5 class="card-title text-center">Search Entries</h5>
+
+        <form [formGroup]="searchForm" class="form-row align-items-center mb-4">
+
+          <div class="col">
+            <ng-select [searchable]="true" placeholder="account number" [groupBy]="groupBy"
+                       [items]="accounts$ | async" bindLabel="number" formControlName="account">
+            </ng-select>
+          </div>
+
+          <div class="col">
+            <select class="form-control form-control-sm" formControlName="operationType">
+              <option disabled [value]="null">Select Operation Type</option>
+              <option value="Debit">Debit</option>
+              <option value="Credit">Credit</option>
+            </select>
+          </div>
+
+          <div formGroupName="transaction" class="col">
+            <select class="col form-control form-control-sm" formControlName="entryType">
+              <option disabled [value]="null">Select Entry Type</option>
+              <option *ngFor="let entryType of entryTypes$| async" [value]="entryType">{{entryType | underscore}}
+              </option>
+            </select>
+          </div>
+
+          <div class="col">
+            <input
+              bsDatepicker placement="top" placeholder="from"
+              [bsConfig]="{dateInputFormat: 'YYYY-MM-DD', containerClass:'theme-default'}"
+              type="text" [formControl]="fromDate" class="form-control form-control-sm">
+          </div>
+
+          <div class="col">
+            <input
+              bsDatepicker placement="top" placeholder="to"
+              [bsConfig]="{dateInputFormat: 'YYYY-MM-DD', containerClass:'theme-default'}"
+              type="text" [formControl]="toDate" class="form-control form-control-sm">
+          </div>
+
+          <div class="col">
+            <div class="btn-group btn-group-sm d-flex">
+              <button type="button" class="btn btn-sm btn-outline-primary w-100" (click)="search()">Search</button>
+              <button type="button" class="btn btn-sm btn-secondary w-100" (click)="clearSearch()">Clear Search</button>
+            </div>
+          </div>
+
+        </form>
+
+        <h5 class="card-title text-center">Entries</h5>
+
+        <div class="form-group row">
+          <label for="filter" class="col-2 col-form-label col-form-label-sm">Filter Columns</label>
+          <mat-select (selectionChange)="addColumn($event)" placeholder="Columns" multiple [value]="displayedColumns"
+                      class="form-control form-control-sm col" id="filter">
+            <mat-option *ngFor="let column of columns" [value]="column">{{column | sentence}}</mat-option>
+          </mat-select>
+        </div>
+
+        <table cdk-table [dataSource]="dataSource" matSort class="table table-bordered table-hover table-sm">
+
+          <ng-container matColumnDef="id">
+            <th cdk-header-cell *matHeaderCellDef mat-sort-header>ID</th>
+            <td cdk-cell *cdkCellDef="let entry">{{entry.id}}</td>
+          </ng-container>
+
+          <ng-container cdkColumnDef="account">
+            <th cdk-header-cell *cdkHeaderCellDef mat-sort-header>Acc Number</th>
+            <td cdk-cell *cdkCellDef="let entry">{{entry.account?.number}}</td>
+          </ng-container>
+
+          <ng-container cdkColumnDef="amount">
+            <th cdk-header-cell *cdkHeaderCellDef mat-sort-header>Amount</th>
+            <td cdk-cell *cdkCellDef="let entry">{{entry.amount | number: '1.2-2'}}</td>
+          </ng-container>
+
+          <ng-container cdkColumnDef="operationType">
+            <th cdk-header-cell *cdkHeaderCellDef mat-sort-header>Operation Type</th>
+            <td cdk-cell *cdkCellDef="let entry">{{entry.operationType}}</td>
+          </ng-container>
+
+          <ng-container cdkColumnDef="user">
+            <th cdk-header-cell *cdkHeaderCellDef mat-sort-header>Username</th>
+            <td cdk-cell *cdkCellDef="let entry">{{entry.transaction?.user?.username}}</td>
+          </ng-container>
+
+          <ng-container cdkColumnDef="dateTime">
+            <th cdk-header-cell *cdkHeaderCellDef mat-sort-header>Date Time</th>
+            <td cdk-cell *cdkCellDef="let entry">{{entry.transaction?.dateTime}}</td>
+          </ng-container>
+
+          <tr class="thead-light" cdk-header-row *cdkHeaderRowDef="displayedColumns"></tr>
+
+          <tr cdk-row *cdkRowDef="let row; columns: displayedColumns"></tr>
+
+        </table>
+        <mat-paginator [pageSizeOptions]="[5, 7, 10]"></mat-paginator>
+
+      </div>
+    </div>
+
+  </div>
+</div>
+
+
+<ng-template #persist>
+  <div class="modal-body text-center">
+    <table class="table table-bordered table-hover table-sm">
+      <thead class="thead-light">
+      <tr>
+        <th scope="col" colspan="2">Please Review Again</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr>
+        <td>Entry Type</td>
+        <td>{{entryType.value}}</td>
+      </tr>
+      <tr>
+        <td>Narration</td>
+        <td>{{narration.value}}</td>
+      </tr>
+      <tr>
+        <td colspan="2"><b>Entries</b></td>
+      </tr>
+      <ng-container *ngFor="let entry of entryList.controls">
+        <tr>
+          <td>Account Number</td>
+          <td>{{entry.get('account').value?.number}}</td>
+        </tr>
+        <tr>
+          <td>Operation Type</td>
+          <td>{{entry.get('operationType').value}}</td>
+        </tr>
+        <tr>
+          <td>Amount</td>
+          <td>{{entry.get('amount').value}}</td>
+        </tr>
+      </ng-container>
+      </tbody>
+    </table>
+    <div class="btn-group btn-group-sm d-flex">
+      <button type="button" class="btn btn-primary w-100" (click)="onPersistYes()">Yes</button>
+      <button type="button" class="btn btn-secondary w-100" (click)="closeModal()">No</button>
+    </div>
+  </div>
+</ng-template>

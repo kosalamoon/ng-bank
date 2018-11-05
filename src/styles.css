@@ -2,6 +2,7 @@
 
 @import '~@angular/material/prebuilt-themes/indigo-pink.css';
 @import "~ngx-bootstrap/datepicker/bs-datepicker.css";
+@import "~@ng-select/ng-select/themes/default.theme.css";
 
 .dropdown-toggle, .dropdown-menu {
   cursor: pointer;

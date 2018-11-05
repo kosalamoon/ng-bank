@@ -4,7 +4,7 @@ import {integers} from "../../shared/regex/regex";
 import {Account} from "../../ledger/model/account";
 import {Entry} from "../../ledger/model/entry";
 import {BsModalRef, BsModalService} from "ngx-bootstrap/modal";
-import {Observable} from "../../../../node_modules/rxjs";
+import {Observable} from "rxjs/internal/Observable";
 import {AuthenticationService} from "../../auth/authentication.service";
 import {AccountService} from "../../ledger/service/account.service";
 import {EntryService} from "../../ledger/service/entry.service";

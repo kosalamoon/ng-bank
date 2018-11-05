@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit, TemplateRef, ViewChild} from "@angular/core";
+import {Component, OnInit, TemplateRef, ViewChild} from "@angular/core";
 import {MatPaginator, MatSelectChange, MatSort, MatTableDataSource} from "@angular/material";
 import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import {Member} from "../model/member";
@@ -14,13 +14,15 @@ import {Division} from "../../area/model/division";
 import {Society} from "../../area/model/society";
 import {AccountService} from "../../ledger/service/account.service";
 import {PersonService} from "../service/person.service";
+import {ExportService} from "../../shared/print/export.service";
+import {DomSanitizer} from "@angular/platform-browser";
 
 @Component({
   selector: "app-member",
   templateUrl: "./member.component.html",
-  styleUrls: ["./member.component.css"]
+  styleUrls: ["./member.component.css"],
 })
-export class MemberComponent implements OnInit, OnDestroy {
+export class MemberComponent implements OnInit {
 
   dataSource: MatTableDataSource<Member>;
 
@@ -47,6 +49,8 @@ export class MemberComponent implements OnInit, OnDestroy {
 
   modalRef: BsModalRef;
   isLoading: boolean = false;
+  downloadUrl: string = null;
+
 
 
   constructor(private memberService: MemberService,
@@ -56,7 +60,9 @@ export class MemberComponent implements OnInit, OnDestroy {
               private divisionService: DivisionService,
               private societyService: SocietyService,
               private accountService: AccountService,
-              private personService: PersonService) {
+              private personService: PersonService,
+              private exportService: ExportService,
+              private sanitizer: DomSanitizer) {
   }
 
   ngOnInit() {
@@ -85,7 +91,7 @@ export class MemberComponent implements OnInit, OnDestroy {
         "id": null,
         "subsidyType": [null, Validators.required],
         "amount": [null, Validators.required],
-        "number": [null, Validators.required]
+        "number": [null, Validators.required],
       }));
     } else
       this.form.removeControl("subsidy");
@@ -108,7 +114,7 @@ export class MemberComponent implements OnInit, OnDestroy {
       "spouse": null,
       "incomeType": [null, Validators.required],
       "team": [null, Validators.required],
-      "shareAccount": null
+      "shareAccount": null,
     });
 
 
@@ -120,9 +126,9 @@ export class MemberComponent implements OnInit, OnDestroy {
       "dob": null,
       "incomeType": null,
       "subsidy": this.fb.group({
-        "subsidyType": null
+        "subsidyType": null,
       }),
-      "team": null
+      "team": null,
     });
   }
 
@@ -210,10 +216,10 @@ export class MemberComponent implements OnInit, OnDestroy {
           "id": member.subsidy.id,
           "subsidyType": member.subsidy.subsidyType,
           "amount": member.subsidy.amount,
-          "number": member.subsidy.number
+          "number": member.subsidy.number,
         },
         "team": member.team,
-        "shareAccount": member.shareAccount
+        "shareAccount": member.shareAccount,
       });
     } else {
       this.removeSubsidyFromForm();
@@ -228,7 +234,7 @@ export class MemberComponent implements OnInit, OnDestroy {
         "spouse": member.spouse,
         "incomeType": member.incomeType,
         "team": member.team,
-        "shareAccount": member.shareAccount
+        "shareAccount": member.shareAccount,
       });
     }
   }
@@ -255,7 +261,7 @@ export class MemberComponent implements OnInit, OnDestroy {
 
   addMember(template: TemplateRef<any>) {
     this.form.patchValue({
-      "dob": this.convertDateToString(this.dob.value)
+      "dob": this.convertDateToString(this.dob.value),
     });
 
     if (this.subsidy.value === true)
@@ -274,7 +280,7 @@ export class MemberComponent implements OnInit, OnDestroy {
 
   onDeleteYes(id: string) {
     this.memberService.delete(id).subscribe(
-      value => this.memberService.findAll().subscribe(meetingList => this.initializeTable(meetingList))
+      value => this.memberService.findAll().subscribe(meetingList => this.initializeTable(meetingList)),
     );
     this.closeModal();
   }
@@ -290,8 +296,8 @@ export class MemberComponent implements OnInit, OnDestroy {
           "name": "Member " + this.fullName.value,
           "operationType": "Credit",
           "accountType": {"id": 3},
-          "subAccountType": {"id": 13}
-        }
+          "subAccountType": {"id": 13},
+        },
       });
     }
     this.memberService.save(this.form.value).subscribe(member => {
@@ -305,7 +311,7 @@ export class MemberComponent implements OnInit, OnDestroy {
   search() {
     setTimeout(() => {
       this.searchForm.patchValue({
-        "dob": this.convertDateToString(this.searchForm.get("dob").value)
+        "dob": this.convertDateToString(this.searchForm.get("dob").value),
       });
       if (this.searchForm.value.subsidy.subsidyType == null) {
         this.searchForm.value.subsidy = null;
@@ -400,7 +406,7 @@ export class MemberComponent implements OnInit, OnDestroy {
   isInvalid(control: FormControl) {
     return {
       "is-invalid": control.touched && control.invalid,
-      "is-valid": control.touched && control.valid
+      "is-valid": control.touched && control.valid,
     };
   }
 
@@ -414,8 +420,20 @@ export class MemberComponent implements OnInit, OnDestroy {
     });
   }
 
-  ngOnDestroy(): void {
+  export() {
+    this.exportService.exportAsExcelFile(this.dataSource.data, "member-details");
+  }
 
+  pdf() {
+    this.memberService.pdf().subscribe(value => {
+      let file = new Blob([value], {type: 'application/pdf'});
+      this.downloadUrl = URL.createObjectURL(file);
+      window.location.assign(this.downloadUrl);
+    });
+  }
+
+  open() {
+    window.open(this.downloadUrl, "_blank", "");
   }
 
 

@@ -5,13 +5,14 @@ import {
   MatSelectModule,
   MatSlideToggleModule,
   MatSortModule,
-  MatTableModule
+  MatTableModule,
 } from "@angular/material";
 import {RolePipe} from "./pipes/role.pipe";
 import {UnderscorePipe} from "./pipes/underscore.pipe";
 import {TimePipe} from "./pipes/time.pipe";
 import {SentenceCasePipe} from "./pipes/sentence-case.pipe";
 import {CdkTableModule} from "@angular/cdk/table";
+import {ExportService} from "./print/export.service";
 
 @NgModule({
   declarations: [
@@ -32,6 +33,7 @@ import {CdkTableModule} from "@angular/cdk/table";
     UnderscorePipe,
     TimePipe,
     SentenceCasePipe
-  ]
+  ],
+  providers: [ExportService],
 })
 export class SharedModule { }

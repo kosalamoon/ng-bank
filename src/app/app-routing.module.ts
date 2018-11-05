@@ -26,6 +26,7 @@ import {SavingsComponent} from "./savings/savings/savings.component";
 import {LoanApproveComponent} from "./loan/loan-approve/loan-approve.component";
 import {LoanDetailsComponent} from "./loan/loan-details/loan-details.component";
 import {LoanRequestComponent} from "./loan/loan-request/loan-request.component";
+import {JournalEntryComponent} from "./ledger/journal-entry/journal-entry.component";
 
 const routes: Routes = [
   {path: "", redirectTo: "login", pathMatch: "full"},
@@ -44,6 +45,7 @@ const routes: Routes = [
       {path: "meeting", component: MeetingComponent},
       {path: "attendance", component: AttendanceComponent},
       {path: "account", component: AccountComponent},
+      {path: "journal-entry", component: JournalEntryComponent},
       {path: "share-account", component: SharesAccountComponent},
       {path: "team-account", component: TeamAccountComponent},
       {path: "deposit", component: DepositComponent},

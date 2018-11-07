@@ -44,11 +44,21 @@
           </div>
 
           <div class="form-group row">
+            <label for="loanType" class="col-sm-4 col-form-label col-form-label-sm">Loan Type</label>
+            <select [compareWith]="compareDropdown" [formControl]="loanType" class="form-control form-control-sm col-sm" id="loanType">
+              <option disabled [value]="null">Select Loan Type</option>
+              <option *ngFor="let loanType of loanTypes$ | async" [ngValue]="loanType">{{loanType.name}} - {{loanType.interestRate}}%</option>
+            </select>
+            <div class="invalid-feedback offset-5" *ngIf="requiredValidation(loanType)">loan type is required</div>
+          </div>
+
+          <div class="form-group row">
             <label for="requestedAmount" class="col-sm-5 col-form-label col-form-label-sm">RequestedAmount <span style="color: red">*</span></label>
             <input [ngClass]="isInvalid(requestedAmount)" formControlName="requestedAmount" id="requestedAmount" type="number"
                    class="form-control form-control-sm col-sm">
             <div class="invalid-feedback offset-5" *ngIf="requiredValidation(requestedAmount)">Amount is required</div>
             <div class="invalid-feedback offset-5" *ngIf="requestedAmount.hasError('pattern') && requestedAmount.touched">Amount should contain rupees without cents</div>
+            <div class="invalid-feedback offset-5" *ngIf="requestedAmount.hasError('invalidAmount') && requestedAmount.touched">Invalid Amount according to loan type</div>
           </div>
 
           <div class="form-group row">
@@ -57,15 +67,7 @@
                    class="form-control form-control-sm col-sm">
             <div class="invalid-feedback offset-4" *ngIf="requiredValidation(duration)">duration is required</div>
             <div class="invalid-feedback offset-4" *ngIf="duration.hasError('pattern') && duration.touched">duration should contain integers</div>
-          </div>
-
-          <div class="form-group row">
-            <label for="loanType" class="col-sm-4 col-form-label col-form-label-sm">Loan Type</label>
-            <select [compareWith]="compareDropdown" [formControl]="loanType" class="form-control form-control-sm col-sm" id="loanType">
-              <option disabled [value]="null">Select Loan Type</option>
-              <option *ngFor="let loanType of loanTypes$ | async" [ngValue]="loanType">{{loanType.name}} - {{loanType.interestRate}}%</option>
-            </select>
-            <div class="invalid-feedback offset-5" *ngIf="requiredValidation(loanType)">loan type is required</div>
+            <div class="invalid-feedback offset-4" *ngIf="duration.hasError('invalidAmount') && duration.touched">Invalid duration according to loan type</div>
           </div>
 
           <div class="form-group row">

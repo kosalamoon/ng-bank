@@ -65,6 +65,7 @@ export class LoanInstallmentComponent implements OnInit {
   private createForm() {
     this.form = this.fb.group({
       "entryType": "Transaction_Entry",
+      "narration": null,
       "user": this.fb.group({
         "id": this.authService.getUserIdFromToken(),
       }),
@@ -86,6 +87,10 @@ export class LoanInstallmentComponent implements OnInit {
         }),
       ]),
     });
+  }
+
+  public get narration() {
+    return this.form.get('narration') as FormControl;
   }
 
   createResponseForm() {

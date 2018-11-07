@@ -280,7 +280,7 @@ export class MemberComponent implements OnInit {
 
   onDeleteYes(id: string) {
     this.memberService.delete(id).subscribe(
-      value => this.memberService.findAll().subscribe(meetingList => this.initializeTable(meetingList)),
+      value => this.memberService.findAll().subscribe(memberList => this.initializeTable(memberList)),
     );
     this.closeModal();
   }

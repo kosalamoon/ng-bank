@@ -27,6 +27,8 @@ import {LoanApproveComponent} from "./loan/loan-approve/loan-approve.component";
 import {LoanDetailsComponent} from "./loan/loan-details/loan-details.component";
 import {LoanRequestComponent} from "./loan/loan-request/loan-request.component";
 import {JournalEntryComponent} from "./ledger/journal-entry/journal-entry.component";
+import {SavingsHistoryComponent} from "./savings/savings-history/savings-history.component";
+import {LoanTypeComponent} from "./loan/loan-type/loan-type.component";
 
 const routes: Routes = [
   {path: "", redirectTo: "login", pathMatch: "full"},
@@ -52,9 +54,11 @@ const routes: Routes = [
       {path: "withdraw", component: WithdrawComponent},
       {path: "loan-pay", component: LoanInstallmentComponent},
       {path: "savings", component: SavingsComponent},
+      {path: "savings-history", component: SavingsHistoryComponent},
       {path: "loan-approve", component: LoanApproveComponent},
       {path: "loan-details", component: LoanDetailsComponent},
       {path: "loan-request", component: LoanRequestComponent},
+      {path: "loan-type", component: LoanTypeComponent},
     ]
   },
   {path: "changePassword/:username", component: ChangePasswordComponent}

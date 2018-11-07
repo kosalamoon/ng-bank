@@ -11,11 +11,12 @@ import {EntryService} from "../../ledger/service/entry.service";
 import {TransactionService} from "../../ledger/service/transaction.service";
 import {Savings} from "../../savings/model/savings";
 import {SavingsService} from "../../savings/service/savings.service";
+import {CashierReportService} from "../service/cashier-report.service";
 
 @Component({
   selector: "app-deposit",
   templateUrl: "./deposit.component.html",
-  styleUrls: ["./deposit.component.css"]
+  styleUrls: ["./deposit.component.css"],
 })
 export class DepositComponent implements OnInit {
 
@@ -39,10 +40,12 @@ export class DepositComponent implements OnInit {
 
   confirmModal: BsModalRef;
 
+  transactionId: string = null;
+
   constructor(private fb: FormBuilder, private authService: AuthenticationService,
               private accountService: AccountService, private entryService: EntryService,
               private transactionService: TransactionService, private modalService: BsModalService,
-              private savingsService: SavingsService) {
+              private savingsService: SavingsService, private cashierService: CashierReportService) {
   }
 
   ngOnInit() {
@@ -60,7 +63,7 @@ export class DepositComponent implements OnInit {
       this.assignAccount(account);
       this.loadSavings(account.savings.id);
       this.account = account;
-      this.entries$ = this.entryService.findTop3ByAccountNumber(this.accountNumber.value);
+      this.entries$ = this.entryService.findTop5ByAccountNumber(this.accountNumber.value);
     }, error1 => {
       this.account = null;
       this.savings = null;
@@ -87,6 +90,7 @@ export class DepositComponent implements OnInit {
     this.errorMsg = null;
     this.account = null;
     this.entries$ = null;
+    this.narration.reset();
   }
 
   addDeposits(template: TemplateRef<any>) {
@@ -98,7 +102,9 @@ export class DepositComponent implements OnInit {
   }
 
   onPersistYes() {
+
     this.transactionService.save(this.form.value).subscribe(value => {
+      this.transactionId = value.id;
       this.clearForm();
       this.closeModal();
     });
@@ -111,7 +117,7 @@ export class DepositComponent implements OnInit {
   isInvalid(control: FormControl) {
     return {
       "is-invalid": control.touched && control.invalid,
-      "is-valid": control.touched && control.valid
+      "is-valid": control.touched && control.valid,
     };
   }
 
@@ -130,22 +136,27 @@ export class DepositComponent implements OnInit {
   private createForm() {
     this.form = this.fb.group({
       "entryType": "Transaction_Entry",
+      "narration": null,
       "user": this.fb.group({
-        "id": this.authService.getUserIdFromToken()
+        "id": this.authService.getUserIdFromToken(),
       }),
       "entryList": this.fb.array([
         this.fb.group({
           "account": this.fb.group({"id": null}),
           "amount": null,
-          "operationType": "Credit"
+          "operationType": "Credit",
         }),
         this.fb.group({
-          "account": this.fb.group({"id": "5"}),
+          "account": this.fb.group({"id": "1"}),
           "amount": null,
-          "operationType": "Debit"
-        })
-      ])
+          "operationType": "Debit",
+        }),
+      ]),
     });
+  }
+
+  public get narration() {
+    return this.form.get('narration') as FormControl;
   }
 
   private assignAmount() {
@@ -153,6 +164,13 @@ export class DepositComponent implements OnInit {
       (this.form.get("entryList") as FormArray).controls.forEach(control => {
         control.patchValue({"amount": amount});
       });
+    });
+  }
+
+  generateReport() {
+    this.cashierService.deposit(this.transactionId, "deposit").subscribe(value => {
+      let file = new Blob([value], {type: 'application/pdf'});
+      window.open(URL.createObjectURL(file), "_self");
     });
   }
 

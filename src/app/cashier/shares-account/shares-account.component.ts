@@ -52,6 +52,7 @@ export class SharesAccountComponent implements OnInit {
   createForm() {
     this.form = this.fb.group({
       "entryType": "Transaction_Entry",
+      "narration": null,
       "user": this.fb.group({
         "id": this.authService.getUserIdFromToken()
       }),
@@ -62,12 +63,16 @@ export class SharesAccountComponent implements OnInit {
           "operationType": "Credit"
         }),
         this.fb.group({
-          "account": this.fb.group({"id": "5"}),
+          "account": this.fb.group({"id": "1"}),
           "amount": null,
           "operationType": "Debit"
         })
       ])
     });
+  }
+
+  public get narration() {
+    return this.form.get('narration') as FormControl;
   }
 
   assignAmount() {
@@ -87,7 +92,7 @@ export class SharesAccountComponent implements OnInit {
       }
       this.assignAccount(account);
       this.account = account;
-      this.entries$ = this.entryService.findTop3ByAccountNumber(this.accountNumber.value);
+      this.entries$ = this.entryService.findTop5ByAccountNumber(this.accountNumber.value);
     }, error1 => {
       this.account = null;
       this.entries$ = null;

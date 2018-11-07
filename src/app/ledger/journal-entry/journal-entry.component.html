@@ -194,7 +194,7 @@
 
           <ng-container cdkColumnDef="dateTime">
             <th cdk-header-cell *cdkHeaderCellDef mat-sort-header>Date Time</th>
-            <td cdk-cell *cdkCellDef="let entry">{{entry.transaction?.dateTime}}</td>
+            <td cdk-cell *cdkCellDef="let entry">{{entry.transaction?.dateTime | date: 'yyyy-MM-dd @ h:mm:ss a'}}</td>
           </ng-container>
 
           <tr class="thead-light" cdk-header-row *cdkHeaderRowDef="displayedColumns"></tr>

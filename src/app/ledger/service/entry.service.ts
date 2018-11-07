@@ -1,5 +1,5 @@
 import {Injectable} from "@angular/core";
-import {HttpClient, HttpHeaders} from "@angular/common/http";
+import {HttpClient, HttpHeaders, HttpParams} from "@angular/common/http";
 import {baseURL} from "../../shared/const/constants";
 import {Service} from "../../person/service/service";
 import {Entry} from "../model/entry";
@@ -18,16 +18,24 @@ export class EntryService implements Service<Entry> {
 
   findAll(fromDate: string = null, toDate: string = null): Observable<Entry[]> {
     if (fromDate != null && toDate != null) {
-      let headers = new HttpHeaders()
-        .append("fromDate", fromDate)
-        .append("toDate", toDate);
-      return this.http.get<Entry[]>(this.url, {headers: headers});
+      let params = new HttpParams().append("fromDate", fromDate).append("toDate", toDate);
+      return this.http.get<Entry[]>(this.url, {params: params});
     }
     return this.http.get<Entry[]>(this.url);
   }
 
-  findTop3ByAccountNumber(number: string): Observable<Entry[]> {
+  findAllByAccountNumber(number: string, fromDate: string = null, toDate: string = null): Observable<Entry[]> {
+    if (fromDate != null && toDate != null) {
+      let params = new HttpParams()
+        .append("fromDate", fromDate)
+        .append("toDate", toDate);
+      return this.http.get<Entry[]>(`${this.url}/account/number/${number}`, {params: params});
+    }
     return this.http.get<Entry[]>(`${this.url}/account/number/${number}`);
+  }
+
+  findTop5ByAccountNumber(number: string): Observable<Entry[]> {
+    return this.http.get<Entry[]>(`${this.url}/top5/account/number/${number}`);
   }
 
   findById(id: string): Observable<Entry> {
@@ -40,8 +48,7 @@ export class EntryService implements Service<Entry> {
 
   search(e: {}, fromDate: string = null, toDate: string = null): Observable<Entry[]> {
     if (fromDate != null && toDate != null) {
-      let params = {"fromDate": fromDate, "toDate": toDate};
-      console.log(params);
+      let params = new HttpParams().append("fromDate", fromDate).append("toDate", toDate);
       return this.http.put<Entry[]>(`${this.url}/search`, e, {params: params});
     }
     return this.http.put<Entry[]>(`${this.url}/search`, e);

@@ -11,6 +11,7 @@ import {AccountService} from "../../ledger/service/account.service";
 import {EntryService} from "../../ledger/service/entry.service";
 import {TransactionService} from "../../ledger/service/transaction.service";
 import {SavingsService} from "../../savings/service/savings.service";
+import {CashierReportService} from "../service/cashier-report.service";
 
 @Component({
   selector: "app-withdraw",
@@ -39,10 +40,12 @@ export class WithdrawComponent implements OnInit {
 
   confirmModal: BsModalRef;
 
+  transactionId: string = null;
+
   constructor(private fb: FormBuilder, private authService: AuthenticationService,
               private accountService: AccountService, private entryService: EntryService,
               private transactionService: TransactionService, private modalService: BsModalService,
-              private savingsService: SavingsService) {
+              private savingsService: SavingsService, private cashierService: CashierReportService) {
   }
 
   ngOnInit() {
@@ -53,6 +56,7 @@ export class WithdrawComponent implements OnInit {
   createForm() {
     this.form = this.fb.group({
       "entryType": "Transaction_Entry",
+      "narration": null,
       "user": this.fb.group({
         "id": this.authService.getUserIdFromToken()
       }),
@@ -63,12 +67,16 @@ export class WithdrawComponent implements OnInit {
           "operationType": "Debit"
         }),
         this.fb.group({
-          "account": this.fb.group({"id": "5"}),
+          "account": this.fb.group({"id": "1"}),
           "amount": null,
           "operationType": "Credit"
         })
       ])
     });
+  }
+
+  public get narration() {
+    return this.form.get('narration') as FormControl;
   }
 
   assignAmount() {
@@ -89,7 +97,7 @@ export class WithdrawComponent implements OnInit {
       this.assignAccount(account);
       this.loadSavings(account.savings.id);
       this.account = account;
-      this.entries$ = this.entryService.findTop3ByAccountNumber(this.accountNumber.value);
+      this.entries$ = this.entryService.findTop5ByAccountNumber(this.accountNumber.value);
     }, error1 => {
       this.account = null;
       this.entries$ = null;
@@ -114,6 +122,7 @@ export class WithdrawComponent implements OnInit {
     this.errorMsg = null;
     this.account = null;
     this.entries$ = null;
+    this.narration.reset();
   }
 
   withdraw(template: TemplateRef<any>) {
@@ -126,6 +135,7 @@ export class WithdrawComponent implements OnInit {
 
   onPersistYes() {
     this.transactionService.save(this.form.value).subscribe(value => {
+      this.transactionId = value.id;
       this.clearForm();
       this.closeModal();
     });
@@ -154,8 +164,11 @@ export class WithdrawComponent implements OnInit {
     return null;
   }
 
-  getToday() {
-    return new Date();
+  generateReport() {
+    this.cashierService.deposit(this.transactionId, "withdraw").subscribe(value => {
+      let file = new Blob([value], {type: 'application/pdf'});
+      window.open(URL.createObjectURL(file), "_self");
+    });
   }
 
 }

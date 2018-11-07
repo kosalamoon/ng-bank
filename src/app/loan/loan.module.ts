@@ -9,6 +9,7 @@ import {LoanRequestComponent} from './loan-request/loan-request.component';
 import {LoanDetailsComponent} from './loan-details/loan-details.component';
 import {LoanStatusService} from "./service/loan-status.service";
 import {ChartsModule} from "ng2-charts";
+import { LoanTypeComponent } from './loan-type/loan-type.component';
 
 @NgModule({
   imports: [
@@ -19,7 +20,7 @@ import {ChartsModule} from "ng2-charts";
     ChartsModule,
     SharedModule,
   ],
-  declarations: [LoanApproveComponent, LoanRequestComponent, LoanDetailsComponent],
+  declarations: [LoanApproveComponent, LoanRequestComponent, LoanDetailsComponent, LoanTypeComponent],
   providers: [
     LoanTypeService,
     LoanStatusService,

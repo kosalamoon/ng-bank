@@ -13,7 +13,7 @@ import {TransactionService} from "../../ledger/service/transaction.service";
 @Component({
   selector: "app-team-account",
   templateUrl: "./team-account.component.html",
-  styleUrls: ["./team-account.component.css"]
+  styleUrls: ["./team-account.component.css"],
 })
 export class TeamAccountComponent implements OnInit {
 
@@ -49,22 +49,27 @@ export class TeamAccountComponent implements OnInit {
   createForm() {
     this.form = this.fb.group({
       "entryType": "Transaction_Entry",
+      "narration": null,
       "user": this.fb.group({
-        "id": this.authService.getUserIdFromToken()
+        "id": this.authService.getUserIdFromToken(),
       }),
       "entryList": this.fb.array([
         this.fb.group({
           "account": this.fb.group({"id": null}),
           "amount": null,
-          "operationType": "Credit"
+          "operationType": "Credit",
         }),
         this.fb.group({
-          "account": this.fb.group({"id": "5"}),
+          "account": this.fb.group({"id": "1"}),
           "amount": null,
-          "operationType": "Debit"
-        })
-      ])
+          "operationType": "Debit",
+        }),
+      ]),
     });
+  }
+
+  public get narration() {
+    return this.form.get('narration') as FormControl;
   }
 
   assignAmount() {
@@ -84,7 +89,7 @@ export class TeamAccountComponent implements OnInit {
       }
       this.assignAccount(account);
       this.account = account;
-      this.entries$ = this.entryService.findTop3ByAccountNumber(this.accountNumber.value);
+      this.entries$ = this.entryService.findTop5ByAccountNumber(this.accountNumber.value);
     }, error1 => {
       this.account = null;
       this.entries$ = null;
@@ -129,7 +134,7 @@ export class TeamAccountComponent implements OnInit {
   isInvalid(control: FormControl) {
     return {
       "is-invalid": control.touched && control.invalid,
-      "is-valid": control.touched && control.valid
+      "is-valid": control.touched && control.valid,
     };
   }
 

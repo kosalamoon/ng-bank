@@ -9,6 +9,7 @@ import {DepositComponent} from "./deposit/deposit.component";
 import {WithdrawComponent} from "./withdraw/withdraw.component";
 import {LoanInstallmentComponent} from "./loan-installment/loan-installment.component";
 import {LoanService} from "../loan/service/loan.service";
+import {CashierReportService} from "./service/cashier-report.service";
 
 @NgModule({
   imports: [
@@ -26,7 +27,8 @@ import {LoanService} from "../loan/service/loan.service";
     LoanInstallmentComponent
   ],
   providers: [
-    LoanService
+    LoanService,
+    CashierReportService
   ]
 })
 export class CashierModule {

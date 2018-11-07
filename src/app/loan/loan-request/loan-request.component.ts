@@ -56,6 +56,14 @@ export class LoanRequestComponent implements OnInit {
     this.loadTeamsBySocietyId();
     this.loadMembersByTeamId();
     this.loadLoanTypes();
+
+    this.loanType.valueChanges.subscribe(value => {
+      if (value) {
+        console.log(this.form.controls);
+        this.addAmountValidation();
+        this.addPeriodValidation();
+      }
+    });
   }
 
   createForm() {
@@ -173,4 +181,18 @@ export class LoanRequestComponent implements OnInit {
 
 
   compareDropdown = (o1: any, o2: any) => o1 && o2 ? o1.id === o2.id : o1 === o2;
+
+  addAmountValidation() {
+    let func = (control: FormControl) =>
+      +(this.loanType.value as LoanType).minAmount > (control.value as number) ||
+      +(this.loanType.value as LoanType).maxAmount < (control.value as number) ? {"invalidAmount": true} : null;
+    this.requestedAmount.setValidators(func.bind(this));
+  }
+
+  addPeriodValidation() {
+    let func = (control: FormControl) =>
+      +(this.loanType.value as LoanType).minPeriod > (control.value as number) ||
+      +(this.loanType.value as LoanType).maxPeriod < (control.value as number) ? {"invalidAmount": true} : null;
+    this.duration.setValidators(func.bind(this));
+  }
 }

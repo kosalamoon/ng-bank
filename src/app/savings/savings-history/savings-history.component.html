@@ -1,3 +1,112 @@
-<p>
-  savings-history works!
-</p>
+<div class="form-row">
+  <div class="col-4">
+
+    <div class="card bg-light mb-3">
+      <div class="card-body">
+        <h5 class="card-title text-center">Savings history Form</h5>
+
+        <div class="form-group row">
+          <label for="account" class="col-5 col-form-label col-form-label-sm">Account Number<span style="color: red">*</span></label>
+          <ng-select [searchable]="true" [ngClass]="isInvalid(account)"
+                     placeholder="account number" [groupBy]="groupBy"
+                     [items]="accounts$ | async" bindLabel="number"
+                     [formControl]="account" id="account"
+                     class="col">
+          </ng-select>
+          <div class="text-danger offset-5" *ngIf="requiredValidation(account)">
+            <small>Account number is required</small>
+          </div>
+        </div>
+
+        <div class="form-group row">
+          <label for="account" class="col-5 col-form-label col-form-label-sm">Date From<span style="color: red">*</span></label>
+          <input
+            bsDatepicker placement="right" [ngClass]="isInvalid(fromDate)"
+            [bsConfig]="{dateInputFormat: 'YYYY-MM-DD', containerClass:'theme-default'}"
+            type="text" [formControl]="fromDate" class="form-control form-control-sm col">
+          <div class="invalid-feedback offset-5" *ngIf="requiredValidation(fromDate)">Date is required</div>
+        </div>
+
+
+        <div class="form-group row">
+          <label for="account" class="col-5 col-form-label col-form-label-sm">Date To<span style="color: red">*</span></label>
+          <input
+            bsDatepicker placement="right" [ngClass]="isInvalid(toDate)"
+            [bsConfig]="{dateInputFormat: 'YYYY-MM-DD', containerClass:'theme-default'}"
+            type="text" [formControl]="toDate" class="form-control form-control-sm col">
+          <div class="invalid-feedback offset-5" *ngIf="requiredValidation(toDate)">Date is required</div>
+        </div>
+
+        <div class="form-group row">
+          <div class="btn-group btn-group-sm d-flex col">
+            <button type="button" class="btn btn-primary w-100" (click)="loadEntries()">View
+            </button>
+            <button type="button" class="btn btn-secondary w-100" (click)="clearControls()">Clear</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+  <div class="col-8" *ngIf="dataSource?.data">
+    <div class="card bg-light mb-3">
+      <div class="card-body">
+        <h5 class="card-title text-center">Savings</h5>
+
+        <div class="form-group row">
+          <label for="filter" class="col-2 col-form-label col-form-label-sm">Filter Columns</label>
+          <mat-select (selectionChange)="addColumn($event)" placeholder="Columns" multiple [value]="displayedColumns"
+                      class="form-control form-control-sm col" id="filter">
+            <mat-option *ngFor="let column of columns" [value]="column">{{column | sentence}}</mat-option>
+          </mat-select>
+        </div>
+
+        <div class="row">
+          <table cdk-table [dataSource]="dataSource" matSort class="col table table-bordered table-hover table-sm">
+
+            <ng-container matColumnDef="id">
+              <th cdk-header-cell *matHeaderCellDef mat-sort-header>ID</th>
+              <td cdk-cell *cdkCellDef="let entry">{{entry.id}}</td>
+            </ng-container>
+
+            <ng-container cdkColumnDef="narration">
+              <th cdk-header-cell *cdkHeaderCellDef mat-sort-header>Narration</th>
+              <td cdk-cell *cdkCellDef="let entry">{{entry.transaction?.narration}}</td>
+            </ng-container>
+
+            <ng-container cdkColumnDef="dateTime">
+              <th cdk-header-cell *cdkHeaderCellDef mat-sort-header>Date Time</th>
+              <td cdk-cell *cdkCellDef="let entry">{{entry.transaction?.dateTime | date: 'yyyy-MM-dd @ h:mm:ss a'}}</td>
+            </ng-container>
+
+            <ng-container cdkColumnDef="deposits">
+              <th cdk-header-cell *cdkHeaderCellDef mat-sort-header>Deposits</th>
+              <td cdk-cell *cdkCellDef="let entry">
+                <ng-container *ngIf="entry.operationType === 'Credit'">
+                  {{entry.amount | number: '1.2-2'}}
+                </ng-container>
+              </td>
+            </ng-container>
+
+            <ng-container cdkColumnDef="withdrawals">
+              <th cdk-header-cell *cdkHeaderCellDef mat-sort-header>Withdrawals</th>
+              <td cdk-cell *cdkCellDef="let entry">
+                <ng-container *ngIf="entry.operationType === 'Debit'">
+                  {{entry.amount | number: '1.2-2'}}
+                </ng-container>
+              </td>
+            </ng-container>
+
+            <tr class="thead-light" cdk-header-row *cdkHeaderRowDef="displayedColumns"></tr>
+
+            <tr cdk-row *cdkRowDef="let row; columns: displayedColumns"></tr>
+
+          </table>
+        </div>
+        <mat-paginator [pageSizeOptions]="[5, 7, 10]"></mat-paginator>
+
+      </div>
+    </div>
+  </div>
+</div>

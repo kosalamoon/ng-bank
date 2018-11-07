@@ -19,6 +19,10 @@ export class AccountService {
     return this.http.get<Account[]>(this.url);
   }
 
+  findAllHavingSavings() {
+    return this.http.get<Account[]>(`${this.url}/savings`);
+  }
+
   findById(id: string): Observable<Account> {
     return this.http.get<Account>(`${this.url}/${id}`);
   }

@@ -20,7 +20,7 @@ import {SavingsStatusService} from "../service/saving-status.service";
 @Component({
   selector: "app-savings",
   templateUrl: "./savings.component.html",
-  styleUrls: ["./savings.component.css"]
+  styleUrls: ["./savings.component.css"],
 })
 export class SavingsComponent implements OnInit {
 
@@ -71,10 +71,10 @@ export class SavingsComponent implements OnInit {
   createForm() {
     this.form = this.fb.group({
       "id": null,
-      "savingStatus": [null, Validators.required],
+      "savingStatus": ["Active", Validators.required],
       "savingType": [null, Validators.required],
-      "account": [null, Validators.required],
-      "member": [null, Validators.required]
+      "account": null,
+      "member": [null, Validators.required],
     });
   }
 
@@ -83,11 +83,11 @@ export class SavingsComponent implements OnInit {
       "savingStatus": null,
       "savingType": null,
       "account": this.fb.group({
-        "number": null
+        "number": null,
       }),
       "member": this.fb.group({
-        "fullName": null
-      })
+        "fullName": null,
+      }),
     });
   }
 
@@ -148,12 +148,13 @@ export class SavingsComponent implements OnInit {
       "savingStatus": savings.savingStatus,
       "savingType": savings.savingType,
       "account": savings.account,
-      "member": savings.member
+      "member": savings.member,
     });
   }
 
   private clearForm() {
     this.form.reset();
+    this.savingStatus.reset("Active");
     this.division.reset();
     this.society.reset();
     this.team.reset();
@@ -183,9 +184,20 @@ export class SavingsComponent implements OnInit {
   }
 
   addSavings(template: TemplateRef<any>) {
-    this.validate(["id", "savingStatus", "savingType", "account", "member"]);
+    this.validate(["id", "savingStatus", "savingType", "member"]);
+    if (this.id.value == null)
+      this.account.patchValue({
+        "name": "Saving " + this.member.value.fullName,
+        "operationType": "Credit",
+        "accountType": {"id": 2},
+        "subAccountType": {"id": 8},
+      });
     if (this.form.valid)
       this.confirmModal = this.modalService.show(template);
+  }
+
+  deleteSavings(template: TemplateRef<any>) {
+    this.confirmModal = this.modalService.show(template);
   }
 
   onPersistYes() {
@@ -193,6 +205,13 @@ export class SavingsComponent implements OnInit {
       this.loadSavings();
       this.closeModal();
       this.clearForm();
+    });
+  }
+
+  onDeleteYes(id: string) {
+    this.savingsService.delete(id).subscribe(value => {
+      this.loadSavings();
+      this.closeModal();
     });
   }
 
@@ -220,7 +239,7 @@ export class SavingsComponent implements OnInit {
   isInvalid(control: FormControl) {
     return {
       "is-invalid": control.touched && control.invalid,
-      "is-valid": control.touched && control.valid
+      "is-valid": control.touched && control.valid,
     };
   }
 

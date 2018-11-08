@@ -96,8 +96,8 @@
       </li>
 
       <li class="list-group-item d-flex justify-content-between list-group-item-action bg-light">
-        <b class="text-success">Remaining Balance</b>
-        <span class="text-success">{{account.balance | number: '1.2-2'}}</span>
+        <b class="text-success">Remaining Amount</b>
+        <span class="text-success">{{remainingAmount | number: '1.2-2'}}</span>
       </li>
 
       <li class="list-group-item d-flex justify-content-between list-group-item-action bg-light"
@@ -107,9 +107,9 @@
       </li>
 
       <li class="list-group-item d-flex justify-content-between list-group-item-action bg-light"
-          *ngIf="arrears !== '0'">
+          *ngIf="arrears != '0'">
         <b class="text-danger">Arrears</b>
-        <span class="text-danger">{{nextInstallmentAmount | number: '1.2-2'}}</span>
+        <span class="text-danger">{{arrears | number: '1.2-2'}}</span>
       </li>
     </ul>
   </div>
@@ -134,17 +134,17 @@
               <td>{{transaction.dateTime | date: 'fullDate'}}</td>
               <td>
                 <ng-container *ngFor="let entry of transaction.entryList">
-                  <ng-container *ngIf="entry.account.id == '3'">{{entry.amount | number: '1.2-2'}}</ng-container>
+                  <ng-container *ngIf="entry.account.id == '3'">{{entry.amount | number: '1.2-2'}}</ng-container> <!--interest receivable-->
                 </ng-container>
               </td>
               <td>
                 <ng-container *ngFor="let entry of transaction.entryList">
-                  <ng-container *ngIf="entry.account.id == account.id">{{entry.amount | number: '1.2-2'}}</ng-container>
+                  <ng-container *ngIf="entry.account.id == account.id">{{entry.amount | number: '1.2-2'}}</ng-container> <!--loan account-->
                 </ng-container>
               </td>
               <td>
                 <ng-container *ngFor="let entry of transaction.entryList">
-                  <ng-container *ngIf="entry.account.id == '1'">{{entry.amount | number: '1.2-2'}}</ng-container>
+                  <ng-container *ngIf="entry.account.id == '1'">{{entry.amount | number: '1.2-2'}}</ng-container> <!--cash-->
                 </ng-container>
               </td>
             </tr>

@@ -134,16 +134,9 @@
 
           <div class="col">
             <input
-              bsDatepicker placement="top" placeholder="from"
+              bsDaterangepicker placement="top" placeholder="date range"
               [bsConfig]="{dateInputFormat: 'YYYY-MM-DD', containerClass:'theme-default'}"
-              type="text" [formControl]="fromDate" class="form-control form-control-sm">
-          </div>
-
-          <div class="col">
-            <input
-              bsDatepicker placement="top" placeholder="to"
-              [bsConfig]="{dateInputFormat: 'YYYY-MM-DD', containerClass:'theme-default'}"
-              type="text" [formControl]="toDate" class="form-control form-control-sm">
+              type="text" [formControl]="dateRange" class="form-control form-control-sm">
           </div>
 
           <div class="col">

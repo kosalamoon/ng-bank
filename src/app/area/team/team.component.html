@@ -131,7 +131,7 @@
                     <div class="btn-group btn-group-sm d-flex">
                       <button type="button" class="btn btn-warning w-100" (click)="fillForm(team)">Edit</button>
                       <button type="button" class="btn btn-danger w-100"
-                              *ngIf="team.account?.balance === '0' || team.account?.balance === null"
+                              *ngIf="team.account?.balance == '0' || team.account?.balance === null"
                               (click)="deleteTeam(delete)">Delete
                       </button>
                     </div>

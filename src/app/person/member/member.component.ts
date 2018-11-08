@@ -51,6 +51,8 @@ export class MemberComponent implements OnInit {
   isLoading: boolean = false;
   downloadUrl: string = null;
 
+  maxDate = new Date();
+
 
 
   constructor(private memberService: MemberService,
@@ -263,13 +265,11 @@ export class MemberComponent implements OnInit {
     this.form.patchValue({
       "dob": this.convertDateToString(this.dob.value),
     });
-
     if (this.subsidy.value === true)
       this.validate(["fullName", "address", "nic", "dob", "gender", "telephone", "spouse", "incomeType", "team",
         "subsidy.subsidyType", "subsidy.amount", "subsidy.number"]);
     else
       this.validate(["fullName", "address", "nic", "dob", "gender", "telephone", "spouse", "incomeType", "team"]);
-
     if (this.form.valid)
       this.modalRef = this.modalService.show(template);
   }

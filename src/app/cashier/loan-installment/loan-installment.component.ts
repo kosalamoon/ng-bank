@@ -43,6 +43,7 @@ export class LoanInstallmentComponent implements OnInit {
 
   nextInstallmentAmount: string;
   arrears: string;
+  remainingAmount: string;
 
   response: LoanStatusResponse;
 
@@ -81,7 +82,7 @@ export class LoanInstallmentComponent implements OnInit {
           "operationType": "Credit",
         }),
         this.fb.group({
-          "account": this.fb.group({"id": "2"}), // interest income account
+          "account": this.fb.group({"id": "3"}), // interest income account
           "amount": null,
           "operationType": "Credit",
         }),
@@ -116,6 +117,7 @@ export class LoanInstallmentComponent implements OnInit {
       this.assignAccount(account);
       this.getNextInstallmentAmount(account.loan.id);
       this.getArrears(account.loan.id);
+      this.getRemainingAmount(account.loan.id);
 
     }, error1 => {
       this.account = null;
@@ -169,6 +171,12 @@ export class LoanInstallmentComponent implements OnInit {
   getArrears(id: string) {
     this.loanService.calculateArrears(id).subscribe(value => this.arrears = value);
 
+  }
+
+  getRemainingAmount(id: string) {
+    this.loanService.calculateRemainingAmount(id).subscribe(value => {
+      this.remainingAmount = value;
+    });
   }
 
   clearForm() {

@@ -5,7 +5,7 @@ import {Account} from "../../ledger/model/account";
 import {Savings} from "../../savings/model/savings";
 import {Entry} from "../../ledger/model/entry";
 import {BsModalRef, BsModalService} from "ngx-bootstrap/modal";
-import {Observable} from "../../../../node_modules/rxjs";
+import {Observable} from "rxjs/internal/Observable";
 import {AuthenticationService} from "../../auth/authentication.service";
 import {AccountService} from "../../ledger/service/account.service";
 import {EntryService} from "../../ledger/service/entry.service";
@@ -97,6 +97,7 @@ export class WithdrawComponent implements OnInit {
       this.assignAccount(account);
       this.loadSavings(account.savings.id);
       this.account = account;
+      this.withdrawLimitValidation();
       this.entries$ = this.entryService.findTop5ByAccountNumber(this.accountNumber.value);
     }, error1 => {
       this.account = null;
@@ -162,6 +163,11 @@ export class WithdrawComponent implements OnInit {
       return {"numberIsForbidden": true};
     }
     return null;
+  }
+
+  withdrawLimitValidation() {
+    let func = (control: FormControl) => (control.value as number) > +this.account.balance ? {"invalidAmount": true} : null;
+    this.amount.setValidators(func.bind(this));
   }
 
   generateReport() {

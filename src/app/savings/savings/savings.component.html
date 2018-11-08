@@ -8,10 +8,11 @@
           <div class="form-group row">
             <label for="savingStatus" class="col-sm-4 col-form-label col-form-label-sm">Saving Status
               <span style="color: red">*</span></label>
-            <select formControlName="savingStatus" class="form-control form-control-sm col-sm" [ngClass]="isInvalid(savingStatus)"
+            <select [attr.disabled]="!id.value? 'disabled': null" formControlName="savingStatus" class="form-control form-control-sm col-sm" [ngClass]="isInvalid(savingStatus)"
                     id="savingStatus">
               <option disabled [value]="null">Select Saving Status</option>
-              <option *ngFor="let savingStatus of savingStatuses$ | async" [ngValue]="savingStatus">{{savingStatus}}</option>
+              <option *ngFor="let savingStatus of savingStatuses$ | async"
+                      [ngValue]="savingStatus">{{savingStatus}}</option>
             </select>
             <div class="invalid-feedback offset-4" *ngIf="requiredValidation(savingStatus)">Saving status is required</div>
           </div>
@@ -172,7 +173,20 @@
               <ng-container cdkColumnDef="action">
                 <th cdk-header-cell *cdkHeaderCellDef mat-sort-header>Action</th>
                 <td cdk-cell *cdkCellDef="let savings">
-                  <button type="button" class="btn btn-warning btn-sm btn-block" (click)="fillForm(savings)">Edit</button>
+                  <div class="btn-group btn-group-sm d-flex">
+                    <button type="button" class="btn btn-warning btn-sm w-100" (click)="fillForm(savings)">Edit</button>
+                    <button *ngIf="savings.account.balance == '0'" type="button" class="btn btn-danger btn-sm w-100" (click)="deleteSavings(delete)">Delete</button>
+                  </div>
+                  <ng-template #delete>
+                    <div class="modal-body text-center">
+                      <p>Are you sure that you want to delete saving id: {{savings.id}} ?</p>
+                      <div class="btn-group btn-group-sm d-flex">
+                        <button type="button" class="btn btn-danger w-100" (click)="onDeleteYes(savings.id)">Yes
+                        </button>
+                        <button type="button" class="btn btn-secondary w-100" (click)="closeModal()">No</button>
+                      </div>
+                    </div>
+                  </ng-template>
                 </td>
               </ng-container>
 

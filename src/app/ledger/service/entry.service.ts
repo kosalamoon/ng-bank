@@ -46,7 +46,7 @@ export class EntryService implements Service<Entry> {
     return undefined;
   }
 
-  search(e: {}, fromDate: string = null, toDate: string = null): Observable<Entry[]> {
+  search(e: {}, fromDate?: string, toDate?: string): Observable<Entry[]> {
     if (fromDate != null && toDate != null) {
       let params = new HttpParams().append("fromDate", fromDate).append("toDate", toDate);
       return this.http.put<Entry[]>(`${this.url}/search`, e, {params: params});

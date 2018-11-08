@@ -3,7 +3,7 @@ import {HttpClient} from "@angular/common/http";
 import {BoardMember} from "../model/board-member";
 import {Observable} from "rxjs/internal/Observable";
 import {Service} from "./service";
-import {baseURL} from "../../shared/const/constants";
+import {baseURL, responseType} from "../../shared/const/constants";
 
 @Injectable()
 export class BoardMemberService implements Service<BoardMember>{
@@ -25,17 +25,18 @@ export class BoardMemberService implements Service<BoardMember>{
   }
 
   delete(id: string) {
+    return this.http.delete<string>(`${this.url}/${id}`, responseType);
   }
 
-  search(): Observable<BoardMember[]> {
-    return undefined;
+  search(e: {}): Observable<BoardMember[]> {
+    return this.http.put<BoardMember[]>(`${this.url}/search`, e);
   }
 
   save(e: BoardMember): Observable<BoardMember> {
-    return undefined;
+    return this.http.post<BoardMember>(`${this.url}`, e);
   }
 
   update(e: BoardMember): Observable<BoardMember> {
-    return undefined;
+    return this.http.put<BoardMember>(`${this.url}`, e);
   }
 }

@@ -27,8 +27,7 @@ export class JournalEntryComponent implements OnInit {
   form: FormGroup;
   searchForm: FormGroup;
 
-  fromDate: FormControl = new FormControl(null);
-  toDate: FormControl = new FormControl(null);
+  dateRange: FormControl = new FormControl(null);
 
   entryTypes$: Observable<string[]>;
   accounts$: Observable<Account[]>;
@@ -163,24 +162,21 @@ export class JournalEntryComponent implements OnInit {
   }
 
   search() {
-    if (this.fromDate.value != null && this.toDate.value != null) {
-      let fromDate: string = this.convertDateToString(this.fromDate.value) + "T00:00";
-      let toDate: string = this.convertDateToString(this.toDate.value) + "T00:00";
-      console.log(fromDate, toDate);
-      this.entryService.search(this.searchForm.value, fromDate, toDate).subscribe(value => {
-        this.initializeTable(value);
-        return;
-      });
+    let fromDate: string;
+    let toDate: string;
+    if (this.dateRange.value != null) {
+      fromDate = this.convertDateToString(this.dateRange.value[0]) + "T00:00";
+      toDate = this.convertDateToString(this.dateRange.value[1]) + "T00:00";
     }
-    this.entryService.search(this.searchForm.value).subscribe(value => {
+    this.entryService.search(this.searchForm.value, fromDate, toDate).subscribe(value => {
       this.initializeTable(value);
+      return;
     });
   }
 
   clearSearch() {
     this.searchForm.reset();
-    this.fromDate.reset();
-    this.toDate.reset();
+    this.dateRange.reset();
     this.entryService.findAll().subscribe(value => {
       this.initializeTable(value);
     });

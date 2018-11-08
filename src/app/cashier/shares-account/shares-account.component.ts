@@ -3,7 +3,7 @@ import {FormArray, FormBuilder, FormControl, FormGroup, Validators} from "@angul
 import {AuthenticationService} from "../../auth/authentication.service";
 import {AccountService} from "../../ledger/service/account.service";
 import {Account} from "../../ledger/model/account";
-import {Observable} from "../../../../node_modules/rxjs";
+import {Observable} from "rxjs/internal/Observable";
 import {Entry} from "../../ledger/model/entry";
 import {EntryService} from "../../ledger/service/entry.service";
 import {TransactionService} from "../../ledger/service/transaction.service";

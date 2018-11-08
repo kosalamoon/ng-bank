@@ -53,7 +53,7 @@ export class MeetingComponent implements OnInit {
       "id": null,
       "date": [null, [Validators.required, Validators.pattern(date)]],
       "time": [null, [Validators.required, Validators.pattern(time)]],
-      "meetingStatus": [null, Validators.required],
+      "meetingStatus": ["To_Be_Held", Validators.required],
       "meetingType": [null, Validators.required],
     });
   }
@@ -105,6 +105,7 @@ export class MeetingComponent implements OnInit {
 
   clearForm() {
     this.form.reset();
+    this.meetingStatus.reset("To_Be_Held");
   }
 
   columns = ["id", "date", "time", "meetingStatus", "meetingType", "action", "attendance"];

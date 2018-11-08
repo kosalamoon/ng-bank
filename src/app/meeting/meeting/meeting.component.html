@@ -33,10 +33,10 @@
           <div class="form-group row">
             <label class="col-sm-5 col-form-label col-form-label-sm">Meeting Status <span
               style="color: red">*</span></label>
-            <select [ngClass]="isInvalid(meetingStatus)"
+            <select [attr.disabled]="!id.value? 'disabled': null" [ngClass]="isInvalid(meetingStatus)"
                     class="form-control form-control-sm col-sm" id="meetingStatus" formControlName="meetingStatus">
               <option disabled [ngValue]="null">Select Meeting Status</option>
-              <option *ngFor="let meetingStatus of meetingStatusList" [ngValue]="meetingStatus">{{meetingStatus}}
+              <option *ngFor="let meetingStatus of meetingStatusList" [ngValue]="meetingStatus">{{meetingStatus | underscore}}
               </option>
             </select>
             <div class="invalid-feedback offset-5" *ngIf="meetingStatus.hasError('required') && meetingStatus.touched">
@@ -157,7 +157,7 @@
 
                 <ng-container cdkColumnDef="meetingStatus">
                   <th cdk-header-cell *cdkHeaderCellDef mat-sort-header>Meeting Status</th>
-                  <td cdk-cell *cdkCellDef="let meeting">{{meeting.meetingStatus}}</td>
+                  <td cdk-cell *cdkCellDef="let meeting">{{meeting.meetingStatus | underscore}}</td>
                 </ng-container>
 
                 <ng-container cdkColumnDef="action">

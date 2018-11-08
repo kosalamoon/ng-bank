@@ -48,6 +48,7 @@
               bsDatepicker
               [bsConfig]="{dateInputFormat: 'YYYY-MM-DD', containerClass:'theme-default'}"
               placement="right"
+              [maxDate]="maxDate"
               type="text" formControlName="dob" class="form-control form-control-sm  col-sm" id="dob">
             <div class="invalid-feedback offset-4" *ngIf="dob.hasError('required') && dob.touched">Date of birth is
               required
@@ -205,6 +206,7 @@
       </div>
     </div>
   </div>
+
   <div class="col-lg-8">
     <div class="card bg-light mb-3">
       <div class="card-header text-center">Search</div>

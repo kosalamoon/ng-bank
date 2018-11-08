@@ -49,6 +49,10 @@ export class LoanService implements Service<Loan> {
     return this.http.get<string>(`${this.url}/calcArrears/${id}`);
   }
 
+  calculateRemainingAmount(id: string): Observable<string> {
+    return this.http.get<string>(`${this.url}/calcRemaining/${id}`);
+  }
+
   nextInstallmentAmount(id: string): Observable<string> {
     return this.http.get<string>(`${this.url}/nextInstallmentAmount/${id}`);
 

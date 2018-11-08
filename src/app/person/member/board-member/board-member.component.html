@@ -1,3 +1,223 @@
-<p>
-  board-member works!
-</p>
+<div class="form-row">
+  <div class="col-4">
+    <div class="card bg-light mb-3">
+      <div class="card-body">
+        <h5 class="card-title text-center">Board Member Form</h5>
+
+        <form [formGroup]="form">
+
+          <div class="form-group row">
+            <label for="boardDesignation" class="col-sm-4 col-form-label col-form-label-sm">Designation <span style="color: red">*</span></label>
+            <select [ngClass]="isInvalid(boardDesignation)" class="form-control form-control-sm col-sm" id="boardDesignation" formControlName="boardDesignation">
+              <option disabled [value]="null">Select Designation</option>
+              <option *ngFor="let boardDesignation of boardDesignations$ | async" [ngValue]="boardDesignation">{{boardDesignation | underscore}}</option>
+            </select>
+            <div class="invalid-feedback offset-4" *ngIf="requiredValidation(boardDesignation)">Board designation is required</div>
+          </div>
+
+          <div class="form-group row">
+            <label for="currentStatus" class="col-sm-4 col-form-label col-form-label-sm">Current Status <span style="color: red">*</span></label>
+            <select [attr.disabled]="!id.value? 'Disabled': null" [ngClass]="isInvalid(currentStatus)" class="form-control form-control-sm col-sm" id="currentStatus" formControlName="currentStatus">
+              <option disabled [value]="null">Select Division</option>
+              <option *ngFor="let currentStatus of currentStatuses$ | async" [ngValue]="currentStatus">{{currentStatus}}</option>
+            </select>
+            <div class="invalid-feedback offset-4" *ngIf="requiredValidation(currentStatus)">Current status is required</div>
+          </div>
+
+          <div class="form-group row">
+            <label for="division" class="col-sm-4 col-form-label col-form-label-sm">Division</label>
+            <select class="form-control form-control-sm col-sm" id="division"
+                    [compareWith]="compareDropdown" [formControl]="division">
+              <option disabled [value]="null">Select Division</option>
+              <option *ngFor="let division of divisions$ | async" [ngValue]="division">{{division.name}}</option>
+            </select>
+          </div>
+
+          <div class="form-group row">
+            <label for="society" class="col-sm-4 col-form-label col-form-label-sm">Society</label>
+            <select class="form-control form-control-sm col-sm" id="society"
+                    [compareWith]="compareDropdown" [formControl]="society">
+              <option disabled [value]="null">Select Society</option>
+              <option *ngFor="let society of societies$ | async" [ngValue]="society">{{society.name}}</option>
+            </select>
+          </div>
+
+          <div class="form-group row">
+            <label for="team" class="col-sm-4 col-form-label col-form-label-sm">Team</label>
+            <select [compareWith]="compareDropdown" [formControl]="team" class="form-control form-control-sm col-sm" id="team">
+              <option disabled [value]="null">Select Team</option>
+              <option *ngFor="let team of teams$ | async" [ngValue]="team">{{team.name}}</option>
+            </select>
+          </div>
+
+          <div class="form-group row">
+            <label for="member" class="col-sm-4 col-form-label col-form-label-sm">Member <span style="color: red">*</span></label>
+            <select [ngClass]="isInvalid(member)" class="form-control form-control-sm col-sm" id="member"
+                    [compareWith]="compareDropdown" formControlName="member">
+              <option disabled [value]="null">Select Member</option>
+              <option *ngFor="let member of members$ | async" [ngValue]="member">{{member.fullName}}</option>
+            </select>
+            <div class="invalid-feedback offset-4" *ngIf="requiredValidation(member)">Member is required</div>
+          </div>
+
+          <div class="form-group row">
+            <div class="btn-group btn-group-sm d-flex col">
+              <button type="button" class="btn btn-primary w-100" *ngIf="id.value === null" (click)="addBoardMember(persist)">Add</button>
+              <button type="button" *ngIf="id.value !== null" (click)="addBoardMember(persist)" class="btn btn-warning w-100">Update</button>
+              <button type="button" class="btn btn-secondary w-100" (click)="clearForm()">Clear</button>
+            </div>
+          </div>
+
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-8">
+    <div class="card bg-light mb-3">
+      <div class="card-body">
+        <h5 class="card-title text-center">Search</h5>
+        <form [formGroup]="searchForm" class="form-row align-items-end">
+
+          <div class="col">
+            <select class="form-control form-control-sm" formControlName="boardDesignation" (change)="search()">
+              <option disabled [value]="null">Select Designation</option>
+              <option *ngFor="let boardDesignation of boardDesignations$ | async" [ngValue]="boardDesignation">{{boardDesignation | underscore}}</option>
+            </select>
+          </div>
+
+          <div class="col">
+            <select class="form-control form-control-sm" formControlName="currentStatus" (change)="search()">
+              <option disabled [value]="null">Select Current Status</option>
+              <option *ngFor="let currentStatus of currentStatuses$ | async" [ngValue]="currentStatus">{{currentStatus}}</option>
+            </select>
+          </div>
+
+          <div class="col" formGroupName="member">
+            <input type="text" class="form-control form-control-sm" formControlName="fullName" placeholder="member name" (keyup.enter)="search()">
+          </div>
+
+          <div class="col">
+            <button type="button" class="btn btn-secondary btn-block btn-sm" (click)="clearSearchForm()">Clear</button>
+          </div>
+
+        </form>
+      </div>
+    </div>
+
+    <div class="card bg-light mb-3">
+      <div class="card-body">
+        <h5 class="card-title text-center">Board Members</h5>
+        <div class="form-group row">
+          <label for="filter" class="col-2 col-form-label col-form-label-sm">Filter Columns</label>
+          <mat-select (selectionChange)="addColumn($event)" placeholder="Columns" multiple [value]="displayedColumns" class="form-control form-control-sm col" id="filter">
+            <mat-option *ngFor="let column of columns" [value]="column">{{column | sentence}}</mat-option>
+          </mat-select>
+        </div>
+
+        <div class="row">
+          <div class="col">
+
+            <table cdk-table [dataSource]="dataSource" matSort class="table table-bordered table-hover table-sm">
+
+              <ng-container matColumnDef="id">
+                <th cdk-header-cell *matHeaderCellDef mat-sort-header>ID</th>
+                <td cdk-cell *cdkCellDef="let boardMember">{{boardMember.id}}</td>
+              </ng-container>
+
+              <ng-container cdkColumnDef="appointedDate">
+                <th cdk-header-cell *cdkHeaderCellDef mat-sort-header>Appointed Date</th>
+                <td cdk-cell *cdkCellDef="let boardMember">{{boardMember.appointedDate}}</td>
+              </ng-container>
+
+              <ng-container cdkColumnDef="boardDesignation">
+                <th cdk-header-cell *cdkHeaderCellDef mat-sort-header>Designation</th>
+                <td cdk-cell *cdkCellDef="let boardMember">{{boardMember.boardDesignation | underscore}}</td>
+              </ng-container>
+
+              <ng-container cdkColumnDef="currentStatus">
+                <th cdk-header-cell *cdkHeaderCellDef mat-sort-header>Current Status</th>
+                <td cdk-cell *cdkCellDef="let boardMember">{{boardMember.currentStatus}}</td>
+              </ng-container>
+
+              <ng-container cdkColumnDef="member">
+                <th cdk-header-cell *cdkHeaderCellDef mat-sort-header>Member</th>
+                <td cdk-cell *cdkCellDef="let boardMember">{{boardMember.member?.fullName}}</td>
+              </ng-container>
+
+              <ng-container cdkColumnDef="division">
+                <th cdk-header-cell *cdkHeaderCellDef mat-sort-header>Division</th>
+                <td cdk-cell *cdkCellDef="let boardMember">{{boardMember.division?.name}}</td>
+              </ng-container>
+
+              <ng-container cdkColumnDef="action">
+                <th cdk-header-cell *cdkHeaderCellDef mat-sort-header>Action</th>
+                <td cdk-cell *cdkCellDef="let boardMember">
+                  <div class="btn-group btn-group-sm d-flex">
+                    <button type="button" class="btn btn-warning w-100" (click)="fillForm(boardMember)">Edit</button>
+                    <button type="button" class="btn btn-danger w-100" *ngIf="!boardMember.user" (click)="deleteBoardMember(delete)">Delete</button>
+                  </div>
+                  <ng-template #delete>
+                    <div class="modal-body text-center">
+                      <p>Are you sure that you want to delete {{boardMember.member.name}} ?</p>
+                      <div class="btn-group d-flex">
+                        <button type="button" class="btn btn-danger w-100" (click)="onDeleteYes(boardMember.id)">Yes
+                        </button>
+                        <button type="button" class="btn btn-secondary w-100" (click)="closeModal()">No</button>
+                      </div>
+                    </div>
+                  </ng-template>
+                </td>
+              </ng-container>
+
+              <tr class="thead-light" cdk-header-row *cdkHeaderRowDef="displayedColumns"></tr>
+
+              <tr cdk-row *cdkRowDef="let row; columns: displayedColumns"></tr>
+
+            </table>
+            <mat-paginator [pageSizeOptions]="[5, 7, 10]"></mat-paginator>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #persist>
+  <div class="modal-body text-center">
+    <table class="table table-bordered table-hover table-sm">
+      <thead class="thead-light">
+      <tr>
+        <th scope="col" colspan="2">Please Review Again</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngIf="id.value">
+        <td>Id</td>
+        <td> {{id.value}}</td>
+      </tr>
+      <tr>
+        <td>Board Designation</td>
+        <td>{{boardDesignation.value}}</td>
+      </tr>
+      <tr>
+        <td>Current Status</td>
+        <td>{{currentStatus.value}}</td>
+      </tr>
+      <tr>
+        <td>Member</td>
+        <td>{{member.value?.fullName}}</td>
+      </tr>
+      <tr>
+        <td>Division</td>
+        <td>{{division.value?.name}}</td>
+      </tr>
+      </tbody>
+    </table>
+    <div class="btn-group btn-group-sm d-flex">
+      <button type="button" class="btn btn-primary w-50" (click)="onPersistYes()">Yes</button>
+      <button type="button" class="btn btn-secondary w-100" (click)="closeModal()">No</button>
+    </div>
+  </div>
+</ng-template>

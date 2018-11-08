@@ -5,7 +5,7 @@ import {HttpClient} from "@angular/common/http";
 @Injectable()
 export class PersonService {
 
-  url: string = baseURL + "persons";
+  private url: string = baseURL + "persons";
 
   constructor(private http: HttpClient) {
   }

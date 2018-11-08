@@ -22,19 +22,19 @@
           </div>
 
           <div class="form-group row">
-            <label for="minPeriod" class="col-sm-5 col-form-label col-form-label-sm">Minimum Period <span style="color: red">*</span></label>
+            <label for="minPeriod" class="col-sm-6 col-form-label col-form-label-sm">Minimum Period (months) <span style="color: red">*</span></label>
             <input [ngClass]="isInvalid(minPeriod)" formControlName="minPeriod" id="minPeriod" type="number"
                    class="form-control form-control-sm col-sm">
-            <div class="invalid-feedback offset-5" *ngIf="requiredValidation(minPeriod)">Minimum period is required</div>
-            <div class="invalid-feedback offset-5" *ngIf="interestRate.hasError('pattern') && interestRate.touched">should contain integers</div>
+            <div class="invalid-feedback offset-6" *ngIf="requiredValidation(minPeriod)">Minimum period is required</div>
+            <div class="invalid-feedback offset-6" *ngIf="interestRate.hasError('pattern') && interestRate.touched">should contain integers</div>
           </div>
 
           <div class="form-group row">
-            <label for="maxPeriod" class="col-sm-5 col-form-label col-form-label-sm">Maximum Period <span style="color: red">*</span></label>
+            <label for="maxPeriod" class="col-sm-6 col-form-label col-form-label-sm">Maximum Period (months) <span style="color: red">*</span></label>
             <input [ngClass]="isInvalid(maxPeriod)" formControlName="maxPeriod" id="maxPeriod" type="number"
                    class="form-control form-control-sm col-sm">
-            <div class="invalid-feedback offset-5" *ngIf="requiredValidation(maxPeriod)">Maximum period is required</div>
-            <div class="invalid-feedback offset-5" *ngIf="interestRate.hasError('pattern') && interestRate.touched">should contain integers</div>
+            <div class="invalid-feedback offset-6" *ngIf="requiredValidation(maxPeriod)">Maximum period is required</div>
+            <div class="invalid-feedback offset-6" *ngIf="interestRate.hasError('pattern') && interestRate.touched">should contain integers</div>
           </div>
 
           <div class="form-group row">

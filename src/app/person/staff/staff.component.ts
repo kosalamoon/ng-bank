@@ -1,6 +1,6 @@
 import {Component, OnInit, TemplateRef, ViewChild} from "@angular/core";
 import {StaffService} from "../service/staff.service";
-import {MatPaginator, MatSelectChange, MatSort, MatTableDataSource} from "@angular/material";
+import {MatPaginator, MatSelectChange, MatSnackBar, MatSort, MatTableDataSource} from "@angular/material";
 import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import {BsModalRef, BsModalService} from "ngx-bootstrap/modal";
 import {Staff} from "../model/staff";
@@ -34,7 +34,8 @@ export class StaffComponent implements OnInit {
               private fb: FormBuilder,
               private personService: PersonService,
               private modalService: BsModalService,
-              private exportService: ExportService) {
+              private exportService: ExportService,
+              private snackBar: MatSnackBar) {
   }
 
   ngOnInit() {
@@ -156,6 +157,7 @@ export class StaffComponent implements OnInit {
       value => this.staffService.findAll().subscribe(staffList => this.initializeTable(staffList))
     );
     this.modalRef.hide();
+    this.openSnackBar(`Staff having ID ${id} deleted successfully`);
   }
 
   onDeleteNo() {
@@ -168,6 +170,7 @@ export class StaffComponent implements OnInit {
         this.clearForm();
         this.staffService.findAll().subscribe(staffList => this.initializeTable(staffList));
         this.modalRef.hide();
+        this.openSnackBar(`Staff having ID ${value.id} persisted successfully`);
       });
   }
 
@@ -235,5 +238,9 @@ export class StaffComponent implements OnInit {
 
   export() {
     this.exportService.exportAsExcelFile(this.dataSource.data, "staff-details");
+  }
+
+  openSnackBar(message: string) {
+    this.snackBar.open(message, "Close");
   }
 }

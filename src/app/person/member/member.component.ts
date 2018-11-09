@@ -1,5 +1,5 @@
 import {Component, OnInit, TemplateRef, ViewChild} from "@angular/core";
-import {MatPaginator, MatSelectChange, MatSort, MatTableDataSource} from "@angular/material";
+import {MatPaginator, MatSelectChange, MatSnackBar, MatSort, MatTableDataSource} from "@angular/material";
 import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import {Member} from "../model/member";
 import {Team} from "../../area/model/team";
@@ -15,7 +15,6 @@ import {Society} from "../../area/model/society";
 import {AccountService} from "../../ledger/service/account.service";
 import {PersonService} from "../service/person.service";
 import {ExportService} from "../../shared/print/export.service";
-import {DomSanitizer} from "@angular/platform-browser";
 
 @Component({
   selector: "app-member",
@@ -64,7 +63,7 @@ export class MemberComponent implements OnInit {
               private accountService: AccountService,
               private personService: PersonService,
               private exportService: ExportService,
-              private sanitizer: DomSanitizer) {
+              private snackBar: MatSnackBar) {
   }
 
   ngOnInit() {
@@ -283,6 +282,7 @@ export class MemberComponent implements OnInit {
       value => this.memberService.findAll().subscribe(memberList => this.initializeTable(memberList)),
     );
     this.closeModal();
+    this.openSnackBar(`Member having ID ${id} deleted successfully`);
   }
 
   closeModal() {
@@ -305,6 +305,7 @@ export class MemberComponent implements OnInit {
       this.memberService.findAll()
         .subscribe(memberList => this.initializeTable(memberList));
       this.closeModal();
+      this.openSnackBar(`Member having ID ${member.id} persisted successfully`);
     });
   }
 
@@ -435,6 +436,11 @@ export class MemberComponent implements OnInit {
   open() {
     window.open(this.downloadUrl, "_blank", "");
   }
+
+  openSnackBar(message: string) {
+    this.snackBar.open(message, "Close");
+  }
+
 
 
 }

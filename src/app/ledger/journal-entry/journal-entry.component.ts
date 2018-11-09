@@ -9,7 +9,7 @@ import {EntryTypeService} from "../service/entry-type.service";
 import {Account} from "../model/account";
 import {BsModalRef, BsModalService} from "ngx-bootstrap";
 import {integers} from "../../shared/regex/regex";
-import {MatPaginator, MatSelectChange, MatSort, MatTableDataSource} from "@angular/material";
+import {MatPaginator, MatSelectChange, MatSnackBar, MatSort, MatTableDataSource} from "@angular/material";
 import {Entry} from "../model/entry";
 
 @Component({
@@ -42,7 +42,8 @@ export class JournalEntryComponent implements OnInit {
               private accountService: AccountService,
               private fb: FormBuilder,
               private authService: AuthenticationService,
-              private modalService: BsModalService) {
+              private modalService: BsModalService,
+              private snackBar: MatSnackBar) {
   }
 
   ngOnInit() {
@@ -231,6 +232,7 @@ export class JournalEntryComponent implements OnInit {
   onPersistYes() {
     this.transactionService.save(this.form.value).subscribe(value => {
       this.closeModal();
+      this.openSnackBar(`Transaction having ID ${value.id} added successfully`);
     });
   }
 
@@ -267,6 +269,10 @@ export class JournalEntryComponent implements OnInit {
     }
     else
       return value;
+  }
+
+  openSnackBar(message: string) {
+    this.snackBar.open(message, "Close");
   }
 
 

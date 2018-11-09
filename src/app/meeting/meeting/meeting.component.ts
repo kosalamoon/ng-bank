@@ -1,5 +1,5 @@
 import {Component, OnInit, TemplateRef, ViewChild} from "@angular/core";
-import {MatPaginator, MatSelectChange, MatSort, MatTableDataSource} from "@angular/material";
+import {MatPaginator, MatSelectChange, MatSnackBar, MatSort, MatTableDataSource} from "@angular/material";
 import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import {Meeting} from "../model/meeting";
 import {BsModalRef, BsModalService} from "ngx-bootstrap/modal";
@@ -33,10 +33,10 @@ export class MeetingComponent implements OnInit {
 
   isLoading: boolean = false;
 
-  constructor(
-    private fb: FormBuilder, private modalService: BsModalService,
-    private meetingService: MeetingService, private meetingStatusService: MeetingStatusService,
-    private meetingTypeService: MeetingTypeService, private attendanceService: AttendanceService,
+  constructor(private fb: FormBuilder, private modalService: BsModalService,
+              private meetingService: MeetingService, private meetingStatusService: MeetingStatusService,
+              private meetingTypeService: MeetingTypeService, private attendanceService: AttendanceService,
+              private snackBar: MatSnackBar,
   ) {
   }
 
@@ -135,6 +135,7 @@ export class MeetingComponent implements OnInit {
         this.meetingService.findAll().subscribe(meetingList => {
           this.initializeTable(meetingList);
           this.closeModal();
+          this.openSnackBar(`Meeting having ID ${id} deleted successfully`);
         });
       },
     );
@@ -145,12 +146,12 @@ export class MeetingComponent implements OnInit {
   }
 
   onPersistYes() {
-    console.log(this.form.value);
     this.meetingService.save(this.form.value).subscribe(
       value => {
         this.clearForm();
         this.meetingService.findAll().subscribe(meetingList => this.initializeTable(meetingList));
         this.closeModal();
+        this.openSnackBar(`Meeting having ID ${value.id} persisted successfully`);
       });
   }
 
@@ -258,6 +259,10 @@ export class MeetingComponent implements OnInit {
     controls.forEach(control => {
       this.form.get(control).markAsTouched({onlySelf: true})
     });
+  }
+
+  openSnackBar(message: string) {
+    this.snackBar.open(message, "Close");
   }
 
 }

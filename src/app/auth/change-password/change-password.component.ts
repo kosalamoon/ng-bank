@@ -1,7 +1,7 @@
 import {Component, OnInit} from "@angular/core";
 import {AuthenticationService} from "../authentication.service";
 import {ActivatedRoute, Router} from "@angular/router";
-import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
+import {AbstractControl, FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 
 @Component({
   selector: 'app-change-password',
@@ -44,11 +44,11 @@ export class ChangePasswordComponent implements OnInit {
   }
 
   change() {
-    console.log(this.form);
-    /*this.authService.changePassword(this.username.value, this.newPassword.value)
+    if (this.form.valid)
+      this.authService.changePassword(this.username.value, this.newPassword.value)
       .subscribe(
         value => this.router.navigate(['']),
-        error1 => this.error = 'There is something wrong in connection !!!');*/
+        error1 => this.error = 'There is something wrong in connection !!!');
   }
 
   cancel() {
@@ -74,14 +74,14 @@ export class ChangePasswordComponent implements OnInit {
 
   //</editor-fold>
 
-  isInvalid(control: FormControl) {
+  isInvalid(control: AbstractControl) {
     return {
       "is-invalid": control.touched && control.invalid,
       "is-valid": control.touched && control.valid,
     };
   }
 
-  requiredValidation(control: FormControl) {
+  requiredValidation(control: AbstractControl) {
     return control.hasError("required") && control.touched;
   }
 

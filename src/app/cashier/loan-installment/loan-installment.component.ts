@@ -13,6 +13,7 @@ import {LoanStatusResponse} from "../../loan/model/loan-status-response";
 import {LoanService} from "../../loan/service/loan.service";
 import {Transaction} from "../../ledger/model/transaction";
 import {CashierReportService} from "../service/cashier-report.service";
+import {MatSnackBar} from "@angular/material";
 
 @Component({
   selector: "app-loan-installment",
@@ -53,12 +54,13 @@ export class LoanInstallmentComponent implements OnInit {
 
   confirmModal: BsModalRef;
 
-  transactionId: string = null;
+  transactionId: string;
 
   constructor(private fb: FormBuilder, private authService: AuthenticationService,
               private accountService: AccountService, private entryService: EntryService,
               private transactionService: TransactionService, private modalService: BsModalService,
-              private loanService: LoanService, private cashierService: CashierReportService) {
+              private loanService: LoanService, private cashierService: CashierReportService,
+              private snackBar: MatSnackBar) {
   }
 
   ngOnInit() {
@@ -201,8 +203,10 @@ export class LoanInstallmentComponent implements OnInit {
 
   onPersistYes() {
     this.transactionService.save(this.form.value).subscribe(value => {
+      this.transactionId = value.id;
       this.closeModal();
       this.clearForm();
+      this.openSnackBar(`Installment Added Successfully`);
     });
   }
 
@@ -234,6 +238,10 @@ export class LoanInstallmentComponent implements OnInit {
       let file = new Blob([value], {type: 'application/pdf'});
       window.open(URL.createObjectURL(file), "_self");
     });
+  }
+
+  openSnackBar(message: string) {
+    this.snackBar.open(message, "Close");
   }
 
   //<editor-fold desc="responseForm getters">

@@ -1,5 +1,5 @@
 import {Component, OnInit, TemplateRef, ViewChild} from "@angular/core";
-import {MatPaginator, MatSelectChange, MatSort, MatTableDataSource} from "@angular/material";
+import {MatPaginator, MatSelectChange, MatSnackBar, MatSort, MatTableDataSource} from "@angular/material";
 import {Society} from "../model/society";
 import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import {BsModalRef} from "ngx-bootstrap/modal";
@@ -9,12 +9,11 @@ import {SocietyService} from "../service/society.service";
 import {TeamService} from "../service/team.service";
 import {Division} from "../model/division";
 import {DivisionService} from "../service/division.service";
-import {AccountService} from "../../ledger/service/account.service";
 
 @Component({
   selector: "app-team",
   templateUrl: "./team.component.html",
-  styleUrls: ["./team.component.css"]
+  styleUrls: ["./team.component.css"],
 })
 export class TeamComponent implements OnInit {
 
@@ -38,8 +37,7 @@ export class TeamComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder, private modalService: BsModalService, private divisionService: DivisionService,
-    private societyService: SocietyService, private teamService: TeamService, private accountService: AccountService
-  ) {
+    private societyService: SocietyService, private teamService: TeamService, private snackBar: MatSnackBar) {
   }
 
   ngOnInit() {
@@ -55,14 +53,14 @@ export class TeamComponent implements OnInit {
       "id": null,
       "name": [null, Validators.required],
       "society": [null, Validators.required],
-      "account": null
+      "account": null,
     });
   }
 
   createSearchForm() {
     this.searchForm = this.fb.group({
       "name": null,
-      "society": null
+      "society": null,
     });
   }
 
@@ -118,7 +116,7 @@ export class TeamComponent implements OnInit {
       "id": team.id,
       "name": team.name,
       "society": team.society,
-      "account": team.account
+      "account": team.account,
     });
   }
 
@@ -146,7 +144,7 @@ export class TeamComponent implements OnInit {
           "operationType": "Credit",
           "accountType": {"id": 3},
           "subAccountType": {"id": 14},
-        }
+        },
       });
     }
     this.teamService.save(this.form.value).subscribe(team => {
@@ -154,6 +152,7 @@ export class TeamComponent implements OnInit {
       this.teamService.findAll()
         .subscribe(teamList => this.initializeTable(teamList));
       this.closeModal();
+      this.openSnackBar(`Team having ID '${team.id}' persisted Successfully`);
     });
   }
 
@@ -166,6 +165,7 @@ export class TeamComponent implements OnInit {
       .subscribe(value => this.teamService.findAll()
         .subscribe(teamList => this.initializeTable(teamList)));
     this.closeModal();
+    this.openSnackBar(`Team having ID '${id}' deleted Successfully`);
   }
 
   closeModal() {
@@ -181,6 +181,10 @@ export class TeamComponent implements OnInit {
 
   search() {
     this.teamService.search(this.searchForm.value).subscribe(value => this.initializeTable(value));
+  }
+
+  openSnackBar(message: string) {
+    this.snackBar.open(message, "Close");
   }
 
   //<editor-fold desc="form getters">
@@ -202,7 +206,7 @@ export class TeamComponent implements OnInit {
   isInvalid(control: FormControl) {
     return {
       "is-invalid": control.touched && control.invalid,
-      "is-valid": control.touched && control.valid
+      "is-valid": control.touched && control.valid,
     };
   }
 

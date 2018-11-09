@@ -10,6 +10,7 @@ import {TransactionService} from "../../ledger/service/transaction.service";
 import {BsModalRef, BsModalService} from "ngx-bootstrap/modal";
 import {integers} from "../../shared/regex/regex";
 import {CashierReportService} from "../service/cashier-report.service";
+import {MatSnackBar} from "@angular/material";
 
 @Component({
   selector: "app-share",
@@ -44,7 +45,7 @@ export class SharesAccountComponent implements OnInit {
   constructor(private fb: FormBuilder, private authService: AuthenticationService,
               private accountService: AccountService, private entryService: EntryService,
               private transactionService: TransactionService, private modalService: BsModalService,
-              private cashierService: CashierReportService) {
+              private cashierService: CashierReportService, private snackBar: MatSnackBar) {
   }
 
   ngOnInit() {
@@ -131,8 +132,10 @@ export class SharesAccountComponent implements OnInit {
 
   onPersistYes() {
     this.transactionService.save(this.form.value).subscribe(value => {
+      this.transactionId = value.id;
       this.clearForm();
       this.closeModal();
+      this.openSnackBar(`Shares Deposited Successfully`);
     });
   }
 
@@ -173,6 +176,10 @@ export class SharesAccountComponent implements OnInit {
       let file = new Blob([value], {type: 'application/pdf'});
       window.open(URL.createObjectURL(file), "_self");
     });
+  }
+
+  openSnackBar(message: string) {
+    this.snackBar.open(message, "Close");
   }
 
 }

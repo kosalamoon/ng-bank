@@ -7,8 +7,12 @@ import {RouterModule} from "@angular/router";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {AlertModule} from "ngx-bootstrap";
 
+export function tokenGetter() {
+  return sessionStorage.getItem('token');
+}
+
 const jwtConfig = {
-  tokenGetter: () => sessionStorage.getItem('token'),
+  tokenGetter: tokenGetter,
   whitelistedDomains: ['localhost:8080'],
   blacklistedRoutes: ['localhost:8080/login', 'localhost:8080/register'],
   throwNoTokenError: false
@@ -29,3 +33,6 @@ const jwtConfig = {
   ]
 })
 export class AuthModule { }
+
+
+

@@ -15,6 +15,7 @@ import {InstallmentScheduleResponse} from "../model/installment-schedule-respons
 import {LoanType} from "../model/loan-type";
 import {LoanTypeService} from "../service/loan-type.service";
 import {BsModalRef, BsModalService} from "ngx-bootstrap";
+import {MatSnackBar} from "@angular/material";
 
 @Component({
   selector: 'app-loan-request',
@@ -46,7 +47,8 @@ export class LoanRequestComponent implements OnInit {
               private loanService: LoanService,
               private loanTypeService: LoanTypeService,
               private fb: FormBuilder,
-              private modalService: BsModalService) {
+              private modalService: BsModalService,
+              private snackBar: MatSnackBar) {
   }
 
   ngOnInit() {
@@ -131,6 +133,7 @@ export class LoanRequestComponent implements OnInit {
     this.loanService.save(this.form.value).subscribe(value => {
       this.closeModal();
       this.clearForm();
+      this.openSnackBar(`Loan Request having ID ${value.id} added successfully`);
     });
   }
 
@@ -194,5 +197,9 @@ export class LoanRequestComponent implements OnInit {
       +(this.loanType.value as LoanType).minPeriod > (control.value as number) ||
       +(this.loanType.value as LoanType).maxPeriod < (control.value as number) ? {"invalidAmount": true} : null;
     this.duration.setValidators(func.bind(this));
+  }
+
+  openSnackBar(message: string) {
+    this.snackBar.open(message, "Close");
   }
 }

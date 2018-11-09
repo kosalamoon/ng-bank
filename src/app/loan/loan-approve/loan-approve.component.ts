@@ -1,5 +1,5 @@
 import {Component, OnInit, TemplateRef, ViewChild} from '@angular/core';
-import {MatPaginator, MatSelectChange, MatSort, MatTableDataSource} from "@angular/material";
+import {MatPaginator, MatSelectChange, MatSnackBar, MatSort, MatTableDataSource} from "@angular/material";
 import {Loan} from "../model/loan";
 import {LoanService} from "../service/loan.service";
 import {MemberService} from "../../person/service/member.service";
@@ -60,7 +60,8 @@ export class LoanApproveComponent implements OnInit {
               private loanStatusService: LoanStatusService,
               private accountService: AccountService,
               private modalService: BsModalService,
-              private fb: FormBuilder) {
+              private fb: FormBuilder,
+              private snackBar: MatSnackBar) {
   }
 
   ngOnInit() {
@@ -220,6 +221,7 @@ export class LoanApproveComponent implements OnInit {
     this.loanService.approve(this.loan.id, this.releaseType.value, this.account.value).subscribe(value => {
       this.loadLoans();
       this.closeModal();
+      this.openSnackBar(`Loan having ID ${value.id} released successfully`);
     });
   }
 
@@ -227,6 +229,7 @@ export class LoanApproveComponent implements OnInit {
     this.loanService.reject(this.loan.id).subscribe(value => {
       this.loadLoans();
       this.closeModal();
+      this.openSnackBar(`Loan having ID ${value.id} rejected successfully`);
     });
   }
 
@@ -236,6 +239,10 @@ export class LoanApproveComponent implements OnInit {
 
   closeModal() {
     this.modalRef.hide();
+  }
+
+  openSnackBar(message: string) {
+    this.snackBar.open(message, "Close");
   }
 
 }

@@ -1,5 +1,5 @@
 import {Component, ElementRef, OnInit, TemplateRef, ViewChild} from "@angular/core";
-import {MatPaginator, MatSelectChange, MatSort, MatTableDataSource} from "@angular/material";
+import {MatPaginator, MatSelectChange, MatSnackBar, MatSort, MatTableDataSource} from "@angular/material";
 import {User} from "../model/user";
 import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import {Role} from "../model/role";
@@ -41,7 +41,8 @@ export class UserComponent implements OnInit {
   constructor(private userService: UserService, private fb: FormBuilder,
               private roleService: RoleService, private modalService: BsModalService,
               private staffService: StaffService, private boardMemberService: BoardMemberService,
-              private usernameValidator: UsernameValidator, private exportService: ExportService) {
+              private usernameValidator: UsernameValidator, private exportService: ExportService,
+              private snackBar: MatSnackBar) {
   }
 
 
@@ -153,10 +154,13 @@ export class UserComponent implements OnInit {
 
   onPersistYes() {
     this.userService.save(this.form.value)
-      .subscribe(value => this.userService.findAll(this.userType.value)
-        .subscribe(users => this.initializeTable(users)));
-    this.modalRef.hide();
-    this.clearForm();
+      .subscribe(value => {
+        this.userService.findAll(this.userType.value)
+          .subscribe(users => this.initializeTable(users));
+        this.modalRef.hide();
+        this.openSnackBar(`User having ID ${value.id} persisted successfully`);
+        this.clearForm();
+      });
   }
 
   onPersistNo() {
@@ -165,9 +169,11 @@ export class UserComponent implements OnInit {
 
   onDeleteYes(id: string) {
     this.userService.delete(id)
-      .subscribe(value => this.userService.findAll(this.userType.value)
-        .subscribe(users => this.initializeTable(users)));
-    this.modalRef.hide();
+      .subscribe(value => {
+        this.userService.findAll(this.userType.value).subscribe(users => this.initializeTable(users));
+        this.modalRef.hide();
+        this.openSnackBar(`User having ID ${id} deleted successfully`);
+      });
   }
 
   onDeleteNo() {
@@ -175,12 +181,12 @@ export class UserComponent implements OnInit {
   }
 
   search() {
-      this.userService.search(this.searchForm.value)
-        .subscribe(users => {
-            if (this.userType.value === "staff") this.initializeTable(users.filter(users => users.staff !== null));
-            else this.initializeTable(users.filter(users => users.boardMember !== null));
-          },
-        );
+    this.userService.search(this.searchForm.value)
+      .subscribe(users => {
+          if (this.userType.value === "staff") this.initializeTable(users.filter(users => users.staff !== null));
+          else this.initializeTable(users.filter(users => users.boardMember !== null));
+        },
+      );
   }
 
   clearSearch() {
@@ -265,5 +271,9 @@ export class UserComponent implements OnInit {
 
   export() {
     this.exportService.exportAsExcelFile(this.dataSource.data, "user-details");
+  }
+
+  openSnackBar(message: string) {
+    this.snackBar.open(message, "Close");
   }
 }

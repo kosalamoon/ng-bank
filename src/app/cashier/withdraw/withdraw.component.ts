@@ -12,6 +12,7 @@ import {EntryService} from "../../ledger/service/entry.service";
 import {TransactionService} from "../../ledger/service/transaction.service";
 import {SavingsService} from "../../savings/service/savings.service";
 import {CashierReportService} from "../service/cashier-report.service";
+import {MatSnackBar} from "@angular/material";
 
 @Component({
   selector: "app-withdraw",
@@ -45,7 +46,8 @@ export class WithdrawComponent implements OnInit {
   constructor(private fb: FormBuilder, private authService: AuthenticationService,
               private accountService: AccountService, private entryService: EntryService,
               private transactionService: TransactionService, private modalService: BsModalService,
-              private savingsService: SavingsService, private cashierService: CashierReportService) {
+              private savingsService: SavingsService, private cashierService: CashierReportService,
+              private snackBar: MatSnackBar) {
   }
 
   ngOnInit() {
@@ -139,6 +141,7 @@ export class WithdrawComponent implements OnInit {
       this.transactionId = value.id;
       this.clearForm();
       this.closeModal();
+      this.openSnackBar(`Amount Withdrawn Successfully`);
     });
   }
 
@@ -175,6 +178,10 @@ export class WithdrawComponent implements OnInit {
       let file = new Blob([value], {type: 'application/pdf'});
       window.open(URL.createObjectURL(file), "_self");
     });
+  }
+
+  openSnackBar(message: string) {
+    this.snackBar.open(message, "Close");
   }
 
 }

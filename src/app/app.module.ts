@@ -18,11 +18,12 @@ import {LedgerModule} from "./ledger/ledger.module";
 import {CashierModule} from "./cashier/cashier.module";
 import {SavingsModule} from "./savings/savings.module";
 import {LoanModule} from "./loan/loan.module";
+import {MAT_SNACK_BAR_DEFAULT_OPTIONS} from "@angular/material";
 
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
   ],
   imports: [
     BrowserModule,
@@ -42,13 +43,14 @@ import {LoanModule} from "./loan/loan.module";
     SavingsModule,
     LoanModule,
 
-    SharedModule
+    SharedModule,
   ],
   providers: [
+    {provide: MAT_SNACK_BAR_DEFAULT_OPTIONS, useValue: {duration: 2500, panelClass: ['snack-bar']}},
     // {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptorService, multi: true},
-    AuthenticationService
+    AuthenticationService,
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
 export class AppModule {
 }

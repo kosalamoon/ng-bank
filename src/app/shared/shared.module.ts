@@ -4,6 +4,7 @@ import {
   MatProgressSpinnerModule,
   MatSelectModule,
   MatSlideToggleModule,
+  MatSnackBarModule,
   MatSortModule,
   MatTableModule,
 } from "@angular/material";
@@ -29,6 +30,7 @@ import {ExportService} from "./print/export.service";
     MatSelectModule,
     MatProgressSpinnerModule,
     MatSlideToggleModule,
+    MatSnackBarModule,
     RolePipe,
     UnderscorePipe,
     TimePipe,

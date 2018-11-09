@@ -1,11 +1,10 @@
 import {Component, OnInit, TemplateRef, ViewChild} from '@angular/core';
-import {MatPaginator, MatSelectChange, MatSort, MatTableDataSource} from "@angular/material";
+import {MatPaginator, MatSelectChange, MatSnackBar, MatSort, MatTableDataSource} from "@angular/material";
 import {LoanType} from "../model/loan-type";
 import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import {BsModalRef, BsModalService} from "ngx-bootstrap";
 import {LoanTypeService} from "../service/loan-type.service";
 import {integers, interest} from "../../shared/regex/regex";
-import {Savings} from "../../savings/model/savings";
 
 @Component({
   selector: 'app-loan-type',
@@ -29,7 +28,9 @@ export class LoanTypeComponent implements OnInit {
 
   constructor(private loanTypeService: LoanTypeService,
               private fb: FormBuilder,
-              private modalService: BsModalService) { }
+              private modalService: BsModalService,
+              private snackBar: MatSnackBar) {
+  }
 
   ngOnInit() {
     this.createForm();
@@ -108,12 +109,14 @@ export class LoanTypeComponent implements OnInit {
       this.loadLoanTypes();
       this.clearForm();
       this.closeModal();
+      this.openSnackBar(`Loan type having ID ${value.id} persisted successfully`);
     });
   }
 
   onDeleteYes(id: string) {
     this.loanTypeService.delete(id).subscribe(value => this.loadLoanTypes());
     this.closeModal();
+    this.openSnackBar(`Loan Request having ID ${id} deleted successfully`);
   }
 
   search() {
@@ -181,5 +184,9 @@ export class LoanTypeComponent implements OnInit {
   }
 
   //</editor-fold>
+
+  openSnackBar(message: string) {
+    this.snackBar.open(message, "Close");
+  }
 
 }

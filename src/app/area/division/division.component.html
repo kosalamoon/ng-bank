@@ -3,7 +3,7 @@
     <div class="card bg-light mb-3">
       <div class="card-body">
         <h5 class="card-title text-center">Division Form</h5>
-        <form [formGroup]="form">
+        <form [formGroup]="form" id="form">
           <div class="form-group row">
             <label for="name" class="col-sm-5 col-form-label col-form-label-sm"> Name <span style="color: red">*</span></label>
             <input [ngClass]="isInvalid(name)" formControlName="name" id="name" type="text"

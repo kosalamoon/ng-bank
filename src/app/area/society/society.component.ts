@@ -1,5 +1,5 @@
 import {Component, OnInit, TemplateRef, ViewChild} from "@angular/core";
-import {MatPaginator, MatSelectChange, MatSort, MatTableDataSource} from "@angular/material";
+import {MatPaginator, MatSelectChange, MatSnackBar, MatSort, MatTableDataSource} from "@angular/material";
 import {Division} from "../model/division";
 import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import {BsModalRef} from "ngx-bootstrap/modal";
@@ -11,7 +11,7 @@ import {Society} from "../model/society";
 @Component({
   selector: "app-society",
   templateUrl: "./society.component.html",
-  styleUrls: ["./society.component.css"]
+  styleUrls: ["./society.component.css"],
 })
 export class SocietyComponent implements OnInit {
 
@@ -33,10 +33,8 @@ export class SocietyComponent implements OnInit {
   isLoading: boolean = false;
 
 
-
-
   constructor(
-    private fb: FormBuilder, private modalService: BsModalService,
+    private fb: FormBuilder, private modalService: BsModalService, private snackBar: MatSnackBar,
     private divisionService: DivisionService, private societyService: SocietyService) {
   }
 
@@ -51,14 +49,14 @@ export class SocietyComponent implements OnInit {
     this.form = this.fb.group({
       'id': null,
       'name': [null, Validators.required],
-      'division': [null, Validators.required]
+      'division': [null, Validators.required],
     });
   }
 
   createSearchForm() {
     this.searchForm = this.fb.group({
       'name': null,
-      'division': null
+      'division': null,
     });
   }
 
@@ -102,7 +100,7 @@ export class SocietyComponent implements OnInit {
     this.form.patchValue({
       "id": society.id,
       "name": society.name,
-      "division": society.division
+      "division": society.division,
     });
   }
 
@@ -128,6 +126,7 @@ export class SocietyComponent implements OnInit {
       this.societyService.findAll()
         .subscribe(divisionList => this.initializeTable(divisionList));
       this.closeModal();
+      this.openSnackBar(`Society having ID '${value.id}' persisted Successfully`);
     });
   }
 
@@ -136,6 +135,7 @@ export class SocietyComponent implements OnInit {
       .subscribe(value => this.societyService.findAll()
         .subscribe(divisionList => this.initializeTable(divisionList)));
     this.closeModal();
+    this.openSnackBar(`Society having ID '${id}' deleted Successfully`);
   }
 
   closeModal() {
@@ -144,6 +144,10 @@ export class SocietyComponent implements OnInit {
 
   search() {
     this.societyService.search(this.searchForm.value).subscribe(value => this.initializeTable(value));
+  }
+
+  openSnackBar(message: string) {
+    this.snackBar.open(message, "Close");
   }
 
   //<editor-fold desc="form getters">
@@ -165,7 +169,7 @@ export class SocietyComponent implements OnInit {
   isInvalid(control: FormControl) {
     return {
       "is-invalid": control.touched && control.invalid,
-      "is-valid": control.touched && control.valid
+      "is-valid": control.touched && control.valid,
     };
   }
 

@@ -1,5 +1,5 @@
 import {Component, OnInit, TemplateRef, ViewChild} from "@angular/core";
-import {MatPaginator, MatSelectChange, MatSort, MatTableDataSource} from "@angular/material";
+import {MatPaginator, MatSelectChange, MatSnackBar, MatSort, MatTableDataSource} from "@angular/material";
 import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import {Account} from "../model/account";
 import {Observable} from "rxjs/internal/Observable";
@@ -34,7 +34,7 @@ export class AccountComponent implements OnInit {
 
   constructor(private accountService: AccountService, private accountTypeService: AccountTypeService,
               private subAccountTypeService: SubAccountTypeService, private operationTypeService: OperationTypeService,
-              private fb: FormBuilder, private modalService: BsModalService) {
+              private fb: FormBuilder, private modalService: BsModalService, private snackBar: MatSnackBar) {
   }
 
   sortingDataAccessor = (data: Account, sortHeaderId: string) => {
@@ -86,7 +86,7 @@ export class AccountComponent implements OnInit {
     this.loadSubAccountTypesByAccountTypeId();
   }
 
-  createForm() {
+  public createForm() {
     this.form = this.fb.group({
       "id": null,
       "name": [null, Validators.required],
@@ -174,11 +174,14 @@ export class AccountComponent implements OnInit {
       this.accountService.findAll()
         .subscribe(accountList => this.initializeTable(accountList));
       this.closeModal();
+      this.openSnackBar(`Account having ID ${account.id} persisted successfully`);
     });
   }
 
-  onDeleteYes() {
-
+  onDeleteYes(id: string) {
+    this.accountService.delete(id).subscribe(value => {
+      this.openSnackBar(`Account having ID ${id} deleted successfully`);
+    });
   }
 
   closeModal() {
@@ -211,8 +214,13 @@ export class AccountComponent implements OnInit {
     this.dataSource.sortingDataAccessor = this.sortingDataAccessor;
   }
 
-  private clearForm() {
+  public clearForm() {
     this.form.reset();
     this.loadSubAccountTypes();
   }
+
+  openSnackBar(message: string) {
+    this.snackBar.open(message, "Close");
+  }
+
 }

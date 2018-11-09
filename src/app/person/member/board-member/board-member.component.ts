@@ -1,5 +1,5 @@
 import {Component, OnInit, TemplateRef, ViewChild} from "@angular/core";
-import {MatPaginator, MatSelectChange, MatSort, MatTableDataSource} from "@angular/material";
+import {MatPaginator, MatSelectChange, MatSnackBar, MatSort, MatTableDataSource} from "@angular/material";
 import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import {BoardMember} from "../../model/board-member";
 import {Observable} from "rxjs/internal/Observable";
@@ -52,7 +52,7 @@ export class BoardMemberComponent implements OnInit {
               private personService: PersonService,
               private fb: FormBuilder,
               private modalService: BsModalService,
-  ) {
+              private snackBar: MatSnackBar) {
   }
 
   ngOnInit() {
@@ -194,6 +194,7 @@ export class BoardMemberComponent implements OnInit {
     this.boardMemberService.save(this.form.value).subscribe(value => {
       this.loadBoardMembers();
       this.closeModal();
+      this.openSnackBar(`Board Member having ID ${value.id} persisted successfully`);
     });
   }
 
@@ -201,6 +202,7 @@ export class BoardMemberComponent implements OnInit {
     this.boardMemberService.delete(id).subscribe(value => {
       this.loadBoardMembers();
       this.closeModal();
+      this.openSnackBar(`Board Member having ID ${id} deleted successfully`);
     });
   }
 
@@ -253,6 +255,10 @@ export class BoardMemberComponent implements OnInit {
   }
 
   compareDropdown = (o1: any, o2: any) => o1 && o2 ? o1.id === o2.id : o1 === o2;
+
+  openSnackBar(message: string) {
+    this.snackBar.open(message, "Close");
+  }
 
 
 }

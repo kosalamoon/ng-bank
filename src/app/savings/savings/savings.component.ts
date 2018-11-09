@@ -68,7 +68,7 @@ export class SavingsComponent implements OnInit {
     this.loadMembersByTeamId();
   }
 
-  createForm() {
+  public createForm() {
     this.form = this.fb.group({
       "id": null,
       "savingStatus": ["Active", Validators.required],
@@ -152,7 +152,7 @@ export class SavingsComponent implements OnInit {
     });
   }
 
-  private clearForm() {
+  public clearForm() {
     this.form.reset();
     this.savingStatus.reset("Active");
     this.division.reset();

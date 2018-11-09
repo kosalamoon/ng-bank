@@ -3,7 +3,7 @@ import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import {BoardMemberService} from "../../person/service/board-member.service";
 import {StaffService} from "../../person/service/staff.service";
 import {BsModalService} from "ngx-bootstrap";
-import {MatPaginator, MatSelectChange, MatSort, MatTableDataSource} from "@angular/material";
+import {MatPaginator, MatSelectChange, MatSnackBar, MatSort, MatTableDataSource} from "@angular/material";
 import {Division} from "../model/division";
 import {BsModalRef} from "ngx-bootstrap/modal";
 import {BoardMember} from "../../person/model/board-member";
@@ -13,7 +13,7 @@ import {DivisionService} from "../service/division.service";
 @Component({
   selector: "app-division",
   templateUrl: "./division.component.html",
-  styleUrls: ["./division.component.css"]
+  styleUrls: ["./division.component.css"],
 })
 export class DivisionComponent implements OnInit {
 
@@ -32,9 +32,12 @@ export class DivisionComponent implements OnInit {
 
   isLoading: boolean = false;
 
-  constructor(
-    private fb: FormBuilder, private modalService: BsModalService, private divisionService: DivisionService,
-    private boardMemberService: BoardMemberService, private staffService: StaffService) {
+  constructor(private fb: FormBuilder,
+              private modalService: BsModalService,
+              private divisionService: DivisionService,
+              private snackBar: MatSnackBar,
+              private boardMemberService: BoardMemberService,
+              private staffService: StaffService) {
   }
 
   ngOnInit() {
@@ -50,7 +53,7 @@ export class DivisionComponent implements OnInit {
       "id": null,
       "name": [null, Validators.required],
       "boardMember": [null, Validators.required],
-      "staff": [null, Validators.required]
+      "staff": [null, Validators.required],
     });
   }
 
@@ -58,7 +61,7 @@ export class DivisionComponent implements OnInit {
     this.searchForm = this.fb.group({
       "name": null,
       "boardMember": null,
-      "staff": null
+      "staff": null,
     });
   }
 
@@ -105,7 +108,7 @@ export class DivisionComponent implements OnInit {
       "id": division.id,
       "name": division.name,
       "boardMember": division.boardMember,
-      "staff": division.staff
+      "staff": division.staff,
     });
   }
 
@@ -137,6 +140,7 @@ export class DivisionComponent implements OnInit {
       this.closeModal();
       this.loadStaff();
       this.loadBoardMembers();
+      this.openSnackBar(`Area having ID '${value.id}' persisted Successfully`);
     });
   }
 
@@ -147,6 +151,7 @@ export class DivisionComponent implements OnInit {
     this.closeModal();
     this.loadStaff();
     this.loadBoardMembers();
+    this.openSnackBar(`Area having ID ${id} deleted Successfully`);
   }
 
   closeModal() {
@@ -158,6 +163,10 @@ export class DivisionComponent implements OnInit {
       this.initializeTable(value);
     });
 
+  }
+
+  openSnackBar(message: string) {
+    this.snackBar.open(message, "Close");
   }
 
   //<editor-fold desc="form getters">
@@ -183,7 +192,7 @@ export class DivisionComponent implements OnInit {
   isInvalid(control: FormControl) {
     return {
       "is-invalid": control.touched && control.invalid,
-      "is-valid": control.touched && control.valid
+      "is-valid": control.touched && control.valid,
     };
   }
 

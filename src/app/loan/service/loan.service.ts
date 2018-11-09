@@ -9,6 +9,7 @@ import {LoanStatusResponse} from "../model/loan-status-response";
 import {InstallmentScheduleRequest} from "../model/installment-schedule-request";
 import {InstallmentScheduleResponse} from "../model/installment-schedule-response";
 import {LoanReport} from "../model/loan-report";
+import {PieChart} from "../../core/model/pie-chart";
 
 @Injectable()
 export class LoanService implements Service<Loan> {
@@ -79,6 +80,20 @@ export class LoanService implements Service<Loan> {
 
   update(e: Loan): Observable<Loan> {
     return this.http.put<Loan>(this.url, e);
+  }
+
+  getAllByLoanType() {
+    return this.http.get<PieChart>(`${this.url}/loanTypeReport`);
+  }
+
+  loansToBeApproved() {
+    let response: any = {responseType: 'text', observe: 'response'};
+    return this.http.get<string>(`${this.url}/loansToBeApproved`, response);
+  }
+
+  totalArrears() {
+    let response: any = {responseType: 'text', observe: 'response'};
+    return this.http.get<string>(`${this.url}/totalArrears`, response);
   }
 
 }

@@ -3,6 +3,7 @@ import {Observable} from "rxjs/internal/Observable";
 import {HttpClient} from "@angular/common/http";
 import {baseURL, responseType} from "../../shared/const/constants";
 import {Account} from "../model/account";
+import {DataSet} from "../../loan/model/loan-report";
 
 @Injectable()
 export class AccountService {
@@ -41,5 +42,14 @@ export class AccountService {
 
   update(e: Account): Observable<Account> {
     return this.http.put<Account>(this.url, e);
+  }
+
+  sharesReport() {
+    return this.http.get<DataSet[]>(`${this.url}/shares/report`);
+  }
+
+  teamReport() {
+    return this.http.get<DataSet[]>(`${this.url}/teams/report`);
+
   }
 }

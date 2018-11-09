@@ -144,8 +144,8 @@ export class TeamComponent implements OnInit {
         "account": {
           "name": "Team " + this.name.value,
           "operationType": "Credit",
-          "accountType": {"id": 2},
-          "subAccountType": {"id": 8}
+          "accountType": {"id": 3},
+          "subAccountType": {"id": 14},
         }
       });
     }

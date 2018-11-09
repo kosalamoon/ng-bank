@@ -1,10 +1,100 @@
-<div class="row" *ngIf="loanReport">
+<div class="form-row">
+  <div class="col-8">
+    <div class="row mb-2">
+      <div class="col">
+        <div class="card bg-light">
+          <div class="card-body">
+            <div class="form-row">
+              <div class="col">
+                <h5 class="card-title text-center">Share Deposits</h5>
+                <canvas baseChart *ngIf="sharesLineChart"
+                        [datasets]="sharesLineChart"
+                        [labels]="['Shares']"
+                        [options]="barChartOptions"
+                        [legend]="true"
+                        [chartType]="'bar'"></canvas>
+
+              </div>
+              <div class="col">
+                <h5 class="card-title text-center">Team Deposits</h5>
+                <canvas baseChart *ngIf="teamsLineChart"
+                        [datasets]="teamsLineChart"
+                        [labels]="['Teams']"
+                        [options]="barChartOptions"
+                        [legend]="true"
+                        [chartType]="'bar'"></canvas>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <div class="card bg-light">
+          <div class="card-body">
+            <div class="row">
+              <div class="col">
+                <h5 class="card-title text-center">Saving Deposits</h5>
+
+                <canvas baseChart *ngIf="savingsLineChart"
+                        [datasets]="savingsLineChart.dataSetList"
+                        [labels]="savingsLineChart.labelList"
+                        [options]="barChartOptions"
+                        [legend]="true"
+                        [chartType]="'bar'"></canvas>
+              </div>
+              <div class="col">
+                <h6 class="card-title text-center">Total Savings By Category</h6>
+                <canvas baseChart *ngIf="savingsPieChart" class="mb-3"
+                        [data]="savingsPieChart.dataList" [labels]="savingsPieChart.labelList" [chartType]="'pie'">
+
+                </canvas>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
   <div class="col-4">
-    <canvas baseChart width="400" height="400"
-            [datasets]="lineChartData"
-            [labels]="lineChartLabels"
-            [options]="lineChartOptions"
-            [legend]="lineChartLegend"
-            [chartType]="lineChartType"></canvas>
+    <div class="card bg-light">
+      <div class="card-body">
+        <h5 class="card-title text-center">Loan Details</h5>
+        <ul class="list-group mb-3">
+
+          <li class="list-group-item d-flex justify-content-between list-group-item-action">
+            <b>Loans to be approved</b>
+            <span class="badge badge-secondary" [ngClass]="{'badge-warning': loansToBeApproved != '0'}">{{loansToBeApproved}}</span>
+          </li>
+
+          <li class="list-group-item d-flex justify-content-between list-group-item-action">
+            <b>Total Arrears</b>
+            <span class="text-muted">{{totalArrears | number: '1.2-2'}}</span>
+          </li>
+
+        </ul>
+
+        <h6 class="card-title text-center">Total Loans By Category</h6>
+        <canvas baseChart *ngIf="loanPieChart" class="mb-3"
+                [data]="loanPieChart.dataList" [labels]="loanPieChart.labelList" [chartType]="'pie'">
+
+        </canvas>
+
+        <div class="mb-3 text-center">
+          <progressbar [max]="700000" [type]="cashBarStyle()" [value]="cashBalance">{{cashBalance | number: '1.2-2'}}/{{700000 | number: '1.2-2'}}</progressbar>
+          <small><em>Cash Balance</em></small>
+        </div>
+
+        <div class="mb-3 text-center">
+          <progressbar [max]="5000000" [type]="bankBarStyle()" [value]="bankBalance">{{bankBalance | number: '1.2-2'}}/{{5000000 | number: '1.2-2'}}</progressbar>
+          <small><em>Bank Balance</em></small>
+        </div>
+
+      </div>
+    </div>
+
   </div>
 </div>

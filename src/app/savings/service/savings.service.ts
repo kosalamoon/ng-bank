@@ -4,6 +4,8 @@ import {Savings} from "../model/savings";
 import {Observable} from "rxjs/internal/Observable";
 import {baseURL, responseType} from "../../shared/const/constants";
 import {HttpClient} from "@angular/common/http";
+import {LineChart} from "../../core/model/line-chart";
+import {PieChart} from "../../core/model/pie-chart";
 
 @Injectable()
 export class SavingsService implements Service<Savings> {
@@ -39,6 +41,14 @@ export class SavingsService implements Service<Savings> {
 
   update(e: Savings): Observable<Savings> {
     return this.http.put<Savings>(this.url, e);
+  }
+
+  reportByType() {
+    return this.http.get<LineChart>(`${this.url}/report/all`);
+  }
+
+  getPieChart() {
+    return this.http.get<PieChart>(`${this.url}/report/pieChart`);
   }
 
 

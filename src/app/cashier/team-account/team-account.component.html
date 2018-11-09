@@ -36,6 +36,7 @@
           <div class="btn-group btn-group-sm d-flex col">
             <button type="button" class="btn btn-primary w-100" (click)="addTeamFunds(persist)">Add</button>
             <button type="button" class="btn btn-secondary w-100" (click)="clearForm()">Clear</button>
+            <button *ngIf="transactionId" type="button" class="btn btn-outline-success w-100" (click)="generateReport()">Print</button>
           </div>
         </div>
 

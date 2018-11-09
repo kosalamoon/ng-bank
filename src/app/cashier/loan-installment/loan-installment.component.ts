@@ -12,6 +12,7 @@ import {TransactionService} from "../../ledger/service/transaction.service";
 import {LoanStatusResponse} from "../../loan/model/loan-status-response";
 import {LoanService} from "../../loan/service/loan.service";
 import {Transaction} from "../../ledger/model/transaction";
+import {CashierReportService} from "../service/cashier-report.service";
 
 @Component({
   selector: "app-loan-installment",
@@ -52,10 +53,12 @@ export class LoanInstallmentComponent implements OnInit {
 
   confirmModal: BsModalRef;
 
+  transactionId: string = null;
+
   constructor(private fb: FormBuilder, private authService: AuthenticationService,
               private accountService: AccountService, private entryService: EntryService,
               private transactionService: TransactionService, private modalService: BsModalService,
-              private loanService: LoanService) {
+              private loanService: LoanService, private cashierService: CashierReportService) {
   }
 
   ngOnInit() {
@@ -224,6 +227,13 @@ export class LoanInstallmentComponent implements OnInit {
   private addTotalValidation() {
     let func = control => (control.value as number) < +this.response.interest ? {"invalidAmount": true} : null;
     this.total.setValidators(func.bind(this));
+  }
+
+  generateReport() {
+    this.cashierService.loan(this.transactionId).subscribe(value => {
+      let file = new Blob([value], {type: 'application/pdf'});
+      window.open(URL.createObjectURL(file), "_self");
+    });
   }
 
   //<editor-fold desc="responseForm getters">

@@ -9,6 +9,7 @@ import {AuthenticationService} from "../../auth/authentication.service";
 import {AccountService} from "../../ledger/service/account.service";
 import {EntryService} from "../../ledger/service/entry.service";
 import {TransactionService} from "../../ledger/service/transaction.service";
+import {CashierReportService} from "../service/cashier-report.service";
 
 @Component({
   selector: "app-team-account",
@@ -36,9 +37,12 @@ export class TeamAccountComponent implements OnInit {
 
   confirmModal: BsModalRef;
 
+  transactionId: string = null;
+
   constructor(private fb: FormBuilder, private authService: AuthenticationService,
               private accountService: AccountService, private entryService: EntryService,
-              private transactionService: TransactionService, private modalService: BsModalService) {
+              private transactionService: TransactionService, private modalService: BsModalService,
+              private cashierService: CashierReportService) {
   }
 
   ngOnInit() {
@@ -148,6 +152,13 @@ export class TeamAccountComponent implements OnInit {
       return {"numberIsForbidden": true};
     }
     return null;
+  }
+
+  generateReport() {
+    this.cashierService.team(this.transactionId).subscribe(value => {
+      let file = new Blob([value], {type: 'application/pdf'});
+      window.open(URL.createObjectURL(file), "_self");
+    });
   }
 
 }

@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {baseURL} from "../../shared/const/constants";
 import {HttpClient, HttpParams} from "@angular/common/http";
 
@@ -18,5 +18,13 @@ export class CashierReportService {
 
   share(id: string) {
     return this.http.get(`${this.url}shares/transaction/${id}`, {responseType: 'blob'});
+  }
+
+  team(id: string) {
+    return this.http.get(`${this.url}teams/transaction/${id}`, {responseType: 'blob'});
+  }
+
+  loan(id: string) {
+    return this.http.get(`${this.url}loans/transaction/${id}`, {responseType: 'blob'});
   }
 }

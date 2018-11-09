@@ -9,6 +9,7 @@ import {EntryService} from "../../ledger/service/entry.service";
 import {TransactionService} from "../../ledger/service/transaction.service";
 import {BsModalRef, BsModalService} from "ngx-bootstrap/modal";
 import {integers} from "../../shared/regex/regex";
+import {CashierReportService} from "../service/cashier-report.service";
 
 @Component({
   selector: "app-share",
@@ -38,9 +39,12 @@ export class SharesAccountComponent implements OnInit {
 
   confirmModal: BsModalRef;
 
+  transactionId: string = null;
+
   constructor(private fb: FormBuilder, private authService: AuthenticationService,
               private accountService: AccountService, private entryService: EntryService,
-              private transactionService: TransactionService, private modalService: BsModalService) {
+              private transactionService: TransactionService, private modalService: BsModalService,
+              private cashierService: CashierReportService) {
   }
 
   ngOnInit() {
@@ -162,6 +166,13 @@ export class SharesAccountComponent implements OnInit {
       return {"numberIsForbidden": true};
     }
     return null;
+  }
+
+  generateReport() {
+    this.cashierService.share(this.transactionId).subscribe(value => {
+      let file = new Blob([value], {type: 'application/pdf'});
+      window.open(URL.createObjectURL(file), "_self");
+    });
   }
 
 }

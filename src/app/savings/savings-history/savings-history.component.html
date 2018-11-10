@@ -6,35 +6,25 @@
         <h5 class="card-title text-center">Savings history Form</h5>
 
         <div class="form-group row">
-          <label for="account" class="col-5 col-form-label col-form-label-sm">Account Number<span style="color: red">*</span></label>
+          <label for="account" class="col-5 col-form-label col-form-label-sm">Account Number <span style="color: red">*</span></label>
           <ng-select [searchable]="true" [ngClass]="isInvalid(account)"
                      placeholder="account number" [groupBy]="groupBy"
                      [items]="accounts$ | async" bindLabel="number"
                      [formControl]="account" id="account"
                      class="col">
           </ng-select>
-          <div class="text-danger offset-5" *ngIf="requiredValidation(account)">
+          <div class="text-danger offset-6" *ngIf="requiredValidation(account)">
             <small>Account number is required</small>
           </div>
         </div>
 
         <div class="form-group row">
-          <label for="account" class="col-5 col-form-label col-form-label-sm">Date From<span style="color: red">*</span></label>
+          <label for="account" class="col-5 col-form-label col-form-label-sm">Date Range <span style="color: red">*</span></label>
           <input
-            bsDatepicker placement="right" [ngClass]="isInvalid(fromDate)"
+            bsDaterangepicker placement="right" placeholder="date range" [ngClass]="isInvalid(account)"
             [bsConfig]="{dateInputFormat: 'YYYY-MM-DD', containerClass:'theme-default'}"
-            type="text" [formControl]="fromDate" class="form-control form-control-sm col">
-          <div class="invalid-feedback offset-5" *ngIf="requiredValidation(fromDate)">Date is required</div>
-        </div>
-
-
-        <div class="form-group row">
-          <label for="account" class="col-5 col-form-label col-form-label-sm">Date To<span style="color: red">*</span></label>
-          <input
-            bsDatepicker placement="right" [ngClass]="isInvalid(toDate)"
-            [bsConfig]="{dateInputFormat: 'YYYY-MM-DD', containerClass:'theme-default'}"
-            type="text" [formControl]="toDate" class="form-control form-control-sm col">
-          <div class="invalid-feedback offset-5" *ngIf="requiredValidation(toDate)">Date is required</div>
+            type="text" [formControl]="dateRange" class="form-control form-control-sm col">
+          <div class="invalid-feedback offset-5" *ngIf="requiredValidation(dateRange)">Date range is required</div>
         </div>
 
         <div class="form-group row">

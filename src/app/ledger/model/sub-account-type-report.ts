@@ -1,6 +1,6 @@
 export interface SubAccountTypeReport {
 
   name: string;
-  balance: string;
+  balance: number;
 
 }

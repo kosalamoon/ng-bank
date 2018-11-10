@@ -30,6 +30,8 @@ export class StaffComponent implements OnInit {
 
   isLoading: boolean = false;
 
+  today: Date = new Date();
+
   constructor(private staffService: StaffService,
               private fb: FormBuilder,
               private personService: PersonService,

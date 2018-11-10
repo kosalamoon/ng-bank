@@ -31,7 +31,7 @@
               style="color: red">*</span></label>
             <input
               [ngClass]="isInvalid(dob)"
-              bsDatepicker
+              bsDatepicker [maxDate]="today"
               [bsConfig]="{dateInputFormat: 'YYYY-MM-DD', containerClass:'theme-default'}"
               placement="right"
               type="text" formControlName="dob" class="form-control form-control-sm  col-sm" id="dob">

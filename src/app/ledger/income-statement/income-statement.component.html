@@ -54,7 +54,7 @@
 
           <li class="list-group-item d-flex justify-content-between list-group-item-action">
             <b>Profit/Loss</b>
-            <b>{{incomeStatement[0].balance - incomeStatement[1].balance | number: '1.2-2'}}</b>
+            <b>{{+incomeStatement[0].balance - +incomeStatement[1].balance | number: '1.2-2'}}</b>
           </li>
 
         </ul>

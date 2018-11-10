@@ -82,13 +82,13 @@
         <form [formGroup]="searchForm" class="form-row align-items-end">
           <div class="col">
             <input
-              bsDatepicker placement="bottom" placeholder="date" (blur)="search()"
+              bsDaterangepicker placement="bottom" placeholder="date range"
               [bsConfig]="{dateInputFormat: 'YYYY-MM-DD', containerClass:'theme-default'}"
-              type="text" formControlName="date" class="form-control form-control-sm  col-sm">
+              type="text" [formControl]="dateRange" class="form-control form-control-sm">
           </div>
 
           <div class="col">
-            <select [compareWith]="compareDropdown" class="form-control form-control-sm col-sm" (change)="search()"
+            <select [compareWith]="compareDropdown" class="form-control form-control-sm col-sm"
                     formControlName="meetingStatus">
               <option disabled [ngValue]="null">Select Meeting Status</option>
               <option *ngFor="let meetingStatus of meetingStatusList" [ngValue]="meetingStatus">{{meetingStatus}}
@@ -97,11 +97,15 @@
           </div>
 
           <div class="col">
-            <select [compareWith]="compareDropdown" class="form-control form-control-sm col-sm" (change)="search()"
+            <select [compareWith]="compareDropdown" class="form-control form-control-sm col-sm"
                     formControlName="meetingType">
               <option disabled [ngValue]="null">Select Meeting Type</option>
               <option *ngFor="let meetingType of meetingTypeList" [ngValue]="meetingType">{{meetingType}}</option>
             </select>
+          </div>
+
+          <div class="col">
+            <button type="button" class="btn btn-success btn-block btn-sm" (click)="search()">Clear</button>
           </div>
 
           <div class="col">

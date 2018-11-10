@@ -1,4 +1,4 @@
-export const baseURL: string =  "http://localhost:8080/";
+export const baseURL: string = "https://localhost:8080/";
 
 export const responseType: any = {responseType: 'text'};
 

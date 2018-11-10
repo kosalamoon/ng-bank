@@ -23,8 +23,8 @@ export class SavingsHistoryComponent implements OnInit {
   searchForm: FormGroup;
 
   account: FormControl = new FormControl(null, Validators.required);
-  fromDate: FormControl = new FormControl(null, Validators.required);
-  toDate: FormControl = new FormControl(null, Validators.required);
+  dateRange: FormControl = new FormControl(null, Validators.required);
+
 
   accounts$: Observable<Account[]>;
 
@@ -70,21 +70,22 @@ export class SavingsHistoryComponent implements OnInit {
 
   loadEntries() {
     this.account.markAsTouched();
-    this.fromDate.markAsTouched();
-    this.toDate.markAsTouched();
-    if (this.account.valid && this.fromDate.valid && this.toDate.valid) {
-      let fromDate: string = this.convertDateToString(this.fromDate.value) + "T00:00";
-      let toDate: string = this.convertDateToString(this.toDate.value) + "T00:00";
+    this.dateRange.markAsTouched();
+    let fromDate: string;
+    let toDate: string;
+    if (this.account.valid && this.dateRange.valid) {
+      fromDate = this.convertDateToString(this.dateRange.value[0]) + "T00:00";
+      toDate = this.convertDateToString(this.dateRange.value[1]) + "T23:59";
       this.entryService.findAllByAccountNumber(this.account.value.number, fromDate, toDate).subscribe(value => {
         this.initializeTable(value);
       });
     }
+
   }
 
   clearControls() {
     this.account.reset();
-    this.fromDate.reset();
-    this.toDate.reset();
+    this.dateRange.reset();
     this.dataSource = null;
   }
 

@@ -2,6 +2,7 @@ import {Injectable} from "@angular/core";
 import {HttpClient} from "@angular/common/http";
 import {debounceTime, map} from "rxjs/operators";
 import {JwtHelperService} from "@auth0/angular-jwt";
+import {baseURL} from "../shared/const/constants";
 
 
 export interface ApiResponse {
@@ -14,13 +15,13 @@ export interface ApiResponse {
 })
 export class AuthenticationService {
 
-  baseUrl: string = "http://localhost:8080/auth";
+  url: string = baseURL + "auth";
 
   constructor(private http: HttpClient, private jwtHelper: JwtHelperService) {
   }
 
   logIn(username: string, password: string) {
-    return this.http.post(`${this.baseUrl}/login`, {username, password})
+    return this.http.post(`${this.url}/login`, {username, password})
       .pipe(
         map(value => this.setTokenToSession(value["token"])
         )
@@ -55,22 +56,22 @@ export class AuthenticationService {
   }
 
   changePassword(username: string, password: string) {
-    return this.http.post(`${this.baseUrl}/changePassword`, {username: username, password: password});
+    return this.http.post(`${this.url}/changePassword`, {username: username, password: password});
 
   }
 
   matchPasswords(username: string, password: string) {
-    return this.http.post(`${this.baseUrl}/matchPasswords`, {username: username, password: password})
+    return this.http.post(`${this.url}/matchPasswords`, {username: username, password: password})
       .pipe(
         debounceTime(2000),
       );
   }
 
   lockAccount(username: string) {
-    return this.http.post<ApiResponse>(`${this.baseUrl}/lock`, {username: username});
+    return this.http.post<ApiResponse>(`${this.url}/lock`, {username: username});
   }
 
   checkUsername(username: string) {
-    return this.http.post<ApiResponse>(`${this.baseUrl}/checkUsername`, username);
+    return this.http.post<ApiResponse>(`${this.url}/checkUsername`, username);
   }
 }

@@ -2,7 +2,7 @@ import {Injectable} from "@angular/core";
 import {Service} from "../../person/service/service";
 import {Meeting} from "../model/meeting";
 import {Observable} from "rxjs/internal/Observable";
-import {HttpClient} from "@angular/common/http";
+import {HttpClient, HttpParams} from "@angular/common/http";
 import {baseURL, responseType} from "../../shared/const/constants";
 
 @Injectable()
@@ -29,7 +29,11 @@ export class MeetingService implements Service<Meeting> {
     return this.http.post<Meeting>(this.url, e);
   }
 
-  search(e: {}): Observable<Meeting[]> {
+  search(e: {}, fromDate?: string, toDate?: string): Observable<Meeting[]> {
+    if (fromDate != null && toDate != null) {
+      let params = new HttpParams().append("fromDate", fromDate).append("toDate", toDate);
+      return this.http.put<Meeting[]>(`${this.url}/search`, e, {params: params});
+    }
     return this.http.put<Meeting[]>(`${this.url}/search`, e);
   }
 

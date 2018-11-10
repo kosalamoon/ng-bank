@@ -41,6 +41,7 @@ export class WithdrawComponent implements OnInit {
 
   confirmModal: BsModalRef;
 
+  cash: Account;
   transactionId: string = null;
 
   constructor(private fb: FormBuilder, private authService: AuthenticationService,
@@ -53,6 +54,7 @@ export class WithdrawComponent implements OnInit {
   ngOnInit() {
     this.createForm();
     this.assignAmount();
+    this.loadCashAccount();
   }
 
   createForm() {
@@ -100,6 +102,7 @@ export class WithdrawComponent implements OnInit {
       this.loadSavings(account.savings.id);
       this.account = account;
       this.withdrawLimitValidation();
+      this.cashLimitValidation();
       this.entries$ = this.entryService.findTop5ByAccountNumber(this.accountNumber.value);
     }, error1 => {
       this.account = null;
@@ -117,6 +120,12 @@ export class WithdrawComponent implements OnInit {
 
   loadSavings(id: string) {
     this.savingsService.findById(id).subscribe(value => this.savings = value);
+  }
+
+  loadCashAccount() {
+    this.accountService.findById("1").subscribe(value => {
+      this.cash = value;
+    });
   }
 
   clearForm() {
@@ -170,6 +179,11 @@ export class WithdrawComponent implements OnInit {
 
   withdrawLimitValidation() {
     let func = (control: FormControl) => (control.value as number) > +this.account.balance ? {"invalidAmount": true} : null;
+    this.amount.setValidators(func.bind(this));
+  }
+
+  cashLimitValidation() {
+    let func = (control: FormControl) => (control.value as number) > +this.cash.balance ? {"cashLimit": true} : null;
     this.amount.setValidators(func.bind(this));
   }
 

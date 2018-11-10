@@ -33,6 +33,8 @@ export class MeetingComponent implements OnInit {
 
   isLoading: boolean = false;
 
+  dateRange = new FormControl(null);
+
   constructor(private fb: FormBuilder, private modalService: BsModalService,
               private meetingService: MeetingService, private meetingStatusService: MeetingStatusService,
               private meetingTypeService: MeetingTypeService, private attendanceService: AttendanceService,
@@ -60,7 +62,6 @@ export class MeetingComponent implements OnInit {
 
   private createSearchForm() {
     this.searchForm = this.fb.group({
-      "date": null,
       "meetingStatus": null,
       "meetingType": null,
     });
@@ -157,17 +158,20 @@ export class MeetingComponent implements OnInit {
 
   clearSearch() {
     this.searchForm.reset();
+    this.dateRange.reset();
     this.meetingService.findAll().subscribe(meetingList => this.initializeTable(meetingList));
   }
 
   search() {
-    setTimeout(() => {
-      console.log(this.searchForm.value);
-      this.searchForm.patchValue({
-        date: this.convertDateToString(this.searchForm.get("date").value),
-      });
-      this.meetingService.search(this.searchForm.value).subscribe(meetingList => this.initializeTable(meetingList));
-    }, 500);
+    let fromDate: string;
+    let toDate: string;
+    if (this.dateRange.value != null) {
+      fromDate = this.convertDateToString(this.dateRange.value[0]);
+      toDate = this.convertDateToString(this.dateRange.value[1]);
+    }
+    this.meetingService.search(this.searchForm.value, fromDate, toDate)
+      .subscribe(meetingList => this.initializeTable(meetingList));
+
   }
 
   loadAttendance(id: string, template: TemplateRef<any>) {

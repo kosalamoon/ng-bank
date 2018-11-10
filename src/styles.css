@@ -4,7 +4,7 @@
 @import "~ngx-bootstrap/datepicker/bs-datepicker.css";
 @import "~@ng-select/ng-select/themes/default.theme.css";
 
-.dropdown-toggle, .dropdown-menu {
+.dropdown-toggle, .dropdown-menu, .nav-link {
   cursor: pointer;
 }
 

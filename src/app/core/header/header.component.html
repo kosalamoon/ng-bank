@@ -1,24 +1,20 @@
 <nav class="navbar navbar-expand-lg bg-light navbar-light">
-  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
-          aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-    <span class="navbar-toggler-icon"></span>
-  </button>
-
   <a class="navbar-brand" routerLink="/home" routerLinkActive="active">
-    <i class="material-icons md-20">home</i>
+    Home
   </a>
   <div class="collapse navbar-collapse">
     <ul class="navbar-nav">
 
-      <li class="nav-item">
+      <li class="nav-item" *ngIf="isAuthorized('ROLE_ASSISTANT_MANAGER')">
         <a class="nav-link" routerLink="staff" routerLinkActive="active">Staff</a>
       </li>
 
-      <li class="nav-item">
+      <li class="nav-item" *ngIf="isAuthorized('ROLE_MANAGER')">
         <a class="nav-link" routerLink="user" routerLinkActive="active">Users</a>
       </li>
 
-      <li dropdown class="nav-item dropdown">
+      <li dropdown class="nav-item dropdown"
+          *ngIf="isAuthorized('ROLE_SECRETARY') || isAuthorized('ROLE_ACCOUNTS_CLERK')">
         <a dropdownToggle class="nav-link dropdown-toggle">Area</a>
         <div *dropdownMenu class="dropdown-menu">
           <a class="dropdown-item" routerLink="division">Division</a>
@@ -27,29 +23,31 @@
         </div>
       </li>
 
-      <li dropdown class="nav-item dropdown">
+      <li dropdown class="nav-item dropdown" *ngIf="isAuthorized('ROLE_ACCOUNTS_CLERK') || isAuthorized('ROLE_SECRETARY')">
         <a dropdownToggle class="nav-link dropdown-toggle">Member</a>
         <div *dropdownMenu class="dropdown-menu">
-          <a class="dropdown-item" routerLink="member">Manage Members</a>
-          <a class="dropdown-item" routerLink="boardMember">Manage Board Members</a>
+          <a class="dropdown-item" routerLink="member" *ngIf="isAuthorized('ROLE_ACCOUNTS_CLERK')">Manage Members</a>
+          <a class="dropdown-item" routerLink="boardMember" *ngIf="isAuthorized('ROLE_SECRETARY')">Manage Board Members</a>
         </div>
       </li>
 
-      <li class="nav-item">
+      <li class="nav-item" *ngIf="isAuthorized('ROLE_SECRETARY')">
         <a class="nav-link" routerLink="meeting" routerLinkActive="active">Meeting</a>
       </li>
 
-      <li dropdown class="nav-item dropdown">
+      <li dropdown class="nav-item dropdown" *ngIf="isAuthorized('ROLE_BOOK_KEEPER')">
         <a dropdownToggle class="nav-link dropdown-toggle">General Ledger</a>
         <div *dropdownMenu class="dropdown-menu">
           <a class="dropdown-item" routerLink="account">Accounts</a>
           <a class="dropdown-item" routerLink="journal-entry">Journal Entry</a>
-          <a class="dropdown-item" routerLink="income-statement">Income Statement</a>
-          <a class="dropdown-item" routerLink="balance-sheet">Balance Sheet</a>
+          <a class="dropdown-item" routerLink="income-statement"
+             *ngIf="isAuthorized('ROLE_ASSISTANT_MANAGER')">Income Statement</a>
+          <a class="dropdown-item" routerLink="balance-sheet"
+             *ngIf="isAuthorized('ROLE_ASSISTANT_MANAGER')">Balance Sheet</a>
         </div>
       </li>
 
-      <li dropdown class="nav-item dropdown">
+      <li dropdown class="nav-item dropdown" *ngIf="isAuthorized('ROLE_CASHIER')">
         <a dropdownToggle class="nav-link dropdown-toggle">Cashier</a>
         <div *dropdownMenu class="dropdown-menu">
           <a class="dropdown-item" routerLink="share-account">Add Shares</a>
@@ -60,7 +58,7 @@
         </div>
       </li>
 
-      <li dropdown class="nav-item dropdown">
+      <li dropdown class="nav-item dropdown" *ngIf="isAuthorized('ROLE_ACCOUNTS_CLERK')">
         <a dropdownToggle class="nav-link dropdown-toggle">Savings</a>
         <div *dropdownMenu class="dropdown-menu">
           <a class="dropdown-item" routerLink="savings">Savings Manage</a>
@@ -68,27 +66,29 @@
         </div>
       </li>
 
-      <li dropdown class="nav-item dropdown">
+      <li dropdown class="nav-item dropdown" *ngIf="isAuthorized('ROLE_ACCOUNTS_CLERK')">
         <a dropdownToggle class="nav-link dropdown-toggle">Loan</a>
         <div *dropdownMenu class="dropdown-menu">
           <a class="dropdown-item" routerLink="loan-type">Loan Type</a>
           <a class="dropdown-item" routerLink="loan-request">Loan Request</a>
-          <a class="dropdown-item" routerLink="loan-approve">Loan Approve</a>
+          <a class="dropdown-item" routerLink="loan-approve" *ngIf="isAuthorized('ROLE_MANAGER')">Loan Approve</a>
           <a class="dropdown-item" routerLink="loan-details">Loan Details</a>
         </div>
       </li>
 
     </ul>
 
+
     <ul class="navbar-nav ml-auto">
       <span class="navbar-text">{{username}}  </span>
-      <li dropdown class="nav-item dropdown">
-        <a dropdownToggle class="nav-link dropdown-toggle">Actions</a>
-        <div *dropdownMenu class="dropdown-menu dropdown-menu-right">
-          <a class="dropdown-item" (click)="logout()">Logout</a>
-          <a class="dropdown-item" (click)="changePassword()">Change Password</a>
-        </div>
+      <li class="nav-item">
+        <a class="nav-link" (click)="changePassword()">Change Password</a>
       </li>
+
+      <li class="nav-item">
+        <a class="nav-link" (click)="logout()">Logout</a>
+      </li>
+
     </ul>
   </div>
 </nav>

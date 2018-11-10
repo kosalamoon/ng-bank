@@ -105,11 +105,10 @@
           </div>
 
           <div class="col">
-            <button type="button" class="btn btn-success btn-block btn-sm" (click)="search()">Clear</button>
-          </div>
-
-          <div class="col">
-            <button type="button" class="btn btn-secondary btn-block btn-sm" (click)="clearSearch()">Clear</button>
+            <div class="btn-group btn-group-sm d-flex">
+              <button type="button" class="btn btn-success btn-sm w-100" (click)="search()">Search</button>
+              <button type="button" class="btn btn-secondary btn-sm w-100" (click)="clearSearch()">Clear</button>
+            </div>
           </div>
 
         </form>
@@ -176,7 +175,7 @@
                     <ng-template #delete>
                       <div class="modal-body text-center">
                         <p>Are you sure that you want to delete meeting id: {{meeting.id}} ? </p>
-                          <p><b>Attendances related this meeting will also be deleted</b></p>
+                        <p><b>Attendances related this meeting will also be deleted</b></p>
                         <div class="btn-group btn-group-sm d-flex">
                           <button type="button" class="btn btn-danger w-100" (click)="onDeleteYes(meeting.id)">Yes
                           </button>

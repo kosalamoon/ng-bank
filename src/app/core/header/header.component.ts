@@ -28,11 +28,8 @@ export class HeaderComponent implements OnInit {
     this.router.navigate(["/changePassword", this.authService.getUsernameFromToken()]);
   }
 
-  staffPriviledge(): boolean {
-    return sessionStorage.getItem("roles").includes("ROLE_MANAGER");
-  }
-
-  memberPriviledge(): boolean {
-    return sessionStorage.getItem("roles").includes("ROLE_MANAGER");
+  isAuthorized(role: string) {
+    return this.authService.isAuthorized(role);
+    ;
   }
 }

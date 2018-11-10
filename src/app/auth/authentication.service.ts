@@ -43,8 +43,8 @@ export class AuthenticationService {
     return token != null && !this.jwtHelper.isTokenExpired(token);
   }
 
-  isAuthorized() {
-
+  isAuthorized(role: string) {
+    return sessionStorage.getItem("roles").includes(role);
   }
 
   getUsernameFromToken() {

@@ -167,7 +167,7 @@ export class JournalEntryComponent implements OnInit {
     let toDate: string;
     if (this.dateRange.value != null) {
       fromDate = this.convertDateToString(this.dateRange.value[0]) + "T00:00";
-      toDate = this.convertDateToString(this.dateRange.value[1]) + "T00:00";
+      toDate = this.convertDateToString(this.dateRange.value[1]) + "T23:59";
     }
     this.entryService.search(this.searchForm.value, fromDate, toDate).subscribe(value => {
       this.initializeTable(value);

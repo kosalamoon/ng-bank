@@ -13,6 +13,8 @@ import {TransactionService} from "./service/transaction.service";
 import {JournalEntryComponent} from './journal-entry/journal-entry.component';
 import {EntryTypeService} from "./service/entry-type.service";
 import {NgSelectModule} from "@ng-select/ng-select";
+import {IncomeStatementComponent} from './income-statement/income-statement.component';
+import {BalanceSheetComponent} from './balance-sheet/balance-sheet.component';
 
 @NgModule({
   imports: [
@@ -24,7 +26,7 @@ import {NgSelectModule} from "@ng-select/ng-select";
     NgSelectModule,
     SharedModule
   ],
-  declarations: [AccountComponent, JournalEntryComponent],
+  declarations: [AccountComponent, JournalEntryComponent, IncomeStatementComponent, BalanceSheetComponent],
   providers: [
     AccountService,
     AccountTypeService,

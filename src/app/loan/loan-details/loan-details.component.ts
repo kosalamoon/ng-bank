@@ -1,5 +1,5 @@
 import {Component, OnInit, TemplateRef, ViewChild} from '@angular/core';
-import {MatPaginator, MatSelectChange, MatSort, MatTableDataSource} from "@angular/material";
+import {MatPaginator, MatSelectChange, MatSnackBar, MatSort, MatTableDataSource} from "@angular/material";
 import {Loan} from "../model/loan";
 import {FormBuilder, FormGroup} from "@angular/forms";
 import {Observable} from "rxjs/internal/Observable";
@@ -42,7 +42,8 @@ export class LoanDetailsComponent implements OnInit {
               private loanStatusService: LoanStatusService,
               private modalService: BsModalService,
               private transactionService: TransactionService,
-              private fb: FormBuilder) {
+              private fb: FormBuilder,
+              private snackBar: MatSnackBar) {
   }
 
   ngOnInit() {
@@ -107,6 +108,25 @@ export class LoanDetailsComponent implements OnInit {
       });
   }
 
+  sendSMS(template: TemplateRef<any>) {
+    this.modalRef = this.modalService.show(template, {class: "modal-sm"});
+  }
+
+  sendSMSYes(id: string) {
+    this.loanService.calculateArrears(id).subscribe(value => {
+      console.log(value);
+      if (value + "" !== '0') {
+        this.loanService.sms(id).subscribe(value1 =>
+          this.openSnackBar("Arrears message has sent successfully"));
+        this.closeModal();
+      }
+      else {
+        this.closeModal();
+        this.openSnackBar("this loan hasn't an arrears amount");
+      }
+    });
+  }
+
   clearSearch() {
     this.searchForm.reset();
     this.loadLoans();
@@ -138,14 +158,18 @@ export class LoanDetailsComponent implements OnInit {
     }
   };
 
-  columns: string[] = ["id", "member", "loanType", "requestedDate", "requestedAmount", "duration", "loanStatus", "remarks", "action"];
-  displayedColumns: string[] = ["id", "member", "loanType", "requestedDate", "requestedAmount", "loanStatus", "duration", "action"];
+  columns: string[] = ["id", "member", "loanType", "grantedDate", "requestedAmount", "duration", "loanStatus", "telephone", "remarks", "action"];
+  displayedColumns: string[] = ["id", "member", "loanType", "grantedDate", "requestedAmount", "telephone", "duration", "action"];
 
   addColumn(event: MatSelectChange) {
     this.displayedColumns = event.value;
   }
 
   compareDropdown = (o1: any, o2: any) => o1 && o2 ? o1.id === o2.id : o1 === o2;
+
+  openSnackBar(message: string) {
+    this.snackBar.open(message, "Close");
+  }
 
 
 }

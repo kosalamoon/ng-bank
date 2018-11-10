@@ -1,5 +1,5 @@
 import {Injectable} from "@angular/core";
-import {HttpClient, HttpHeaders, HttpParams} from "@angular/common/http";
+import {HttpClient, HttpParams} from "@angular/common/http";
 import {baseURL} from "../../shared/const/constants";
 import {Service} from "../../person/service/service";
 import {Entry} from "../model/entry";
@@ -24,7 +24,7 @@ export class EntryService implements Service<Entry> {
     return this.http.get<Entry[]>(this.url);
   }
 
-  findAllByAccountNumber(number: string, fromDate: string = null, toDate: string = null): Observable<Entry[]> {
+  findAllByAccountNumber(number: string, fromDate: string, toDate: string): Observable<Entry[]> {
     if (fromDate != null && toDate != null) {
       let params = new HttpParams()
         .append("fromDate", fromDate)

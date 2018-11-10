@@ -178,6 +178,16 @@ export class MeetingComponent implements OnInit {
     });
   }
 
+  sendSMS(template: TemplateRef<any>) {
+    this.modalRef = this.modalService.show(template, {class: "modal-sm"});
+  }
+
+  sendSMSYes(id: string) {
+    this.meetingService.sms(id).subscribe(
+      value => this.openSnackBar(`SMS send successfully`),
+      error1 => this.openSnackBar(`There is a problem with the connection`));
+  }
+
   convertDateToString(value): string {
     if (value instanceof Date) {
       let fullDate: string;

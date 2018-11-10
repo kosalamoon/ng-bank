@@ -59,6 +59,10 @@ export class LoanService implements Service<Loan> {
 
   }
 
+  sms(id: string) {
+    return this.http.get(`${this.url}/sms/${id}`);
+  }
+
   approve(id: string, releaseType: string, accountNumber: string): Observable<Loan> {
     let params: HttpParams = new HttpParams()
       .append("releaseType", releaseType)

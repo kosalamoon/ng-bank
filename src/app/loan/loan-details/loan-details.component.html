@@ -52,9 +52,9 @@
             <td cdk-cell *cdkCellDef="let loan">{{loan.loanType?.name}} - {{loan.loanType.interestRate}}%</td>
           </ng-container>
 
-          <ng-container cdkColumnDef="requestedDate">
-            <th cdk-header-cell *cdkHeaderCellDef mat-sort-header>Requested Date</th>
-            <td cdk-cell *cdkCellDef="let loan">{{loan.requestedDate}}</td>
+          <ng-container cdkColumnDef="grantedDate">
+            <th cdk-header-cell *cdkHeaderCellDef mat-sort-header>Granted Date</th>
+            <td cdk-cell *cdkCellDef="let loan">{{loan.grantedDate}}</td>
           </ng-container>
 
           <ng-container cdkColumnDef="requestedAmount">
@@ -65,6 +65,11 @@
           <ng-container cdkColumnDef="duration">
             <th cdk-header-cell *cdkHeaderCellDef mat-sort-header>Duration</th>
             <td cdk-cell *cdkCellDef="let loan">{{loan.duration}}</td>
+          </ng-container>
+
+          <ng-container cdkColumnDef="telephone">
+            <th cdk-header-cell *cdkHeaderCellDef mat-sort-header>Telephone</th>
+            <td cdk-cell *cdkCellDef="let loan">{{loan.member?.telephone}}</td>
           </ng-container>
 
           <ng-container cdkColumnDef="loanStatus">
@@ -86,7 +91,21 @@
             <td cdk-cell *cdkCellDef="let loan">
               <div class="btn-group btn-group-sm d-flex">
                 <button type="button" class="btn btn-info w-100" (click)="history(loan)">Payment History</button>
+                <button type="button" class="btn btn-warning w-100"
+                        *ngIf="loan.member.telephone" (click)="sendSMS(sms)">Arrears SMS
+                </button>
               </div>
+
+              <ng-template #sms>
+                <div class="modal-body text-center">
+                  <p>Are you sure that you want to send arrears SMS to {{loan.member.fullName}}</p>
+                  <div class="btn-group btn-group-sm d-flex">
+                    <button type="button" class="btn btn-info w-100" (click)="sendSMSYes(loan.id)">Yes</button>
+                    <button type="button" class="btn btn-secondary w-100" (click)="closeModal()">No</button>
+                  </div>
+                </div>
+              </ng-template>
+
             </td>
           </ng-container>
 

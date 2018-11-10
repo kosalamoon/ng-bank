@@ -29,6 +29,8 @@ import {LoanRequestComponent} from "./loan/loan-request/loan-request.component";
 import {JournalEntryComponent} from "./ledger/journal-entry/journal-entry.component";
 import {SavingsHistoryComponent} from "./savings/savings-history/savings-history.component";
 import {LoanTypeComponent} from "./loan/loan-type/loan-type.component";
+import {IncomeStatementComponent} from "./ledger/income-statement/income-statement.component";
+import {BalanceSheetComponent} from "./ledger/balance-sheet/balance-sheet.component";
 
 const routes: Routes = [
   {path: "", redirectTo: "login", pathMatch: "full"},
@@ -48,6 +50,8 @@ const routes: Routes = [
       {path: "attendance", component: AttendanceComponent},
       {path: "account", component: AccountComponent},
       {path: "journal-entry", component: JournalEntryComponent},
+      {path: "income-statement", component: IncomeStatementComponent},
+      {path: "balance-sheet", component: BalanceSheetComponent},
       {path: "share-account", component: SharesAccountComponent},
       {path: "team-account", component: TeamAccountComponent},
       {path: "deposit", component: DepositComponent},

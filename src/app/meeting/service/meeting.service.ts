@@ -37,5 +37,9 @@ export class MeetingService implements Service<Meeting> {
     return this.http.put<Meeting>(this.url, e);
   }
 
+  sms(id: string) {
+    return this.http.get(`${this.url}/sms/${id}`);
+  }
+
 
 }

@@ -166,18 +166,32 @@
                     <div class="btn-group btn-group-sm special">
                       <button type="button" class="btn btn-warning" (click)="fillForm(meeting)">Edit</button>
                       <button type="button" class="btn btn-danger" (click)="deleteMeeting(delete)">Delete</button>
+                      <button type="button" class="btn btn-info" (click)="sendSMS(sms)">Notify</button>
                     </div>
+
                     <ng-template #delete>
                       <div class="modal-body text-center">
                         <p>Are you sure that you want to delete meeting id: {{meeting.id}} ? </p>
                           <p><b>Attendances related this meeting will also be deleted</b></p>
-                        <div class="btn-group d-flex">
+                        <div class="btn-group btn-group-sm d-flex">
                           <button type="button" class="btn btn-danger w-100" (click)="onDeleteYes(meeting.id)">Yes
                           </button>
                           <button type="button" class="btn btn-secondary w-100" (click)="closeModal()">No</button>
                         </div>
                       </div>
                     </ng-template>
+
+                    <ng-template #sms>
+                      <div class="modal-body text-center">
+                        <p>Are you sure that you want to send SMS to board members</p>
+                        <div class="btn-group btn-group-sm d-flex">
+                          <button type="button" class="btn btn-info w-100" (click)="sendSMSYes(meeting.id)">Yes
+                          </button>
+                          <button type="button" class="btn btn-secondary w-100" (click)="closeModal()">No</button>
+                        </div>
+                      </div>
+                    </ng-template>
+
                   </td>
                 </ng-container>
 

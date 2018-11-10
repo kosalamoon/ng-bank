@@ -1,0 +1,59 @@
+<div class="row mb-2">
+  <div class="col-4 offset-6">
+    <div class="card bg-light">
+      <div class="card-body">
+        <div class="form-row">
+          <div class="col">
+            <input
+              bsDaterangepicker placement="bottom" placeholder="date range"
+              [bsConfig]="{dateInputFormat: 'YYYY-MM-DD', containerClass:'theme-default'}"
+              type="text" [formControl]="dateRange" class="form-control form-control-sm">
+          </div>
+          <div class="col-3">
+            <button type="button" class="btn btn-sm btn-block btn-primary" (click)="loadBalanceSheet()">Search</button>
+          </div>
+          <div class="col-3">
+            <button type="button" class="btn btn-sm btn-block btn-secondary" (click)="clearRange()">Clear</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="col-8 offset-2">
+    <div class="card bg-light">
+      <div class="card-body">
+        <ul class="list-group">
+
+          <h5 class="card-title text-center">Balance Sheet</h5>
+
+          <h5 *ngIf="!dateRange.value" class="card-title text-center">For the year ended {{today | date: 'y-MMMM-d'}}</h5>
+
+
+          <h5 *ngIf="dateRange.value" class="card-title text-center">For the period starts from {{dateRange.value[0] | date: 'y-MMMM-d'}}
+            to {{dateRange.value[1] | date: 'y-MMMM-d'}}</h5>
+
+          <ng-container *ngFor="let accountType of balanceSheet">
+
+            <li class="list-group-item d-flex justify-content-between list-group-item-action">
+              <b>{{accountType.name}}</b>
+              <b>{{accountType.balance | number: '1.2-2'}}</b>
+            </li>
+
+            <ng-container *ngFor="let subAccount of accountType.subList">
+
+              <li class="list-group-item d-flex justify-content-between list-group-item-action">
+                <span class="text-muted offset-1">{{subAccount.name}}</span>
+                <span class="text-muted">{{subAccount.balance | number: '1.2-2'}}</span>
+              </li>
+
+            </ng-container>
+
+          </ng-container>
+
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
